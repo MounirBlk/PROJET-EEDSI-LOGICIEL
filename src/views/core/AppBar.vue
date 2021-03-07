@@ -1,0 +1,66 @@
+<template>
+  <v-app-bar id="app-bar" app flat absolute>
+    <v-app-bar-nav-icon @click.stop="setDrawer(!drawer)"></v-app-bar-nav-icon>
+    <v-toolbar-title class="hidden-sm-and-down font-weight-light" v-text="$route.name"></v-toolbar-title>
+    <v-spacer class="mx-3"></v-spacer>
+
+    <v-tooltip bottom>
+      <template v-slot:activator="{ on }">
+        <v-btn class="ml-2" min-width="0" v-on="on" text to="/accueil">
+          <v-icon>mdi-view-dashboard</v-icon>
+        </v-btn>
+      </template>
+      <span>Accueil</span>
+    </v-tooltip>
+
+    <v-tooltip bottom>
+      <template v-slot:activator="{ on }">
+        <v-btn class="ml-2" min-width="0" v-on="on" text to="/parametres">
+          <v-icon>mdi-account-cog-outline</v-icon>
+        </v-btn>
+      </template>
+      <span>Paramètres</span>
+    </v-tooltip>
+
+    <v-tooltip bottom>
+      <template v-slot:activator="{ on }">
+        <v-btn @click="deconnexion" v-on="on" class="ml-2" min-width="0" text color="error">
+          <v-icon>mdi-logout</v-icon>
+        </v-btn>
+      </template>
+      <span>Déconnexion</span>
+    </v-tooltip>
+  </v-app-bar>
+</template>
+
+<script lang="ts">
+// Utilities
+import { mapState, mapMutations } from "vuex";
+import Vue from 'vue';
+
+export default Vue.extend({
+  name: "DashboardCoreAppBar",
+
+  data: () => ({
+
+  }),
+  computed: {
+    ...mapState(["drawer"])
+  },
+
+  methods: {
+    ...mapMutations({
+      setDrawer: "SET_DRAWER"
+    }),
+    deconnexion: function () {
+      this.$store.commit("SET_ID_USER", null);
+      this.$store.commit("SET_IS_ADMIN", null);
+      localStorage.clear();
+      this.$router.push({
+        name: "Connexion",
+        //params: { reloadLogOut: true },
+      });
+    },
+  }
+});
+</script>
