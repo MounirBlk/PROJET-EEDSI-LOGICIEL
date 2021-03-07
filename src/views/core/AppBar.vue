@@ -1,13 +1,22 @@
 <template>
-  <v-app-bar id="app-bar" app flat absolute>
+  <v-app-bar color="primary" id="app-bar" app flat absolute>
     <v-app-bar-nav-icon @click.stop="setDrawer(!drawer)"></v-app-bar-nav-icon>
     <v-toolbar-title class="hidden-sm-and-down font-weight-light" v-text="$route.name"></v-toolbar-title>
     <v-spacer class="mx-3"></v-spacer>
 
     <v-tooltip bottom>
       <template v-slot:activator="{ on }">
+        <v-btn class="ml-2" min-width="0" v-on="on" @click="$vuetify.theme.dark = !$vuetify.theme.dark" text to="/accueil">
+          <v-icon :color="$vuetify.theme.dark ? 'white' : 'black'">mdi-cog-outline</v-icon>
+        </v-btn>
+      </template>
+      <span>{{ $vuetify.theme.dark ? 'Mode Jour' : 'Mode Nuit' }}</span>
+    </v-tooltip>
+
+    <v-tooltip bottom>
+      <template v-slot:activator="{ on }">
         <v-btn class="ml-2" min-width="0" v-on="on" text to="/accueil">
-          <v-icon>mdi-view-dashboard</v-icon>
+          <v-icon color="anchor">mdi-view-dashboard</v-icon>
         </v-btn>
       </template>
       <span>Accueil</span>

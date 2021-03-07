@@ -4,6 +4,10 @@ import router from './router'
 import store from './store'
 import vuetify from './plugins/vuetify';
 import 'roboto-fontface/css/roboto/roboto-fontface.css'
+import './plugins/base'
+import './plugins/chartist'
+import './plugins/vee-validate'
+import './plugins/axiosApi'
 //import '@mdi/font/css/materialdesignicons.css'
 import qs from 'qs'
 
