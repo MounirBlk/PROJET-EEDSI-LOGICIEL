@@ -1,8 +1,8 @@
 <template>
   <v-app>
-    <dashboard-core-app-bar v-model="expandOnHover"/>
+    <dashboard-core-app-bar v-model="expandOnHover" v-if="connected != false"/>
 
-    <dashboard-core-drawer />
+    <dashboard-core-drawer v-if="connected != false"/>
 
     <dashboard-core-view />
 
@@ -27,7 +27,7 @@ export default Vue.extend({
     connected:true,
   }),
   created() {
-    this.$vuetify.theme.dark = true;
+    this.$vuetify.theme.dark = false
     bus.$on("connected",(data: any) => {
       this.connected = data;
     })

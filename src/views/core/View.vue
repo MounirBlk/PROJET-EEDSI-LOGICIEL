@@ -1,8 +1,10 @@
 <template>
   <v-main>
-    <router-view class="mb-10" />
+    <!--<vue-page-transition name="fade-in-up">-->
+      <router-view class="mb-10" style="z-index: 99" />
+    <!--</vue-page-transition>-->
 
-    <dashboard-core-footer style="z-index:0" v-if="connected != false"/>
+    <dashboard-core-footer style="z-index:0"/>
   </v-main>
 </template>
 
