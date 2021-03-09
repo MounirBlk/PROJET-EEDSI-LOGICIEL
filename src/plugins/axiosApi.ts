@@ -2,7 +2,7 @@ import router from '@/router';
 import axios from 'axios';
 
 const axiosApi = axios.create({
-    baseURL: 'https://dashboardmou.herokuapp.com',
+    baseURL: 'https://api-imie-e-commerce.herokuapp.com/',
     headers: {
         "Accept": 'application/json',
         "Content-Type": "application/x-www-form-urlencoded;charset=utf-8"

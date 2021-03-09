@@ -3,7 +3,7 @@
     <v-row align="center" no-gutters>
         <v-spacer class="hidden-sm-and-down" />
         <v-col cols="12" md="auto">
-            <div class="body-1 font-weight-light pt-0 pt-md-0 text-center black--text">
+            <div class="body-1 font-weight-light pt-0 pt-md-0 text-center">
                 &copy;
                 <span> {{ new Date().getFullYear() }} - Dashboard e-commerce</span>
             </div>
