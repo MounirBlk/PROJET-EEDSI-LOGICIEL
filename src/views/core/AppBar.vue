@@ -62,8 +62,6 @@ export default Vue.extend({
       setDrawer: "SET_DRAWER"
     }),
     deconnexion: function () {
-      this.$store.commit("SET_ID_USER", null);
-      this.$store.commit("SET_IS_ADMIN", null);
       localStorage.clear();
       this.$router.push({
         name: "Connexion",

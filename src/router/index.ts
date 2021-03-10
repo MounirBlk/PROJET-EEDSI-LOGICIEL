@@ -17,7 +17,13 @@ const routes: Array<RouteConfig> = [
       component: () =>
           import ('@/views/pages/Login.vue'),
       //meta: { transition: 'fade-in-up'}
-  },]
+    },
+    {
+      name: 'Accueil',
+      path: 'accueil',
+      component: () =>
+          import ('@/views/pages/Dashboard.vue'),
+    }]
   },
   {
     path: '*',

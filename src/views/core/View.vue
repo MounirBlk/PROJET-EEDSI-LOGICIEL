@@ -10,7 +10,6 @@
 
 <script lang="ts">
 import { bus } from "../../main";
-
 import Vue from 'vue';
 
 export default Vue.extend({
