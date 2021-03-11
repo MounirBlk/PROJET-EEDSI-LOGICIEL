@@ -1,5 +1,5 @@
 <template>
-<v-card v-bind="$attrs" :class="classes" class="v-card--material pa-3" style="top: 40px">
+<v-card v-bind="$attrs" :class="classes" class="v-card--material pa-3 mt-5" style="top: 40px">
     <div class="d-flex grow flex-wrap">
         <v-avatar v-if="avatar" size="128" class="mx-auto v-card--material__avatar elevation-6" color="grey">
             <v-img :src="avatar" />

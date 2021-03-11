@@ -5,8 +5,7 @@
     </v-overlay>
     <v-dialog v-model="isDialogForgotPassword" width="400px" overlay-opacity="0.9">
         <v-card class="px-6" outlined>
-            <v-card-title class="i
-            digo--text">
+            <v-card-title class="indigo--text">
                 Mot de passe oublié ?
                 <v-icon aria-label="Close" class="ml-auto" @click="isDialogForgotPassword = false">mdi-close</v-icon>
             </v-card-title>
@@ -30,22 +29,25 @@
                             </h1>
                         </div>
                     </template>
-
-                    <v-card-text class="text-center">
-                        <v-col cols="12" class="py-2">
-                            <v-text-field color="primary" @keyup.enter="connexion(email, password)" label="Email" v-model="email" prepend-icon="mdi-face" clearable />
-                        </v-col>
-                        <v-col cols="12" class="py-2">
-                            <v-text-field color="primary" @keyup.enter="connexion(email, password)" label="Password" v-model="password" prepend-icon="mdi-lock-outline" :type="showPassword ? 'text' : 'password'" @click:append="showPassword = !showPassword" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" clearable />
-                        </v-col>
-                        <v-col cols="12" class="py-2">
-                            <span @click="isDialogForgotPassword = true" style="cursor: pointer">Mot de passe oublié ?</span>
-                        </v-col>
-                        <v-btn color="primary" @click="connexion(email, password)">
-                            <v-icon color="black" left>mdi-lock-outline</v-icon>
-                            <span class="black--text">Connexion</span>
-                        </v-btn>
-                    </v-card-text>
+                    <v-card outlined>
+                        <v-card-text class="text-center">
+                            <v-form ref="form">
+                                <v-col cols="12" class="py-2">
+                                    <v-text-field color="primary" @keyup.enter="connexion(email, password)" label="Email" v-model="email" prepend-icon="mdi-face" clearable />
+                                </v-col>
+                                <v-col cols="12" class="py-2">
+                                    <v-text-field color="primary" @keyup.enter="connexion(email, password)" label="Password" v-model="password" prepend-icon="mdi-lock-outline" :type="showPassword ? 'text' : 'password'" @click:append="showPassword = !showPassword" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" clearable />
+                                </v-col>
+                                <v-col cols="12" class="py-2">
+                                    <span @click="isDialogForgotPassword = true" style="cursor: pointer">Mot de passe oublié ?</span>
+                                </v-col>
+                                <v-btn color="primary" @click="connexion(email, password)">
+                                    <v-icon color="black" left>mdi-lock-outline</v-icon>
+                                    <span class="black--text">Connexion</span>
+                                </v-btn>
+                            </v-form>
+                        </v-card-text>
+                    </v-card>
                     <!--<router-link to="register" class="indigo--text">Inscription</router-link>-->
                 </base-material-card>
             </v-slide-y-transition>
@@ -65,13 +67,17 @@
 </template>
 
 <script lang="ts">
-import Vue, { VNode } from 'vue';
+import Vue, {
+    VNode
+} from 'vue';
 import {
     bus
 } from "../../main";
 import axiosApi from "../../plugins/axiosApi";
 import qs from "qs";
-import { AxiosResponse } from 'axios';
+import {
+    AxiosResponse
+} from 'axios';
 
 export default Vue.extend({
     name: 'Login',
@@ -102,6 +108,7 @@ export default Vue.extend({
         if (localStorage.getItem("token") == null) {
             localStorage.clear();
         } else {
+            bus.$emit("connected", true);
             return this.$router.push({
                 name: "Accueil",
             });
@@ -112,7 +119,7 @@ export default Vue.extend({
         bus.$emit("connected", true);
     },
     methods: {
-        connexion: function (login: string, password: string): void{
+        connexion: function (login: string, password: string): void {
             //bus.$emit("connected", true);
             if (login == null || login == "")
                 return (this as any).errorMessage("Identifiant vide !");
@@ -126,32 +133,21 @@ export default Vue.extend({
             };
             axiosApi
                 .post("/login", qs.stringify(payload))
-                .then((response: any) => {
+                .then((response: AxiosResponse) => {
                     localStorage.setItem("token", response.data.token);
                     axiosApi.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem("token")}`;
                     if (localStorage.getItem("token") == null) return (this as any).errorMessage("Token inconnu !");
                     this.isOverlay = false;
+                    bus.$emit("connected", true);
                     return this.$router.push({
                         name: "Accueil",
                         /*params: {
                             logged: true
                         },*/
                     });
-
                 })
                 .catch((error) => {
-                    console.log(
-                        "ERROR " +
-                        JSON.stringify(error.status) +
-                        " : " +
-                        JSON.stringify(error.data.message)
-                    );
-                    (this as any).errorMessage(
-                        "ERROR " +
-                        JSON.stringify(error.status) +
-                        " : " +
-                        JSON.stringify(error.data.message)
-                    );
+                    (this as any).catchAxios(error);
                     this.isOverlay = false;
                 })
         },
@@ -164,7 +160,20 @@ export default Vue.extend({
             }
             return true;
         },*/
-
+        catchAxios: function (error: any): void {
+            console.log(
+                "ERROR " +
+                JSON.stringify(error.status) +
+                " : " +
+                JSON.stringify(error.data.message)
+            );
+            (this as any).errorMessage(
+                "ERROR " +
+                JSON.stringify(error.status) +
+                " : " +
+                JSON.stringify(error.data.message)
+            );
+        },
         successMessage: function (message: string): void {
             this.snackbarMessage = message;
             this.isSuccess = true;
