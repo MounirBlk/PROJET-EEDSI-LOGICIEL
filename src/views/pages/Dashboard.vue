@@ -4,7 +4,7 @@
         <base-area-chart :labels="chart.labels" :datasets="chart.datasets" :title="chart.title" />
         <v-row>
             <v-col cols="6" md="6" sm="12">
-                <base-material-card color="indigo" max-width="100%" width="600" class="px-5 py-3 mx-auto">
+                <base-material-card color="indigo" max-width="100%" width="auto" class="px-5 py-3 mx-auto">
                     <template v-slot:heading>
                         <div class="text-center">
                             <h1 class="display-1 font-weight-bold">
@@ -16,7 +16,7 @@
                 </base-material-card>
             </v-col>
             <v-col cols="6" md="6" sm="12">
-                <base-material-card color="red" max-width="100%" width="600" class="px-5 py-3 mx-auto">
+                <base-material-card color="red" max-width="100%" width="auto" class="px-5 py-3 mx-auto">
                     <template v-slot:heading>
                         <div class="text-center">
                             <h1 class="display-1 font-weight-bold">

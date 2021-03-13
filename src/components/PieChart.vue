@@ -12,6 +12,11 @@ import Vue from 'vue';
 export default Vue.extend({
     extends: Pie,
     //mixins: [reactiveProp],
+    data(): any {
+        return {
+            
+        }
+    },
     props: {
         title: {
             type: String,

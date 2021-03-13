@@ -45,7 +45,11 @@ import Vue from 'vue';
 
 export default Vue.extend({
     name: 'MaterialCard',
-    props: {
+    data(): any {
+        return {
+            
+        }
+    },    props: {
         avatar: {
             type: String,
             default: '',
@@ -78,7 +82,6 @@ export default Vue.extend({
             }
         },
     },
-    data: () => ({}),
     methods: {}
 });
 </script>

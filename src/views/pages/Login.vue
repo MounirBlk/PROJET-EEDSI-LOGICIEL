@@ -78,23 +78,21 @@ import qs from "qs";
 import {
     AxiosResponse
 } from 'axios';
+import Gestion from "../../mixins/Gestion"
 
 export default Vue.extend({
     name: 'Login',
     props: {},
     components: {},
-    data: () => ({
-        isSuccess: false,
-        isSnackbarOpened: false,
-        snackbarMessage: "",
-        /*-------------------------- */
-        showPassword: false,
-        isDialogForgotPassword: false,
+    mixins: [Gestion],
+    data: (): any => ({
+        showPassword: false as boolean,
+        isDialogForgotPassword: false as boolean,
         email: null as string | null,
         password: null as string | null,
-        opacity: 0.8, //overlay
-        isAbsolute: true, //overlay
-        isOverlay: true, //overlay
+        opacity: 0.8 as number, //overlay
+        isAbsolute: true as boolean, //overlay
+        isOverlay: true as boolean, //overlay
     }),
     computed: {},
     created() {
@@ -105,14 +103,6 @@ export default Vue.extend({
     },
     mounted() {
         bus.$emit("connected", false);
-        if (localStorage.getItem("token") == null) {
-            localStorage.clear();
-        } else {
-            bus.$emit("connected", true);
-            return this.$router.push({
-                name: "Accueil",
-            });
-        }
         this.isOverlay = false;
     },
     beforeDestroy() {
@@ -122,9 +112,9 @@ export default Vue.extend({
         connexion: function (login: string, password: string): void {
             //bus.$emit("connected", true);
             if (login == null || login == "")
-                return (this as any).errorMessage("Identifiant vide !");
+                return this.errorMessage("Identifiant vide !");
             if (password == null || password == "")
-                return (this as any).errorMessage("Mot de passe vide !");
+                return this.errorMessage("Mot de passe vide !");
 
             this.isOverlay = true;
             const payload = {
@@ -136,7 +126,7 @@ export default Vue.extend({
                 .then((response: AxiosResponse) => {
                     localStorage.setItem("token", response.data.token);
                     axiosApi.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem("token")}`;
-                    if (localStorage.getItem("token") == null) return (this as any).errorMessage("Token inconnu !");
+                    if (localStorage.getItem("token") == null) return this.errorMessage("Token inconnu !");
                     this.isOverlay = false;
                     bus.$emit("connected", true);
                     return this.$router.push({
@@ -147,46 +137,12 @@ export default Vue.extend({
                     });
                 })
                 .catch((error) => {
-                    (this as any).catchAxios(error);
+                    this.catchAxios(error);
                     this.isOverlay = false;
                 })
-        },
-        /*------------------------------------------------------ */
-        /*verifyResponseOk: function (responseData: any) {
-            var tmpStr = JSON.stringify(responseData);
-            if (tmpStr.startsWith('"Error:')) {
-                this.errorMessage(responseData.substring(7)); // suppress "Error:
-                return false;
-            }
-            return true;
-        },*/
-        catchAxios: function (error: any): void {
-            console.log(
-                "ERROR " +
-                JSON.stringify(error.status) +
-                " : " +
-                JSON.stringify(error.data.message)
-            );
-            (this as any).errorMessage(
-                "ERROR " +
-                JSON.stringify(error.status) +
-                " : " +
-                JSON.stringify(error.data.message)
-            );
-        },
-        successMessage: function (message: string): void {
-            this.snackbarMessage = message;
-            this.isSuccess = true;
-            this.isSnackbarOpened = true;
-        },
-        errorMessage: function (message: string): void {
-            this.snackbarMessage = message;
-            this.isSuccess = false;
-            this.isSnackbarOpened = true;
         },
     }
 });
 </script>
-
 <style>
 </style>

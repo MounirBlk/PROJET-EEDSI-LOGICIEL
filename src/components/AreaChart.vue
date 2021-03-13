@@ -45,7 +45,7 @@ export default Vue.extend({
             deep: true
         },
     },*/
-    data() {
+    data(): any {
         return {
             gradient: null,
             gradient2: null

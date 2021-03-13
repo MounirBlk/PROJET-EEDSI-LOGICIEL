@@ -6,6 +6,11 @@ import Vue from 'vue';
 
 export default Vue.extend({
     extends: Line,
+    data(): any {
+        return {
+            
+        }
+    },
     props: {
         title: {
             type: String,

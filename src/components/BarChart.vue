@@ -6,6 +6,11 @@ import {
 
 export default Vue.extend({
     extends: Bar,
+    data(): any {
+        return {
+            
+        }
+    },
     props: {
         title: {
             type: String,

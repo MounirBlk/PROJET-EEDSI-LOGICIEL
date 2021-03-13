@@ -7,6 +7,11 @@ import Vue from 'vue';
 
 export default Vue.extend({
     extends: Radar,
+    data(): any {
+        return {
+            
+        }
+    },
     mounted() {
         this.renderChart({
             labels: [
