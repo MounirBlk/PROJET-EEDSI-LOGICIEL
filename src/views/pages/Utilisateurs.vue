@@ -1,0 +1,296 @@
+<template>
+<v-container id="utilisateurs" tag="section" fluid>
+    <v-dialog v-model="isDialogNewUtilisateur" persistent max-width="1000px" overlay-opacity="0.8">
+        <v-card class="px-6" outlined>
+            <v-form ref="form" v-model="rules.valid" lazy-validation>
+                <v-card-title class="info--text">
+                    Ajout Utilisateur
+                    <v-icon aria-label="Close" class="ml-auto" @click="isDialogNewUtilisateur = false">mdi-close</v-icon>
+                </v-card-title>
+                <v-col cols="12">
+                    <div class="text-center">
+                        <v-divider />
+                        <v-row>
+                            <v-col cols="12" md="6">
+                                <v-text-field color="info" label="Nom*" v-model.trim="user.lastname" prepend-inner-icon="mdi-face" clearable :rules="rules.caractereRules" required />
+                            </v-col>
+                            <v-col cols="12" md="6">
+                                <v-text-field color="info" label="Prénom*" v-model.trim="user.firstname" prepend-inner-icon="mdi-face" clearable :rules="rules.caractereRules" required />
+                            </v-col>
+                        </v-row>
+                        <v-row class="mt-n4">
+                            <v-col cols="12" md="6">
+                                <v-text-field color="info" label="Email*" v-model.trim="user.email" prepend-inner-icon="mdi-email-outline" clearable :rules="rules.emailRules" required />
+                            </v-col>
+                            <v-col cols="12" md="6">
+                                <v-text-field color="info" label="Password*" v-model="user.password" prepend-inner-icon="mdi-lock-outline" clearable :type="showPassword ? 'text' : 'password'" @click:append="showPassword = !showPassword" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" :rules="rules.passwordRules" required />
+                            </v-col>
+                        </v-row>
+                        <v-row class="mt-n4">
+                            <v-col cols="12" md="6">
+                                <v-select color="info" prepend-inner-icon="mdi-format-list-bulleted-type" v-model.trim="user.civilite" :items="['Homme', 'Femme']" label="Civilité*" :rules="rules.champRules" required></v-select>
+                            </v-col>
+                            <v-col cols="12" md="6">
+                                <v-menu v-model="isDialogDateNaissanceOpen" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="290px" color="info">
+                                    <template v-slot:activator="{ on, attrs }">
+                                        <v-text-field color="info" v-model="user.dateNaissance" :rules="rules.dateEnRules" required label="Date de naissance*" prepend-inner-icon="mdi-calendar-outline" readonly v-bind="attrs" v-on="on"></v-text-field>
+                                    </template>
+                                    <v-date-picker color="info" first-day-of-week="1" v-model="user.dateNaissance" @input="isDialogDateNaissanceOpen = false" :rules="rules.dateEnRules" required></v-date-picker>
+                                </v-menu>
+                            </v-col>
+                        </v-row>
+                        <v-row class="mt-n4">
+                            <v-col cols="12" md="6">
+                                <v-text-field color="info" label="Numéro de téléphone" v-model.trim="user.portable" prepend-inner-icon="mdi-deskphone" clearable />
+                            </v-col>
+                            <v-col cols="12" md="6">
+                                <v-text-field color="info" label="Adresse" v-model.trim="user.adresse" prepend-inner-icon="mdi-walk" clearable />
+                            </v-col>
+                        </v-row>
+                    </div>
+                    <v-col cols="12">
+                        <v-switch class="ml-n3 my-n2" v-model="user.isAdmin" label="Administrateur ?" :color="user.isAdmin ? 'info' : 'error'"></v-switch>
+                    </v-col>
+                    <small>*Veuillez remplir les champs</small>
+                    <v-col cols="12" class="text-right">
+                        <v-btn class="mr-1" color="error" text @click.prevent="isDialogNewUtilisateur = false">Fermer</v-btn>
+                        <v-btn color="success" text @click.prevent="saveNewUtilisateur">Sauvegarder</v-btn>
+                    </v-col>
+                </v-col>
+            </v-form>
+        </v-card>
+    </v-dialog>
+    <v-dialog v-model="isDialogDeleteUtilisateur" width="500" overlay-opacity="0.8">
+        <v-card outlined>
+            <v-card-title>
+                Supprimer l'utilisateur {{ utilisateurToDelete.firstname }}
+                {{ utilisateurToDelete.lastname }} ?
+                <v-divider class="my-2" />
+            </v-card-title>
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn @click="isDialogDeleteUtilisateur = false" class="mx-2" fab dark>
+                    <v-icon dark>mdi-close</v-icon>
+                </v-btn>
+                <v-btn @click="deleteUtilisateur" class="mx-2" fab color="green darken-1">
+                    <v-icon dark>mdi-check-bold</v-icon>
+                </v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+    <base-material-card color="info" icon="mdi-account-group-outline" max-width="100%" width="auto" inline class="px-5 py-3 mx-auto">
+        <template v-slot:after-heading>
+            <div class="display-2 font-weight-light">Utilisateurs</div>
+        </template>
+
+        <v-row class="mt-8 mr-1">
+            <v-btn color="info" @click="isDialogNewUtilisateur = true" class="ml-3" :disabled="!isAdmin">
+                <v-icon left>mdi-account-plus-outline</v-icon>Ajouter Utilisateur
+            </v-btn>
+            <v-btn color="info" icon @click="getUtilisateursData" class="ml-3">
+                <v-icon large>mdi-refresh</v-icon>
+            </v-btn>
+            <v-text-field v-model="search" prepend-icon="mdi-magnify" class="ml-auto" label="Recherche" color="primary" hide-details single-line style="max-width: 250px" clearable />
+        </v-row>
+        <v-divider class="mt-6" />
+
+        <v-skeleton-loader v-if="isFirstLoad" :loading="isLoading" type="table"></v-skeleton-loader>
+        <v-data-table v-else :headers="headers" :items="items" :search.sync="search" :sort-by="['lastname']" :sort-desc="[false]" show-expand single-expand item-key="email" :expanded.sync="expanded">
+            <template v-slot:expanded-item="{ headers, item }">
+                <td :colspan="headers.length">
+                    <span v-if="item.role.toLowerCase() === 'administrateur'" class="purple--text mr-3 pa-1 mt-1" style="border: solid 1px purple">Admin</span>
+                    <v-btn small color="blue" :class="{
+                        'ml-0': $vuetify.breakpoint.mdAndUp,
+                        'ml-3': $vuetify.breakpoint.smAndDown,
+                    }" outlined @click="PageInfosUtilisateur(item, false)">
+                        <v-icon left>mdi-card-account-details-outline</v-icon>
+                        Informations {{ item.civilite.toLowerCase() === "homme" ? 'M. '+ item.lastname : 'Mme '+ item.lastname }}
+                    </v-btn>
+                    <v-btn :disabled="!isAdmin || item.role.toLowerCase() === 'administrateur'" small outlined color="orange" @click="PageInfosUtilisateur(item, true)" class="ml-3">
+                        <v-icon left>mdi-account-edit-outline</v-icon>
+                        Modifier {{ item.civilite.toLowerCase() === "homme" ? 'M. '+ item.lastname : 'Mme '+ item.lastname }}
+                    </v-btn>
+                    <v-btn :disabled="!isAdmin || item.role.toLowerCase() === 'administrateur'" small outlined color="red" @click="dialogDeleteUtilisateur(item)" class="ml-3">
+                        <v-icon left>mdi-account-remove-outline</v-icon>
+                        Supprimer {{ item.civilite.toLowerCase() === "homme" ? 'M. '+ item.lastname : 'Mme '+ item.lastname }}
+                    </v-btn>
+                </td>
+            </template>
+            <div slot="no-results" :value="true" icon="warning" class="error--text">
+                La recherche "{{ search }}" est inconnu.
+            </div>
+        </v-data-table>
+    </base-material-card>
+    <v-snackbar v-model="isSnackbarOpened" elevation="24" :color="isSuccess ? 'success' : 'error'">
+        <div class="text-center subtitle-1">
+            <v-icon v-if="!isSuccess" color="white">mdi-alert-outline</v-icon>
+            <v-icon v-else color="white">mdi-checkbox-marked-circle-outline</v-icon>
+            <span>{{ snackbarMessage }}</span>
+            <v-btn dark icon class="ml-6" @click="isSnackbarOpened = false">
+                <v-icon>mdi-close</v-icon>
+            </v-btn>
+        </div>
+    </v-snackbar>
+</v-container>
+</template>
+
+<script lang="ts">
+import Vue from 'vue';
+import Gestion from "../../mixins/Gestion"
+import axiosApi from '../../plugins/axiosApi';
+import qs from "qs";
+import {
+    AxiosResponse
+} from 'axios';
+
+export default Vue.extend({
+    name: 'Utilisateurs',
+    mixins: [Gestion],
+    props: {},
+    components: {},
+    //data: () => ({}),
+    data(): any {
+        return {
+            isDialogNewUtilisateur: false as boolean,
+            showPassword: false as boolean,
+            isDialogDateNaissanceOpen: false as boolean,
+            isDialogDeleteUtilisateur: false as boolean,
+            utilisateurToDelete: [] as Array < any > ,
+            user: {
+                email: "",
+                password: "",
+                lastname: "",
+                firstname: "",
+                dateNaissance: new Date().toISOString().substr(0, 10), //new Date().toISOString().substr(0, 10)
+                civilite: "",
+                adresse: "",
+                portable: "",
+                isAdmin: false,
+                role: "Commercial",
+            },
+            search: undefined as string | null | undefined,
+            expanded: [] as Array < any > ,
+            headers: [{
+                    text: "Nom",
+                    value: "lastname",
+                },
+                {
+                    text: "Prénom",
+                    value: "firstname",
+                },
+                {
+                    text: "Email",
+                    value: "email",
+                },
+                {
+                    //sortable: false,
+                    text: "Phone",
+                    value: "portable",
+                },
+                {
+                    sortable: false,
+                    text: "Création",
+                    value: "createdAt",
+                },
+                {
+                    sortable: false,
+                    text: "Dernière connexion",
+                    value: "lastLogin",
+                },
+            ] as Array < any > ,
+            items: [] as Array < any > ,
+        }
+    },
+    computed: {},
+    watch: {},
+    created() {
+        //console.log('created')
+    },
+    beforeMount() {
+        //console.log('beforeMount')
+    },
+    async mounted() {
+        await this.getUtilisateursData();
+    },
+    methods: {
+        getUtilisateursData: async function (): Promise < void > {
+            //https://jsonplaceholder.typicode.com/users
+            this.isLoading = true;
+            this.isFirstLoad = true;
+            await axiosApi.post("/users", qs.stringify({
+                role: 'Commercial'
+            })) //tous les users
+            .then((response: AxiosResponse) => {
+                this.items = response.data.users;
+                setTimeout(() => {
+                    this.isLoading = false;
+                    this.isFirstLoad = false;
+                }, 1000);
+            })
+            .catch((error) => {
+                this.catchAxios(error)
+                setTimeout(() => {
+                    this.isLoading = false;
+                    this.isFirstLoad = false;
+                }, 1000);
+            });
+        },
+        saveNewUtilisateur: async function (): Promise < void > {
+            if (!this.$refs.form.validate()) return this.errorMessage("Veuillez vérifier les champs !");
+            
+            this.user.role = this.user.isAdmin === true ? 'Administrateur' : 'Commercial'
+            //this.user.dateNaissance = this.changeToFormatDateFr(this.user.dateNaissance);
+            await axiosApi.post(
+                "/register",
+                qs.stringify(this.user)
+            )
+            .then((response) => {
+                Object.assign(this.$data, this.$options.data()); //reset data
+                this.$refs.form.reset();
+                this.successMessage("L'utilisateur a bien été ajouté !");
+                setTimeout(() => {
+                    this.getUtilisateursData();
+                }, 1000);
+            })
+            .catch((error) => {
+                //this.user.dateNaissance = this.changeToFormatDateEn(this.user.dateNaissance);
+                this.catchAxios(error)
+            });
+        },
+        deleteUtilisateur: async function (): Promise < void > {
+            this.isDialogDeleteUtilisateur = false;
+            await axiosApi
+            .delete("/user/" + this.utilisateurToDelete._id)
+            .then((response) => {
+                console.log(response.data.message)
+                const utilisateurFirstname = this.utilisateurToDelete.firstname;
+                const utilisateurLastname = this.utilisateurToDelete.lastname;
+                Object.assign(this.$data, this.$options.data()); //reset data
+                //this.$refs.form.reset();
+                this.successMessage(`L'utilisateur ${utilisateurFirstname} ${utilisateurLastname} a été supprimé avec succès`);
+                setTimeout(() => {
+                    this.getUtilisateursData();
+                }, 1000);
+            })
+            .catch((error) => {
+                this.catchAxios(error)
+            });
+        },
+        dialogDeleteUtilisateur: function (infosUtilisateur: Record < string, any > ) {
+            this.isDialogDeleteUtilisateur = true;
+            this.utilisateurToDelete = infosUtilisateur;
+        },
+        PageInfosUtilisateur: function (infosUtilisateur: Record < string, any > , isEdit: boolean) {
+            this.$router.push({
+                name: "Informations-Utilisateur",
+                params: {
+                    isEdit: isEdit,
+                    infosUtilisateur: infosUtilisateur
+                },
+            });
+        }
+    }
+});
+</script>
+
+<style></style>

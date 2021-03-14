@@ -32,12 +32,25 @@ const routes: Array<RouteConfig> = [{
         requiresAuth: false,
         //transition: 'fade-in-up'
       }
-    },
-    {
+    },{
       name: 'Accueil',
       path: '/',
       component: () => import ('@/views/pages/Dashboard.vue'),
       //beforeEnter: (to, from, next) => Auth(next, to)
+      meta: {
+        requiresAuth: true
+      }
+    },{
+      name: 'Utilisateurs',
+      path: '/utilisateurs',
+      component: () => import ('@/views/pages/Utilisateurs.vue'),
+      meta: {
+        requiresAuth: true
+      }
+    },{
+      name: 'Informations-Utilisateur',
+      path: '/utilisateurs/utilisateur',
+      component: () => import ('@/views/pages/InfosUtilisateur.vue'),
       meta: {
         requiresAuth: true
       }
@@ -49,7 +62,7 @@ const routes: Array<RouteConfig> = [{
         import ('@/views/Index.vue'),
     children: [{
         name: '404 Error',
-        path: '',
+        path: '/',
         redirect: "/",
         component: () => import ('@/views/Error.vue'),
     }]
