@@ -15,7 +15,7 @@
 
     <v-tooltip bottom>
       <template v-slot:activator="{ on }">
-        <v-btn class="ml-2" min-width="0" v-on="on" text to="/accueil">
+        <v-btn class="ml-2" min-width="0" v-on="on" text to="/">
           <v-icon color="anchor">mdi-view-dashboard</v-icon>
         </v-btn>
       </template>

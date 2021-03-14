@@ -26,16 +26,21 @@ const routes: Array<RouteConfig> = [{
     component: () => import (/* webpackChunkName: "about" */'@/views/Index.vue'),
     children: [{
       name: 'Connexion',
-      path: '',
+      path: '/login',
       component: () => import ('@/views/pages/Login.vue'),
-      //beforeEnter: (to, from, next) => Auth(next, to )
-      //meta: { transition: 'fade-in-up'}
+      meta: {
+        requiresAuth: false,
+        //transition: 'fade-in-up'
+      }
     },
     {
       name: 'Accueil',
-      path: 'acceuil',
+      path: '/',
       component: () => import ('@/views/pages/Dashboard.vue'),
-      beforeEnter: (to, from, next) => Auth(next, to)
+      //beforeEnter: (to, from, next) => Auth(next, to)
+      meta: {
+        requiresAuth: true
+      }
     }]
   },
   {
@@ -56,8 +61,26 @@ const router = new VueRouter({
   routes
 })
 
-/*router.beforeEach((to, from, next) => {
-  Auth(next, to)
-});*/
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    // this route requires auth, check if logged in
+    // if not, redirect to login page.
+    if (localStorage.getItem("token") === null || localStorage.getItem("token") === undefined) {
+      localStorage.clear();
+      bus.$emit("connected", false);
+      next({
+        //path: '/login',
+        //query: { redirect: to.path }
+        name: "Connexion"
+      })
+    } else {
+      bus.$emit("connected", true);
+      next()
+    }
+  } else {
+    bus.$emit("connected", false);
+    next() // make sure to always call next()!
+  }
+});
 
 export default router

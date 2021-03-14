@@ -4,7 +4,7 @@
       <router-view class="mb-10" style="z-index: 99" />
     <!--</vue-page-transition>-->
 
-    <dashboard-core-footer style="z-index:0"/>
+    <dashboard-core-footer style="z-index:0;"/>
   </v-main>
 </template>
 

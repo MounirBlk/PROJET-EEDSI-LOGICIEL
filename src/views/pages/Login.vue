@@ -4,7 +4,7 @@
         <v-progress-circular color="warning" indeterminate size="80"></v-progress-circular>
     </v-overlay>
     <v-dialog v-model="isDialogForgotPassword" width="400px" overlay-opacity="0.9">
-        <v-card class="px-6" outlined>
+        <v-card class="px-6">
             <v-card-title class="indigo--text">
                 Mot de passe oublié ?
                 <v-icon aria-label="Close" class="ml-auto" @click="isDialogForgotPassword = false">mdi-close</v-icon>
@@ -29,25 +29,25 @@
                             </h1>
                         </div>
                     </template>
-                    <v-card outlined>
-                        <v-card-text class="text-center">
-                            <v-form ref="form">
-                                <v-col cols="12" class="py-2">
-                                    <v-text-field color="primary" @keyup.enter="connexion(email, password)" label="Email" v-model="email" prepend-icon="mdi-face" clearable />
-                                </v-col>
-                                <v-col cols="12" class="py-2">
-                                    <v-text-field color="primary" @keyup.enter="connexion(email, password)" label="Password" v-model="password" prepend-icon="mdi-lock-outline" :type="showPassword ? 'text' : 'password'" @click:append="showPassword = !showPassword" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" clearable />
-                                </v-col>
-                                <v-col cols="12" class="py-2">
-                                    <span @click="isDialogForgotPassword = true" style="cursor: pointer">Mot de passe oublié ?</span>
-                                </v-col>
-                                <v-btn color="primary" @click="connexion(email, password)">
-                                    <v-icon color="black" left>mdi-lock-outline</v-icon>
-                                    <span class="black--text">Connexion</span>
-                                </v-btn>
-                            </v-form>
-                        </v-card-text>
-                    </v-card>
+                    <!--<v-card>-->
+                    <v-card-text class="text-center">
+                        <v-form ref="form">
+                            <v-col cols="12" class="py-2">
+                                <v-text-field color="primary" @keyup.enter="connexion(email, password)" label="Email" v-model="email" prepend-icon="mdi-face" clearable />
+                            </v-col>
+                            <v-col cols="12" class="py-2">
+                                <v-text-field color="primary" @keyup.enter="connexion(email, password)" label="Password" v-model="password" prepend-icon="mdi-lock-outline" :type="showPassword ? 'text' : 'password'" @click:append="showPassword = !showPassword" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" clearable />
+                            </v-col>
+                            <v-col cols="12" class="py-2">
+                                <span @click="isDialogForgotPassword = true" style="cursor: pointer">Mot de passe oublié ?</span>
+                            </v-col>
+                            <v-btn color="primary" @click="connexion(email, password)">
+                                <v-icon :color="!$vuetify.theme.dark ? 'black' : 'white'" left>mdi-lock-outline</v-icon>
+                                <span :class="!$vuetify.theme.dark ? 'black--text' : 'white--text'">Connexion</span>
+                            </v-btn>
+                        </v-form>
+                    </v-card-text>
+                    <!--</v-card>-->
                     <!--<router-link to="register" class="indigo--text">Inscription</router-link>-->
                 </base-material-card>
             </v-slide-y-transition>
@@ -94,7 +94,6 @@ export default Vue.extend({
         isAbsolute: true as boolean, //overlay
         isOverlay: true as boolean, //overlay
     }),
-    computed: {},
     created() {
         //console.log('created')
     },
@@ -144,5 +143,6 @@ export default Vue.extend({
     }
 });
 </script>
+
 <style>
 </style>

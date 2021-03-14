@@ -41,7 +41,7 @@ export default Vue.extend({
         items: [{
             icon: 'mdi-home-outline',
             title: 'Accueil',
-            to: '/accueil',
+            to: '/',
         },
         ]
     }),

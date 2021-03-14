@@ -12,6 +12,7 @@ export default Vue.extend({
         isSuccess: false,
         isSnackbarOpened: false,
         snackbarMessage: "",
+        resetComponentKey: 0,
     }),
     computed: {
         rules(){
@@ -52,6 +53,9 @@ export default Vue.extend({
                 JSON.stringify(errorObj.data.message)
             );
         },
+        resetRenderChart: function(): void {
+            this.resetComponentKey += 1;
+        }
         /*------------------------------------------------------ */
         /*verifyResponseOk: function (responseData: any) {
             var tmpStr = JSON.stringify(responseData);
