@@ -15,7 +15,7 @@
 
     <v-tooltip bottom>
       <template v-slot:activator="{ on }">
-        <v-btn class="ml-2" min-width="0" v-on="on" text to="/accueil">
+        <v-btn class="ml-2" min-width="0" v-on="on" text to="/">
           <v-icon color="anchor">mdi-view-dashboard</v-icon>
         </v-btn>
       </template>
@@ -62,8 +62,6 @@ export default Vue.extend({
       setDrawer: "SET_DRAWER"
     }),
     deconnexion: function () {
-      this.$store.commit("SET_ID_USER", null);
-      this.$store.commit("SET_IS_ADMIN", null);
       localStorage.clear();
       this.$router.push({
         name: "Connexion",

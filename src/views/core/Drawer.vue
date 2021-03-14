@@ -34,14 +34,14 @@ import Vue from "vue";
 //require('../../assets/sidebar-3-dark.jpg')
 export default Vue.extend({
     name: "DashboardCoreDrawer",
-    data: () => ({
+    data: (): any => ({
         //barImageJour: 'https://www.imgonline.com.ua/result_img/imgonline-com-ua-Color-filter-e5SkyjA303JL.jpg' as string,
         barImageNuit: "https://cdn.tomsguide.fr/content/uploads/sites/2/2019/10/voie-lactee-explosion.jpg",
         name: 'Dashboard',
         items: [{
             icon: 'mdi-home-outline',
             title: 'Accueil',
-            to: '/accueil',
+            to: '/',
         },
         ]
     }),

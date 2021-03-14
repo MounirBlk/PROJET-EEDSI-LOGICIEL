@@ -45,28 +45,30 @@ export default Vue.extend({
   name: 'Card',
   props: {},
   components: {},
-  data: () => ({
-      labels: [
-        '12am',
-        '3am',
-        '6am',
-        '9am',
-        '12pm',
-        '3pm',
-        '6pm',
-        '9pm',
-      ],
-      value: [
-        200,
-        675,
-        410,
-        390,
-        310,
-        460,
-        250,
-        240,
-      ],
-  }),
+  data(): any {
+      return {
+        labels: [
+          '12am',
+          '3am',
+          '6am',
+          '9am',
+          '12pm',
+          '3pm',
+          '6pm',
+          '9pm',
+        ],
+        value: [
+          200,
+          675,
+          410,
+          390,
+          310,
+          460,
+          250,
+          240,
+        ], 
+      }
+  },
   computed: {},
   created() {
     //console.log('created')

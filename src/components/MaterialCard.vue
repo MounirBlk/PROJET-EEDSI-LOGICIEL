@@ -1,12 +1,12 @@
 <template>
-<v-card v-bind="$attrs" :class="classes" class="v-card--material pa-3" style="top: 40px">
+<v-card v-bind="$attrs" :class="classes" class="v-card--material pa-3 mt-5 mb-10" style="top: 40px">
     <div class="d-flex grow flex-wrap">
         <v-avatar v-if="avatar" size="128" class="mx-auto v-card--material__avatar elevation-6" color="grey">
             <v-img :src="avatar" />
         </v-avatar>
 
         <v-sheet v-else style="border-radius: 4px;" :class="{
-          'pa-7': !$slots.image
+            'pa-7': !$slots.image
         }" :color="color" :max-height="icon ? 90 : undefined" :width="icon ? 'auto' : '100%'" elevation="6" class="text-start v-card--material__heading mb-n6">
             <slot v-if="$slots.heading" name="heading" />
 
@@ -45,6 +45,11 @@ import Vue from 'vue';
 
 export default Vue.extend({
     name: 'MaterialCard',
+    data(): any {
+        return {
+            
+        }
+    },    
     props: {
         avatar: {
             type: String,
@@ -78,7 +83,6 @@ export default Vue.extend({
             }
         },
     },
-    data: () => ({}),
     methods: {}
 });
 </script>
