@@ -43,6 +43,10 @@ export default Vue.extend({
             title: 'Accueil',
             to: '/',
         }, {
+            title: 'Calendrier',
+            icon: 'mdi-calendar-month-outline',
+            to: '/calendar',
+        }, {
             title: 'Utilisateurs',
             icon: 'mdi-clipboard-account-outline',
             to: '/utilisateurs',

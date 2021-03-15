@@ -54,6 +54,13 @@ const routes: Array<RouteConfig> = [{
       meta: {
         requiresAuth: true
       }
+    },{
+      name: 'Calendar',
+      path: '/calendar',
+      component: () => import ('@/views/pages/Calendar.vue'),
+      meta: {
+        requiresAuth: true
+      }
     }]
   },
   {
