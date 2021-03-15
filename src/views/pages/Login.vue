@@ -21,7 +21,7 @@
     <v-row justify="center">
         <v-col cols="10">
             <v-slide-y-transition appear>
-                <base-material-card color="primary" max-width="100%" width="600" class="px-5 py-3 mx-auto">
+                <base-material-card color="primary" max-width="100%" width="600" class="px-5 mt-10 py-3 mx-auto">
                     <template v-slot:heading>
                         <div class="text-center">
                             <h1 class="display-1 font-weight-bold">
@@ -53,12 +53,12 @@
             </v-slide-y-transition>
         </v-col>
     </v-row>
-    <v-snackbar v-model="isSnackbarOpened" :color="isSuccess ? 'success' : 'error'">
-        <div class="text-center">
+    <v-snackbar v-model="isSnackbarOpened" elevation="24" :color="isSuccess ? 'success' : 'error'">
+        <div class="text-center subtitle-1">
             <v-icon v-if="!isSuccess" color="white">mdi-alert-outline</v-icon>
             <v-icon v-else color="white">mdi-checkbox-marked-circle-outline</v-icon>
-            {{ snackbarMessage }}
-            <v-btn dark icon @click="isSnackbarOpened = false">
+            <span>{{ snackbarMessage }}</span>
+            <v-btn dark icon class="ml-6" @click="isSnackbarOpened = false">
                 <v-icon>mdi-close</v-icon>
             </v-btn>
         </div>
@@ -86,13 +86,9 @@ export default Vue.extend({
     components: {},
     mixins: [Gestion],
     data: (): any => ({
-        showPassword: false as boolean,
         isDialogForgotPassword: false as boolean,
         email: null as string | null,
         password: null as string | null,
-        opacity: 0.8 as number, //overlay
-        isAbsolute: true as boolean, //overlay
-        isOverlay: true as boolean, //overlay
     }),
     created() {
         //console.log('created')
@@ -127,13 +123,20 @@ export default Vue.extend({
                     axiosApi.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem("token")}`;
                     if (localStorage.getItem("token") == null) return this.errorMessage("Token inconnu !");
                     this.isOverlay = false;
-                    bus.$emit("connected", true);
-                    return this.$router.push({
-                        name: "Accueil",
-                        /*params: {
-                            logged: true
-                        },*/
-                    });
+                    const isAdmin = true;
+                    if (isAdmin === undefined || isAdmin === null) {
+                        return;
+                    } else {
+                        //this.$store.commit("SET_IS_ADMIN", isAdmin);
+                        this.setAdminStatus(isAdmin)
+                        bus.$emit("connected", true);
+                        return this.$router.push({
+                            name: "Accueil",
+                            /*params: {
+                                logged: true
+                            },*/
+                        });
+                    }
                 })
                 .catch((error) => {
                     this.catchAxios(error);

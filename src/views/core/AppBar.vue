@@ -6,7 +6,7 @@
 
     <v-tooltip bottom>
       <template v-slot:activator="{ on }">
-        <v-btn class="ml-2" min-width="0" v-on="on" @click="$vuetify.theme.dark = !$vuetify.theme.dark" text to="/accueil">
+        <v-btn class="ml-2" min-width="0" v-on="on" @click="$vuetify.theme.dark = !$vuetify.theme.dark" text>
           <v-icon :color="$vuetify.theme.dark ? 'white' : 'black'">mdi-cog-outline</v-icon>
         </v-btn>
       </template>

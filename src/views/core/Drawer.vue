@@ -42,8 +42,11 @@ export default Vue.extend({
             icon: 'mdi-home-outline',
             title: 'Accueil',
             to: '/',
-        },
-        ]
+        }, {
+            title: 'Utilisateurs',
+            icon: 'mdi-clipboard-account-outline',
+            to: '/utilisateurs',
+        }]
     }),
     computed: {
         drawer: {
