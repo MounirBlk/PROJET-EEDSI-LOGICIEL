@@ -29,7 +29,7 @@ axiosApi.interceptors.response.use((response: any) => {
             case 498:
                 localStorage.clear();
                 router.replace({
-                    path: "/",
+                    path: "/login",
                     query: {
                         redirect: router.currentRoute.fullPath
                     }

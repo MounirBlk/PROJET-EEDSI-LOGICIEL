@@ -35,7 +35,7 @@
                                     <template v-slot:activator="{ on, attrs }">
                                         <v-text-field color="info" v-model="user.dateNaissance" :rules="rules.dateEnRules" required label="Date de naissance*" prepend-inner-icon="mdi-calendar-outline" readonly v-bind="attrs" v-on="on"></v-text-field>
                                     </template>
-                                    <v-date-picker color="info" first-day-of-week="1" v-model="user.dateNaissance" @input="isDialogDateNaissanceOpen = false" :rules="rules.dateEnRules" required></v-date-picker>
+                                    <v-date-picker color="info" locale="fr" first-day-of-week="1" v-model="user.dateNaissance" @input="isDialogDateNaissanceOpen = false" :rules="rules.dateEnRules" required></v-date-picker>
                                 </v-menu>
                             </v-col>
                         </v-row>
@@ -80,7 +80,7 @@
     </v-dialog>
     <base-material-card color="info" icon="mdi-account-group-outline" max-width="100%" width="auto" inline class="px-5 py-3 mx-auto">
         <template v-slot:after-heading>
-            <div class="display-2 font-weight-light">Utilisateurs</div>
+            <div class="display-1 font-weight-light">Utilisateurs</div>
         </template>
 
         <v-row class="mt-8 mr-1">
@@ -142,6 +142,7 @@ import qs from "qs";
 import {
     AxiosResponse
 } from 'axios';
+import moment from 'moment';
 
 export default Vue.extend({
     name: 'Utilisateurs',
@@ -152,7 +153,6 @@ export default Vue.extend({
     data(): any {
         return {
             isDialogNewUtilisateur: false as boolean,
-            showPassword: false as boolean,
             isDialogDateNaissanceOpen: false as boolean,
             isDialogDeleteUtilisateur: false as boolean,
             utilisateurToDelete: [] as Array < any > ,
@@ -161,7 +161,7 @@ export default Vue.extend({
                 password: "",
                 lastname: "",
                 firstname: "",
-                dateNaissance: new Date().toISOString().substr(0, 10), //new Date().toISOString().substr(0, 10)
+                dateNaissance: "", //new Date().toISOString().substr(0, 10)
                 civilite: "",
                 adresse: "",
                 portable: "",
@@ -201,7 +201,13 @@ export default Vue.extend({
             items: [] as Array < any > ,
         }
     },
-    computed: {},
+    /*computed: {
+        formatageDate(): any {
+            return this.user.dateNaissance ?
+                moment(this.user.dateNaissance).format('DD-MM-YYYY') :
+                "";
+        }
+    },*/
     watch: {},
     created() {
         //console.log('created')
@@ -222,6 +228,10 @@ export default Vue.extend({
             })) //tous les users
             .then((response: AxiosResponse) => {
                 this.items = response.data.users;
+                for (let i = 0; i < this.items.length; i++) {
+                    this.items[i].isAdmin = this.items[i].role.toLowerCase() === "administrateur" ? true : false
+                    this.items[i].dateNaissance = this.changeToFormatDateEn(this.items[i].dateNaissance);
+                }
                 setTimeout(() => {
                     this.isLoading = false;
                     this.isFirstLoad = false;
@@ -237,14 +247,15 @@ export default Vue.extend({
         },
         saveNewUtilisateur: async function (): Promise < void > {
             if (!this.$refs.form.validate()) return this.errorMessage("Veuillez vérifier les champs !");
-            
+
             this.user.role = this.user.isAdmin === true ? 'Administrateur' : 'Commercial'
-            //this.user.dateNaissance = this.changeToFormatDateFr(this.user.dateNaissance);
+            this.user.dateNaissance = this.changeToFormatDateFr(this.user.dateNaissance);
             await axiosApi.post(
                 "/register",
                 qs.stringify(this.user)
             )
             .then((response) => {
+                this.user.dateNaissance = this.changeToFormatDateEn(this.user.dateNaissance);
                 Object.assign(this.$data, this.$options.data()); //reset data
                 this.$refs.form.reset();
                 this.successMessage("L'utilisateur a bien été ajouté !");
@@ -253,7 +264,7 @@ export default Vue.extend({
                 }, 1000);
             })
             .catch((error) => {
-                //this.user.dateNaissance = this.changeToFormatDateEn(this.user.dateNaissance);
+                this.user.dateNaissance = this.changeToFormatDateEn(this.user.dateNaissance);
                 this.catchAxios(error)
             });
         },

@@ -86,7 +86,6 @@ export default Vue.extend({
     components: {},
     mixins: [Gestion],
     data: (): any => ({
-        showPassword: false as boolean,
         isDialogForgotPassword: false as boolean,
         email: null as string | null,
         password: null as string | null,

@@ -4,16 +4,18 @@ import Vue, {
 import { bus } from "@/main";
 import { rules } from "@/plugins/observable"
 import { mapState, mapMutations } from "vuex";
+import moment from 'moment';
 
 export default Vue.extend({
     name: 'Mixins',
     props: {},
     components: {},
     data: (): any => ({
-        isSuccess: false,//snackbar
-        isSnackbarOpened: false,//snackbar
-        snackbarMessage: "",//snackbar
-        resetComponentKey: 0,//reset chart render
+        showPassword: false as boolean,
+        isSuccess: false as boolean,//snackbar
+        isSnackbarOpened: false as boolean,//snackbar
+        snackbarMessage: "" as string,//snackbar
+        resetComponentKey: 0 as number,//reset chart render
         opacity: 0.8 as number, //overlay
         isAbsolute: true as boolean, //overlay
         isOverlay: true as boolean, //overlay
@@ -69,16 +71,11 @@ export default Vue.extend({
         resetRenderChart: function(): void {
             this.resetComponentKey += 1;
         },
-        changeToFormatDateFr (input: any): string{
-            const datePart = input.match(/\d+/g)
-            const year = datePart[0] // get only two digits
-            const month = datePart[1];
-            const day = datePart[2];
-            return day+'-'+month+'-'+year;
+        changeToFormatDateFr (input: string): string{
+            return moment(input).format('DD-MM-YYYY')
         },
-        changeToFormatDateEn(input: any): string{
-            const datePart = input.split('-')
-            return datePart[2]+'-'+datePart[1]+'-'+datePart[0];
+        changeToFormatDateEn(input: string): string{
+            return moment(input).format('YYYY-MM-DD')
         }
         /*------------------------------------------------------ */
         /*verifyResponseOk: function (responseData: any) {
