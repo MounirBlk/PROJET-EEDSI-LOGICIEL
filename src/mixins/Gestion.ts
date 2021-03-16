@@ -76,15 +76,15 @@ export default Vue.extend({
         },
         changeToFormatDateEn(input: string): string{
             return moment(input).format('YYYY-MM-DD')
-        }
+        },
         /*------------------------------------------------------ */
-        /*verifyResponseOk: function (responseData: any) {
-            var tmpStr = JSON.stringify(responseData);
+        verifyResponseOk: function (responseData: any) {
+            const tmpStr = JSON.stringify(responseData);
             if (tmpStr.startsWith('"Error:')) {
                 this.errorMessage(responseData.substring(7)); // suppress "Error:
                 return false;
             }
             return true;
-        },*/
+        },
     }
 })
