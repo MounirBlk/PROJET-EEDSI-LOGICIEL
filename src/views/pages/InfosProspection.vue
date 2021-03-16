@@ -1,22 +1,21 @@
 <template>
-<v-container id="livreur" fluid tag="section">
+<v-container id="client" fluid tag="section">
     <v-row justify="center">
         <v-col cols="12" md="8">
-            <base-material-card color="grey">
+            <base-material-card color="pink">
                 <template v-slot:heading>
                     <div v-if="$route.params.isEdit === false">
                         <div class="display-1 white--text">
-                            <span v-if="livreur.role === 'Administrateur'">Administrateur</span>
-                            <span v-else>Livreur</span><br />
+                            <span v-if="prospect.role === 'Administrateur'">Administrateur</span>
+                            <span v-else>Client Prospect</span><br />
                         </div>
-                        Dernière connexion : {{ livreur.lastLogin }}
                     </div>
                     <div v-else>
                         <div class="display-2 white--text mb-4">
-                            <v-icon large>mdi-account-edit-outline</v-icon>Modification livreur
+                            <v-icon large>mdi-account-edit-outline</v-icon>Modification client prospect
                         </div>
                         <div class="subtitle-2 white--text">
-                            <span>{{ livreur.email }}</span>
+                            <span>{{ prospect.email }}</span>
                         </div>
                     </div>
                 </template>
@@ -27,46 +26,54 @@
                             <template v-slot:default>
                                 <tbody>
                                     <tr>
+                                        <td>Prénom</td>
+                                        <td>{{ prospect.firstname }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Nom</td>
+                                        <td>{{ prospect.lastname }}</td>
+                                    </tr>
+                                    <tr>
                                         <td>Email</td>
-                                        <td>{{ livreur.email }}</td>
+                                        <td>{{ prospect.email }}</td>
                                     </tr>
                                     <tr>
                                         <td>Numéro de téléphone</td>
-                                        <td v-if="livreur.portable != ''">{{ livreur.portable }}</td>
+                                        <td v-if="prospect.portable != ''">{{ prospect.portable }}</td>
                                         <td v-else>Inconnu</td>
                                     </tr>
                                     <tr>
                                         <td>Civilité</td>
-                                        <td>{{ livreur.civilite }}</td>
+                                        <td>{{ prospect.civilite }}</td>
                                     </tr>
                                     <tr>
                                         <td>Date de naissance</td>
-                                        <td>{{ livreur.dateNaissance }}</td>
+                                        <td>{{ prospect.dateNaissance }}</td>
                                     </tr>
                                     <tr>
                                         <td>Adresse</td>
-                                        <td v-if="livreur.adresse != ''">{{ livreur.adresse }}</td>
+                                        <td v-if="prospect.adresse != ''">{{ prospect.adresse }}</td>
                                         <td v-else>Inconnu</td>
                                     </tr>
                                     <tr>
                                         <td>Statut administrateur</td>
-                                        <td v-if="livreur.role === 'Administrateur'">Oui</td>
+                                        <td v-if="prospect.role === 'Administrateur'">Oui</td>
                                         <td v-else>Non</td>
                                     </tr>
                                     <tr>
                                         <td>Création</td>
-                                        <td>{{ livreur.createdAt }}</td>
+                                        <td>{{ prospect.createdAt }}</td>
                                     </tr>
                                     <tr>
                                         <td>Mise à jour</td>
-                                        <td>{{ livreur.updateAt }}</td>
+                                        <td>{{ prospect.updateAt }}</td>
                                     </tr>
                                 </tbody>
                             </template>
                         </v-simple-table>
                         <v-row>
                             <v-col cols="12" class="text-left">
-                                <v-btn class="mr-1" outlined color="error" text to="/livreurs">
+                                <v-btn class="mr-1" outlined color="error" text to="/prospections">
                                     <v-icon left>mdi-close-circle-outline</v-icon>Retour
                                 </v-btn>
                             </v-col>
@@ -80,20 +87,20 @@
                                         <v-divider />
                                         <v-row>
                                             <v-col cols="12" md="6">
-                                                <v-text-field color="grey" label="Nom*" v-model="livreur.lastname" prepend-inner-icon="mdi-face" clearable :rules="rules.caractereRules" required solo />
+                                                <v-text-field color="pink" label="Nom*" v-model="prospect.lastname" prepend-inner-icon="mdi-face" clearable :rules="rules.caractereRules" required solo />
                                             </v-col>
                                             <v-col cols="12" md="6">
-                                                <v-text-field color="grey" label="Prénom*" v-model="livreur.firstname" prepend-inner-icon="mdi-face" clearable :rules="rules.caractereRules" required solo />
+                                                <v-text-field color="pink" label="Prénom*" v-model="prospect.firstname" prepend-inner-icon="mdi-face" clearable :rules="rules.caractereRules" required solo />
                                             </v-col>
                                         </v-row>
                                         <v-row class="mt-n4">
                                             <v-col cols="12" md="6">
-                                                <v-text-field color="grey" label="Email*" v-model="livreur.email" prepend-inner-icon="mdi-email-outline" clearable solo disabled />
+                                                <v-text-field color="pink" label="Email*" v-model="prospect.email" prepend-inner-icon="mdi-email-outline" clearable solo disabled />
                                             </v-col>
                                             <v-col cols="12" md="6">
                                                 <v-tooltip top>
                                                     <template v-slot:activator="{ on }">
-                                                        <v-text-field color="grey" label="Password*" v-model="livreur.password" prepend-inner-icon="mdi-lock-outline" clearable :type="showPassword ? 'text' : 'password'" @click:append="showPassword = !showPassword" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" :rules="rules.passwordRules" :disabled="changePassword == false" solo v-on="on" />
+                                                        <v-text-field color="pink" label="Password*" v-model="prospect.password" prepend-inner-icon="mdi-lock-outline" clearable :type="showPassword ? 'text' : 'password'" @click:append="showPassword = !showPassword" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" :rules="rules.passwordRules" :disabled="changePassword == false" solo v-on="on" />
                                                     </template>
                                                     <span>*Attention, cela risque de changer le mot de passe définitivement</span>
                                                 </v-tooltip>
@@ -101,23 +108,23 @@
                                         </v-row>
                                         <v-row class="mt-n4">
                                             <v-col cols="12" md="6">
-                                                <v-select color="grey" prepend-inner-icon="mdi-format-list-bulleted-type" v-model="livreur.civilite" :items="['Homme', 'Femme']" label="Civilité*" :rules="rules.champRules" required solo></v-select>
+                                                <v-select color="pink" prepend-inner-icon="mdi-format-list-bulleted-type" v-model="prospect.civilite" :items="['Homme', 'Femme']" label="Civilité*" :rules="rules.champRules" required solo></v-select>
                                             </v-col>
                                             <v-col cols="12" md="6">
-                                                <v-menu v-model="isDialogDateNaissanceOpen" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="290px" color="grey">
+                                                <v-menu v-model="isDialogDateNaissanceOpen" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="290px" color="pink">
                                                     <template v-slot:activator="{ on, attrs }">
-                                                        <v-text-field color="grey" v-model="livreur.dateNaissance" label="Date de naissance" prepend-inner-icon="mdi-calendar-outline" readonly v-bind="attrs" v-on="on" solo></v-text-field>
+                                                        <v-text-field color="pink" v-model="prospect.dateNaissance" label="Date de naissance" prepend-inner-icon="mdi-calendar-outline" readonly v-bind="attrs" v-on="on" solo></v-text-field>
                                                     </template>
-                                                    <v-date-picker color="grey" first-day-of-week="1" v-model="livreur.dateNaissance" @input="isDialogDateNaissanceOpen = false" :rules="rules.dateUsRules" required></v-date-picker>
+                                                    <v-date-picker color="pink" first-day-of-week="1" v-model="prospect.dateNaissance" @input="isDialogDateNaissanceOpen = false" :rules="rules.dateUsRules" required></v-date-picker>
                                                 </v-menu>
                                             </v-col>
                                         </v-row>
                                         <v-row class="mt-n4">
                                             <v-col cols="12" md="6">
-                                                <v-text-field color="grey" label="Numéro de téléphone" v-model="livreur.portable" prepend-inner-icon="mdi-deskphone" clearable solo />
+                                                <v-text-field color="pink" label="Numéro de téléphone" v-model="prospect.portable" prepend-inner-icon="mdi-deskphone" clearable solo />
                                             </v-col>
                                             <v-col cols="12" md="6">
-                                                <v-text-field color="grey" label="Adresse" v-model="livreur.adresse" prepend-inner-icon="mdi-walk" clearable solo />
+                                                <v-text-field color="pink" label="Adresse" v-model="prospect.adresse" prepend-inner-icon="mdi-walk" clearable solo />
                                             </v-col>
                                         </v-row>
                                     </div>
@@ -129,7 +136,7 @@
                                         </v-col>
                                     </v-row>
                                     <v-col cols="12" class="text-right">
-                                        <v-btn class="mr-1" outlined color="error" text to="/livreurs">
+                                        <v-btn class="mr-1" outlined color="error" text to="/prospections">
                                             <v-icon left>mdi-close-circle-outline</v-icon>Retour
                                         </v-btn>
                                         <v-btn outlined color="success" text @click="modificationProfile">
@@ -146,40 +153,59 @@
         <v-col cols="12" md="4">
             <v-skeleton-loader v-if="isFirstload" :loading="isLoading" type="table"></v-skeleton-loader>
             <div v-else>
-                <base-material-card color="grey" class="v-card-profile">
+                <base-material-card color="pink" icon="mdi-bank" max-width="100%" width="auto" inline class="px-5 py-3 mx-auto">
+                    <template v-slot:after-heading>
+                        <div class="subtitle-1">
+                            <span>Entreprise</span>
+                        </div>
+                    </template>
                     <v-row v-if="$route.params.isEdit === false">
                         <v-col cols="12">
-                            <h4 class="display-1 font-weight-light mb-2 text-md-center grey--text">{{ livreur.firstname }} {{ livreur.lastname }}</h4>
+                            <h4 class="display-1 font-weight-light mb-2 text-md-center pink--text">{{ entreprise.name }}</h4>
                         </v-col>
                         <v-card-text>
-                            <v-col cols="12" class="mb-5">
-                                <h2 class="grey--text">
-                                    <v-icon large left color="indigo">mdi-web</v-icon>Site Web:
-                                    <span>Inconnu</span>
-                                </h2>
+                            <v-col cols="12">
+                                <v-simple-table dense>
+                                    <template v-slot:default>
+                                        <tbody>
+                                            <tr>
+                                                <td>Nom</td>
+                                                <td>{{ entreprise.name }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Siret</td>
+                                                <td>{{ entreprise.siret }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Date de création</td>
+                                                <td></td>
+                                            </tr>
+                                        </tbody>
+                                    </template>
+                                </v-simple-table>
                             </v-col>
                             <v-col cols="12">
-                                <h2 class="font-weight-light mb-n3 grey--text">
+                                <h2 class="font-weight-light grey--text">
                                     <v-icon large left color="blue">mdi-skype</v-icon>
-                                    Skype: {{ livreur.firstname }}.skype
+                                    Skype: {{ prospect.firstname }}.skype
                                 </h2>
                             </v-col>
                             <v-col cols="12">
-                                <h2 class="font-weight-light mb-n3 grey--text">
-                                    <v-icon large left color="indigo">mdi-linkedin</v-icon>
-                                    Linkedin: {{ livreur.firstname }}.linkedin
+                                <h2 class="font-weight-light grey--text">
+                                    <v-icon large left color="pink">mdi-linkedin</v-icon>
+                                    Linkedin: {{ prospect.firstname }}.linkedin
                                 </h2>
                             </v-col>
                             <v-col cols="12">
-                                <h2 class="font-weight-light mb-n3 grey--text">
-                                    <v-icon large left color="indigo">mdi-facebook</v-icon>
-                                    Facebook: {{ livreur.firstname }}.facebook
+                                <h2 class="font-weight-light grey--text">
+                                    <v-icon large left color="pink">mdi-facebook</v-icon>
+                                    Facebook: {{ prospect.firstname }}.facebook
                                 </h2>
                             </v-col>
                             <v-col cols="12">
                                 <h2 class="font-weight-light grey--text">
                                     <v-icon large left color="blue">mdi-twitter</v-icon>
-                                    Twitter: {{ livreur.firstname }}.twitter
+                                    Twitter: {{ prospect.firstname }}.twitter
                                 </h2>
                             </v-col>
                         </v-card-text>
@@ -219,7 +245,7 @@ import {
 import Gestion from "../../mixins/Gestion"
 
 export default Vue.extend({
-    name: 'Livreur',
+    name: 'Prospect',
     mixins: [Gestion],
     props: {},
     components: {},
@@ -230,7 +256,11 @@ export default Vue.extend({
             isDialogDateNaissanceOpen: false as boolean,
             isFirstload: false as boolean,
             isLoading: false as boolean,
-            livreur: {}
+            prospect: {},
+            entreprise: {
+                name: 'IMIE PARIS',
+                siret: 12345678902135
+            }
         }
     },
     computed: {},
@@ -244,17 +274,17 @@ export default Vue.extend({
     mounted(): any {
         //modification du utilisateur choisi
         if (
-            this.$route.params.infosLivreur != null &&
-            this.$route.params.infosLivreur != 0
+            this.$route.params.infosProspect != null &&
+            this.$route.params.infosProspect != 0
         ) {
-            this.livreur = this.$route.params.infosLivreur;
+            this.prospect = this.$route.params.infosProspect;
             setTimeout(() => {
                 this.isLoading = false;
                 this.isFirstLoad = false;
             }, 1000);
         } else {
             return this.$router.push({
-                name: "Livreurs"
+                name: "Prospections"
             });
         }
     },
@@ -263,9 +293,9 @@ export default Vue.extend({
             if (!this.$refs.form.validate() && (!this.$refs.form.validate() && this.changePassword))
                 return this.errorMessage("Veuillez vérifier les champs !");
 
-            this.livreur.role = this.livreur.isAdmin === true ? 'Administrateur' : 'Livreur'
+            this.prospect.role = this.prospect.isAdmin === true ? 'Administrateur' : 'Prospect'
             await axiosApi
-                .put("/user/" + this.livreur._id, qs.stringify(this.livreur)) //update du utilisateur
+                .put("/user/" + this.prospect._id, qs.stringify(this.prospect)) //update du utilisateur
                 .then((response: AxiosResponse) => {
                     if (response.data.error == false) {
                         this.$refs.form.reset();
@@ -275,7 +305,7 @@ export default Vue.extend({
                     }
                     setTimeout(() => {
                         this.$router.push({
-                            name: "Livreurs"
+                            name: "Prospections"
                         });
                     }, 1000);
                 })
