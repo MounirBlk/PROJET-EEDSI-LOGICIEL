@@ -61,6 +61,41 @@ const routes: Array<RouteConfig> = [{
       meta: {
         requiresAuth: true
       }
+    },{
+      name: 'Clients',
+      path: '/clients',
+      component: () => import ('@/views/pages/Clients.vue'),
+      meta: {
+        requiresAuth: true
+      }
+    },{
+      name: 'Informations-Client',
+      path: '/clients/client',
+      component: () => import ('@/views/pages/InfosClient.vue'),
+      meta: {
+        requiresAuth: true
+      }
+    },{
+      name: 'Livreurs',
+      path: '/livreurs',
+      component: () => import ('@/views/pages/Livreurs.vue'),
+      meta: {
+        requiresAuth: true
+      }
+    },{
+      name: 'Informations-Livreur',
+      path: '/livreurs/livreur',
+      component: () => import ('@/views/pages/InfosLivreur.vue'),
+      meta: {
+        requiresAuth: true
+      }
+    },{
+      name: 'Paramètres',
+      path: '/parametres',
+      component: () => import ('@/views/pages/Parametres.vue'),
+      meta: {
+        requiresAuth: true
+      }
     }]
   },
   {

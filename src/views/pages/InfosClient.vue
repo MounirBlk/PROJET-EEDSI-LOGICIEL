@@ -1,22 +1,22 @@
 <template>
-<v-container id="utilisateur" fluid tag="section">
+<v-container id="client" fluid tag="section">
     <v-row justify="center">
         <v-col cols="12" md="8">
-            <base-material-card color="info">
+            <base-material-card color="indigo">
                 <template v-slot:heading>
                     <div v-if="$route.params.isEdit === false">
                         <div class="display-1 white--text">
-                            <span v-if="user.role === 'Administrateur'">Administrateur</span>
-                            <span v-else>Commercial</span><br />
+                            <span v-if="client.role === 'Administrateur'">Administrateur</span>
+                            <span v-else>Client</span><br />
                         </div>
-                        Dernière connexion : {{ user.lastLogin }}
+                        Dernière connexion : {{ client.lastLogin }}
                     </div>
                     <div v-else>
                         <div class="display-2 white--text mb-4">
-                            <v-icon large>mdi-account-edit-outline</v-icon>Modification utilisateur
+                            <v-icon large>mdi-account-edit-outline</v-icon>Modification client
                         </div>
                         <div class="subtitle-2 white--text">
-                            <span>{{ user.email }}</span>
+                            <span>{{ client.email }}</span>
                         </div>
                     </div>
                 </template>
@@ -28,45 +28,45 @@
                                 <tbody>
                                     <tr>
                                         <td>Email</td>
-                                        <td>{{ user.email }}</td>
+                                        <td>{{ client.email }}</td>
                                     </tr>
                                     <tr>
                                         <td>Numéro de téléphone</td>
-                                        <td v-if="user.portable != ''">{{ user.portable }}</td>
+                                        <td v-if="client.portable != ''">{{ client.portable }}</td>
                                         <td v-else>Inconnu</td>
                                     </tr>
                                     <tr>
                                         <td>Civilité</td>
-                                        <td>{{ user.civilite }}</td>
+                                        <td>{{ client.civilite }}</td>
                                     </tr>
                                     <tr>
                                         <td>Date de naissance</td>
-                                        <td>{{ user.dateNaissance }}</td>
+                                        <td>{{ client.dateNaissance }}</td>
                                     </tr>
                                     <tr>
                                         <td>Adresse</td>
-                                        <td v-if="user.adresse != ''">{{ user.adresse }}</td>
+                                        <td v-if="client.adresse != ''">{{ client.adresse }}</td>
                                         <td v-else>Inconnu</td>
                                     </tr>
                                     <tr>
                                         <td>Statut administrateur</td>
-                                        <td v-if="user.role === 'Administrateur'">Oui</td>
+                                        <td v-if="client.role === 'Administrateur'">Oui</td>
                                         <td v-else>Non</td>
                                     </tr>
                                     <tr>
                                         <td>Création</td>
-                                        <td>{{ user.createdAt }}</td>
+                                        <td>{{ client.createdAt }}</td>
                                     </tr>
                                     <tr>
                                         <td>Mise à jour</td>
-                                        <td>{{ user.updateAt }}</td>
+                                        <td>{{ client.updateAt }}</td>
                                     </tr>
                                 </tbody>
                             </template>
                         </v-simple-table>
                         <v-row>
                             <v-col cols="12" class="text-left">
-                                <v-btn class="mr-1" outlined color="error" text to="/utilisateurs">
+                                <v-btn class="mr-1" outlined color="error" text to="/clients">
                                     <v-icon left>mdi-close-circle-outline</v-icon>Retour
                                 </v-btn>
                             </v-col>
@@ -80,20 +80,20 @@
                                         <v-divider />
                                         <v-row>
                                             <v-col cols="12" md="6">
-                                                <v-text-field color="info" label="Nom*" v-model="user.lastname" prepend-inner-icon="mdi-face" clearable :rules="rules.caractereRules" required solo />
+                                                <v-text-field color="indigo" label="Nom*" v-model="client.lastname" prepend-inner-icon="mdi-face" clearable :rules="rules.caractereRules" required solo />
                                             </v-col>
                                             <v-col cols="12" md="6">
-                                                <v-text-field color="info" label="Prénom*" v-model="user.firstname" prepend-inner-icon="mdi-face" clearable :rules="rules.caractereRules" required solo />
+                                                <v-text-field color="indigo" label="Prénom*" v-model="client.firstname" prepend-inner-icon="mdi-face" clearable :rules="rules.caractereRules" required solo />
                                             </v-col>
                                         </v-row>
                                         <v-row class="mt-n4">
                                             <v-col cols="12" md="6">
-                                                <v-text-field color="info" label="Email*" v-model="user.email" prepend-inner-icon="mdi-email-outline" clearable solo disabled />
+                                                <v-text-field color="indigo" label="Email*" v-model="client.email" prepend-inner-icon="mdi-email-outline" clearable solo disabled />
                                             </v-col>
                                             <v-col cols="12" md="6">
                                                 <v-tooltip top>
                                                     <template v-slot:activator="{ on }">
-                                                        <v-text-field color="info" label="Password*" v-model="user.password" prepend-inner-icon="mdi-lock-outline" clearable :type="showPassword ? 'text' : 'password'" @click:append="showPassword = !showPassword" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" :rules="rules.passwordRules" :disabled="changePassword == false" solo v-on="on" />
+                                                        <v-text-field color="indigo" label="Password*" v-model="client.password" prepend-inner-icon="mdi-lock-outline" clearable :type="showPassword ? 'text' : 'password'" @click:append="showPassword = !showPassword" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" :rules="rules.passwordRules" :disabled="changePassword == false" solo v-on="on" />
                                                     </template>
                                                     <span>*Attention, cela risque de changer le mot de passe définitivement</span>
                                                 </v-tooltip>
@@ -101,38 +101,35 @@
                                         </v-row>
                                         <v-row class="mt-n4">
                                             <v-col cols="12" md="6">
-                                                <v-select color="info" prepend-inner-icon="mdi-format-list-bulleted-type" v-model="user.civilite" :items="['Homme', 'Femme']" label="Civilité*" :rules="rules.champRules" required solo></v-select>
+                                                <v-select color="indigo" prepend-inner-icon="mdi-format-list-bulleted-type" v-model="client.civilite" :items="['Homme', 'Femme']" label="Civilité*" :rules="rules.champRules" required solo></v-select>
                                             </v-col>
                                             <v-col cols="12" md="6">
-                                                <v-menu v-model="isDialogDateNaissanceOpen" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="290px" color="info">
+                                                <v-menu v-model="isDialogDateNaissanceOpen" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="290px" color="indigo">
                                                     <template v-slot:activator="{ on, attrs }">
-                                                        <v-text-field color="info" v-model="user.dateNaissance" label="Date de naissance" prepend-inner-icon="mdi-calendar-outline" readonly v-bind="attrs" v-on="on" solo></v-text-field>
+                                                        <v-text-field color="indigo" v-model="client.dateNaissance" label="Date de naissance" prepend-inner-icon="mdi-calendar-outline" readonly v-bind="attrs" v-on="on" solo></v-text-field>
                                                     </template>
-                                                    <v-date-picker color="info" first-day-of-week="1" v-model="user.dateNaissance" @input="isDialogDateNaissanceOpen = false" :rules="rules.dateUsRules" required></v-date-picker>
+                                                    <v-date-picker color="indigo" first-day-of-week="1" v-model="client.dateNaissance" @input="isDialogDateNaissanceOpen = false" :rules="rules.dateUsRules" required></v-date-picker>
                                                 </v-menu>
                                             </v-col>
                                         </v-row>
                                         <v-row class="mt-n4">
                                             <v-col cols="12" md="6">
-                                                <v-text-field color="info" label="Numéro de téléphone" v-model="user.portable" prepend-inner-icon="mdi-deskphone" clearable solo />
+                                                <v-text-field color="indigo" label="Numéro de téléphone" v-model="client.portable" prepend-inner-icon="mdi-deskphone" clearable solo />
                                             </v-col>
                                             <v-col cols="12" md="6">
-                                                <v-text-field color="info" label="Adresse" v-model="user.adresse" prepend-inner-icon="mdi-walk" clearable solo />
+                                                <v-text-field color="indigo" label="Adresse" v-model="client.adresse" prepend-inner-icon="mdi-walk" clearable solo />
                                             </v-col>
                                         </v-row>
                                     </div>
                                     <v-row>
-                                        <v-col cols="12" md="8">
-                                            <v-switch class="my-n2" v-model="user.isAdmin" label="Super Admin ?" color="info"></v-switch>
-                                        </v-col>
-                                        <v-col cols="12" md="3">
+                                        <v-col cols="12" md="12">
                                             <v-btn @click="changePassword = !changePassword" color="secondary" text outlined small>
                                                 <v-icon left>mdi-cog-outline</v-icon>Modifier le password
                                             </v-btn>
                                         </v-col>
                                     </v-row>
                                     <v-col cols="12" class="text-right">
-                                        <v-btn class="mr-1" outlined color="error" text to="/utilisateurs">
+                                        <v-btn class="mr-1" outlined color="error" text to="/clients">
                                             <v-icon left>mdi-close-circle-outline</v-icon>Retour
                                         </v-btn>
                                         <v-btn outlined color="success" text @click="modificationProfile">
@@ -149,40 +146,40 @@
         <v-col cols="12" md="4">
             <v-skeleton-loader v-if="isFirstload" :loading="isLoading" type="table"></v-skeleton-loader>
             <div v-else>
-                <base-material-card class="v-card-profile" :avatar="user.avatar">
+                <base-material-card class="v-card-profile">
                     <v-row v-if="$route.params.isEdit === false">
                         <v-col cols="12">
-                            <h4 class="display-1 font-weight-light mb-2 text-md-center info--text">{{ user.firstname }} {{ user.lastname }}</h4>
+                            <h4 class="display-1 font-weight-light mb-2 text-md-center indigo--text">{{ client.firstname }} {{ client.lastname }}</h4>
                         </v-col>
                         <v-card-text>
                             <v-col cols="12" class="mb-5">
                                 <h2 class="grey--text">
-                                    <v-icon large left color="info">mdi-web</v-icon>Site Web:
+                                    <v-icon large left color="indigo">mdi-web</v-icon>Site Web:
                                     <span>Inconnu</span>
                                 </h2>
                             </v-col>
                             <v-col cols="12">
                                 <h2 class="font-weight-light mb-n3 grey--text">
                                     <v-icon large left color="blue">mdi-skype</v-icon>
-                                    Skype: {{ user.firstname }}.skype
+                                    Skype: {{ client.firstname }}.skype
                                 </h2>
                             </v-col>
                             <v-col cols="12">
                                 <h2 class="font-weight-light mb-n3 grey--text">
                                     <v-icon large left color="indigo">mdi-linkedin</v-icon>
-                                    Linkedin: {{ user.firstname }}.linkedin
+                                    Linkedin: {{ client.firstname }}.linkedin
                                 </h2>
                             </v-col>
                             <v-col cols="12">
                                 <h2 class="font-weight-light mb-n3 grey--text">
                                     <v-icon large left color="indigo">mdi-facebook</v-icon>
-                                    Facebook: {{ user.firstname }}.facebook
+                                    Facebook: {{ client.firstname }}.facebook
                                 </h2>
                             </v-col>
                             <v-col cols="12">
                                 <h2 class="font-weight-light grey--text">
                                     <v-icon large left color="blue">mdi-twitter</v-icon>
-                                    Twitter: {{ user.firstname }}.twitter
+                                    Twitter: {{ client.firstname }}.twitter
                                 </h2>
                             </v-col>
                         </v-card-text>
@@ -222,7 +219,7 @@ import {
 import Gestion from "../../mixins/Gestion"
 
 export default Vue.extend({
-    name: 'Example',
+    name: 'Client',
     mixins: [Gestion],
     props: {},
     components: {},
@@ -233,7 +230,7 @@ export default Vue.extend({
             isDialogDateNaissanceOpen: false as boolean,
             isFirstload: false as boolean,
             isLoading: false as boolean,
-            user: {}
+            client: {}
         }
     },
     computed: {},
@@ -247,18 +244,17 @@ export default Vue.extend({
     mounted(): any {
         //modification du utilisateur choisi
         if (
-            this.$route.params.infosUtilisateur != null &&
-            this.$route.params.infosUtilisateur != 0
+            this.$route.params.infosClient != null &&
+            this.$route.params.infosClient != 0
         ) {
-            this.user = this.$route.params.infosUtilisateur;
-            this.user.avatar = this.user.avatar ? this.user.avatar : 'https://thumbs.dreamstime.com/b/businessman-icon-vector-male-avatar-profile-image-profile-businessman-icon-vector-male-avatar-profile-image-182095609.jpg';
+            this.client = this.$route.params.infosClient;
             setTimeout(() => {
                 this.isLoading = false;
                 this.isFirstLoad = false;
             }, 1000);
         } else {
             return this.$router.push({
-                name: "Utilisateurs"
+                name: "Clients"
             });
         }
     },
@@ -267,12 +263,9 @@ export default Vue.extend({
             if (!this.$refs.form.validate() && (!this.$refs.form.validate() && this.changePassword))
                 return this.errorMessage("Veuillez vérifier les champs !");
 
-            this.user.role = this.user.isAdmin === true ? 'Administrateur' : 'Commercial'
+            this.client.role = this.client.isAdmin === true ? 'Administrateur' : 'Client'
             await axiosApi
-                .put(
-                    "/user/" + this.user._id,
-                    qs.stringify(this.user),
-                ) //update du utilisateur
+                .put("/user/" + this.client._id, qs.stringify(this.client)) //update du utilisateur
                 .then((response: AxiosResponse) => {
                     if (response.data.error == false) {
                         this.$refs.form.reset();
@@ -282,7 +275,7 @@ export default Vue.extend({
                     }
                     setTimeout(() => {
                         this.$router.push({
-                            name: "Utilisateurs"
+                            name: "Clients"
                         });
                     }, 1000);
                 })

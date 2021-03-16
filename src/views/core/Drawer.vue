@@ -48,8 +48,40 @@ export default Vue.extend({
             to: '/calendar',
         }, {
             title: 'Utilisateurs',
-            icon: 'mdi-clipboard-account-outline',
+            icon: 'mdi-clipboard-account',
             to: '/utilisateurs',
+        },{
+            title: 'Clients',
+            icon: 'mdi-clipboard-account-outline',
+            to: '/clients',
+        },{
+            title: 'Factures',
+            icon: 'mdi-receipt',
+            to: '/factures',
+        },{
+            title: 'Produits',
+            icon: 'mdi-table-chair',
+            to: '/produits',
+        },{
+            title: 'Livreurs',
+            icon: 'mdi-walk',
+            to: '/livreurs',
+        },{
+            title: 'Livraisons',
+            icon: 'mdi-package-variant-closed',
+            to: '/livraisons',
+        },{
+            title: 'Paramètres',
+            icon: 'mdi-cogs',
+            to: '/parametres',
+        },{
+            title: 'Signalements',
+            icon: 'mdi-badge-account-alert-outline',
+            to: '/signalements',
+        },{
+            title: 'Prospections',
+            icon: 'mdi-bank',
+            to: '/prospections',
         }]
     }),
     computed: {
