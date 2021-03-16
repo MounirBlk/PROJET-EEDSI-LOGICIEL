@@ -1,6 +1,6 @@
 <template>
 <v-container id="factures" tag="section" fluid>
-    <v-dialog v-model="isDialogNewFacture" max-width="500px">
+    <v-dialog v-model="isDialogSignalement" max-width="500px">
         <v-card>
             <v-card-title>
                 <span class="headline">{{ formTitle }}</span>
@@ -53,25 +53,22 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
-    <base-material-card color="orange" icon="mdi-receipt" max-width="100%" width="auto" inline class="px-5 py-3 mx-auto">
+    <base-material-card color="green" icon="mdi-badge-account-alert-outline" max-width="100%" width="auto" inline class="px-5 py-3 mx-auto">
         <template v-slot:after-heading>
-            <div class="display-1 font-weight-light">Factures</div>
+            <div class="display-1 font-weight-light">Signalements</div>
         </template>
 
         <v-row class="mt-8 mr-1">
-            <v-btn color="orange" @click="isDialogNewFacture = true" class="ml-3" :disabled="!isAdmin" dark>
-                <v-icon left>mdi-plus</v-icon>Ajouter une facture
-            </v-btn>
-            <v-btn color="orange" icon class="ml-3">
+            <v-btn color="green" icon class="ml-3">
                 <v-icon large>mdi-refresh</v-icon>
             </v-btn>
-            <v-text-field v-model="search" prepend-icon="mdi-magnify" class="ml-auto" label="Recherche" color="primary" hide-details single-line style="max-width: 250px" clearable />
+            <v-text-field v-model="search" prepend-icon="mdi-magnify" class="ml-auto" label="Recherche" color="green" hide-details single-line style="max-width: 250px" clearable />
         </v-row>
         <v-divider class="mt-6" />
 
         <v-data-table :headers="headers" :items="desserts" sort-by="client" class="elevation-1">
             <template v-slot:[`item.actions`]="{ item }">
-                <v-icon small class="mr-2" @click="informationsFacture(item)">
+                <v-icon small class="mr-2" @click="isDialogSignalement = true">
                     mdi-information
                 </v-icon>
                 <v-icon small class="mr-2" @click="editItem(item)">
@@ -82,7 +79,7 @@
                 </v-icon>
             </template>
             <template v-slot:no-data>
-                <v-btn color="primary" @click="initialize">
+                <v-btn color="green" @click="initialize">
                     Reset
                 </v-btn>
             </template>
@@ -124,7 +121,7 @@ export default Vue.extend({
     data(): any {
         return {
             search: undefined as string | null | undefined,
-            isDialogNewFacture: false,
+            isDialogSignalement: false,
             dialog: false,
             dialogDelete: false,
             headers: [{
@@ -169,7 +166,7 @@ export default Vue.extend({
     },
     computed: {
         formTitle() {
-            return this.editedIndex === -1 ? 'Nouvelle facture' : 'Modifier facture'
+            return this.editedIndex === -1 ? 'Signalement' : 'Modifier signalement'
         },
     },
     watch: {
@@ -257,16 +254,7 @@ export default Vue.extend({
         editItem(item) {
             this.editedIndex = this.desserts.indexOf(item)
             this.editedItem = Object.assign({}, item)
-            this.isDialogNewFacture = true
-        },
-        informationsFacture(item) {
-            this.$router.push({
-                name: "Informations-Facture",
-                /*params: {
-                    isEdit: isEdit,
-                    infosUtilisateur: infosUtilisateur
-                },*/
-            });
+            this.isDialogSignalement = true
         },
         deleteItem(item) {
             this.editedIndex = this.desserts.indexOf(item)
@@ -280,7 +268,7 @@ export default Vue.extend({
         },
 
         close() {
-            this.isDialogNewFacture = false
+            this.isDialogSignalement = false
             this.$nextTick(() => {
                 this.editedItem = Object.assign({}, this.defaultItem)
                 this.editedIndex = -1

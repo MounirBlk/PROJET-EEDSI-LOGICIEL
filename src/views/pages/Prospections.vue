@@ -1,10 +1,94 @@
 <template>
-<v-container id="livreurs" tag="section" fluid>
+<v-container id="prospections" tag="section" fluid>
+    <v-dialog v-model="isDialogNewDevis" persistent max-width="1000px" overlay-opacity="0.8">
+        <v-card class="px-6" outlined>
+            <v-form ref="form" v-model="rules.valid" lazy-validation>
+                <v-card-title class="pink--text">
+                    Création d'un nouveau devis
+                    <v-icon aria-label="Close" class="ml-auto" @click="isDialogNewDevis = false">mdi-close</v-icon>
+                </v-card-title>
+                <v-col cols="12">
+                    <div class="text-center">
+                        <v-divider />
+                        <v-row>
+                            <v-col cols="12" md="6">
+                                <v-text-field color="pink" prepend-inner-icon="mdi-face" clearable />
+                            </v-col>
+                            <v-col cols="12" md="6">
+                                <v-text-field color="pink" prepend-inner-icon="mdi-numeric" clearable />
+                            </v-col>
+                        </v-row>
+                    </div>
+                    <small>*Veuillez remplir les champs</small>
+                    <v-col cols="12" class="text-right">
+                        <v-btn class="mr-1" color="error" text>Fermer</v-btn>
+                        <v-btn color="success" text>Sauvegarder</v-btn>
+                    </v-col>
+                </v-col>
+            </v-form>
+        </v-card>
+    </v-dialog>
+    <v-dialog v-model="isDialogNewEntreprise" persistent max-width="1000px" overlay-opacity="0.8">
+        <v-card class="px-6" outlined>
+            <v-form ref="form" v-model="rules.valid" lazy-validation>
+                <v-card-title class="pink--text">
+                    Ajout d'une nouvelle entreprise
+                    <v-icon aria-label="Close" class="ml-auto" @click="isDialogNewEntreprise = false">mdi-close</v-icon>
+                </v-card-title>
+                <v-col cols="12">
+                    <div class="text-center">
+                        <v-divider />
+                        <v-row>
+                            <v-col cols="12" md="6">
+                                <v-text-field color="pink" label="Nom*" prepend-inner-icon="mdi-face" clearable :rules="rules.caractereRules" required />
+                            </v-col>
+                            <v-col cols="12" md="6">
+                                <v-text-field color="pink" label="Siret*" prepend-inner-icon="mdi-numeric" clearable :rules="rules.numericRules" required />
+                            </v-col>
+                        </v-row>
+                    </div>
+                    <small>*Veuillez remplir les champs</small>
+                    <v-col cols="12" class="text-right">
+                        <v-btn class="mr-1" color="error" text>Fermer</v-btn>
+                        <v-btn color="success" text>Sauvegarder</v-btn>
+                    </v-col>
+                </v-col>
+            </v-form>
+        </v-card>
+    </v-dialog>
+    <v-dialog v-model="isDialogEditEntreprise" persistent max-width="1000px" overlay-opacity="0.8">
+        <v-card class="px-6" outlined>
+            <v-form ref="form" v-model="rules.valid" lazy-validation>
+                <v-card-title class="pink--text">
+                    Modification de l'entreprise
+                    <v-icon aria-label="Close" class="ml-auto" @click="isDialogEditEntreprise = false">mdi-close</v-icon>
+                </v-card-title>
+                <v-col cols="12">
+                    <div class="text-center">
+                        <v-divider />
+                        <v-row>
+                            <v-col cols="12" md="6">
+                                <v-text-field color="pink" label="Nom*" prepend-inner-icon="mdi-face" clearable :rules="rules.caractereRules" required />
+                            </v-col>
+                            <v-col cols="12" md="6">
+                                <v-text-field color="pink" label="Siret*" prepend-inner-icon="mdi-numeric" clearable :rules="rules.numericRules" required />
+                            </v-col>
+                        </v-row>
+                    </div>
+                    <small>*Veuillez remplir les champs</small>
+                    <v-col cols="12" class="text-right">
+                        <v-btn class="mr-1" color="error" @click="isDialogEditEntreprise = false" text>Fermer</v-btn>
+                        <v-btn color="success" text>Sauvegarder</v-btn>
+                    </v-col>
+                </v-col>
+            </v-form>
+        </v-card>
+    </v-dialog>
     <v-dialog v-model="isDialogNewUtilisateur" persistent max-width="1000px" overlay-opacity="0.8">
         <v-card class="px-6" outlined>
             <v-form ref="form" v-model="rules.valid" lazy-validation>
-                <v-card-title class="grey--text">
-                    Ajout Livreur
+                <v-card-title class="pink--text">
+                    Ajout Client Prospect
                     <v-icon aria-label="Close" class="ml-auto" @click="isDialogNewUtilisateur = false">mdi-close</v-icon>
                 </v-card-title>
                 <v-col cols="12">
@@ -12,39 +96,49 @@
                         <v-divider />
                         <v-row>
                             <v-col cols="12" md="6">
-                                <v-text-field color="grey" label="Nom*" v-model.trim="livreur.lastname" prepend-inner-icon="mdi-face" clearable :rules="rules.caractereRules" required />
+                                <v-text-field color="pink" label="Nom*" v-model.trim="prospect.lastname" prepend-inner-icon="mdi-face" clearable :rules="rules.caractereRules" required />
                             </v-col>
                             <v-col cols="12" md="6">
-                                <v-text-field color="grey" label="Prénom*" v-model.trim="livreur.firstname" prepend-inner-icon="mdi-face" clearable :rules="rules.caractereRules" required />
-                            </v-col>
-                        </v-row>
-                        <v-row class="mt-n4">
-                            <v-col cols="12" md="6">
-                                <v-text-field color="grey" label="Email*" v-model.trim="livreur.email" prepend-inner-icon="mdi-email-outline" clearable :rules="rules.emailRules" required />
-                            </v-col>
-                            <v-col cols="12" md="6">
-                                <v-text-field color="grey" label="Password*" v-model="livreur.password" prepend-inner-icon="mdi-lock-outline" clearable :type="showPassword ? 'text' : 'password'" @click:append="showPassword = !showPassword" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" :rules="rules.passwordRules" required />
+                                <v-text-field color="pink" label="Prénom*" v-model.trim="prospect.firstname" prepend-inner-icon="mdi-face" clearable :rules="rules.caractereRules" required />
                             </v-col>
                         </v-row>
                         <v-row class="mt-n4">
                             <v-col cols="12" md="6">
-                                <v-select color="grey" prepend-inner-icon="mdi-format-list-bulleted-type" v-model.trim="livreur.civilite" :items="['Homme', 'Femme']" label="Civilité*" :rules="rules.champRules" required></v-select>
+                                <v-text-field color="pink" label="Email*" v-model.trim="prospect.email" prepend-inner-icon="mdi-email-outline" clearable :rules="rules.emailRules" required />
                             </v-col>
                             <v-col cols="12" md="6">
-                                <v-menu v-model="isDialogDateNaissanceOpen" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="290px" color="grey">
+                                <v-text-field color="pink" label="Password*" v-model="prospect.password" prepend-inner-icon="mdi-lock-outline" clearable :type="showPassword ? 'text' : 'password'" @click:append="showPassword = !showPassword" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" :rules="rules.passwordRules" required />
+                            </v-col>
+                        </v-row>
+                        <v-row class="mt-n4">
+                            <v-col cols="12" md="6">
+                                <v-select color="pink" prepend-inner-icon="mdi-format-list-bulleted-type" v-model.trim="prospect.civilite" :items="['Homme', 'Femme']" label="Civilité*" :rules="rules.champRules" required></v-select>
+                            </v-col>
+                            <v-col cols="12" md="6">
+                                <v-menu v-model="isDialogDateNaissanceOpen" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="290px" color="pink">
                                     <template v-slot:activator="{ on, attrs }">
-                                        <v-text-field color="grey" v-model="livreur.dateNaissance" :rules="rules.dateEnRules" required label="Date de naissance*" prepend-inner-icon="mdi-calendar-outline" readonly v-bind="attrs" v-on="on"></v-text-field>
+                                        <v-text-field color="pink" v-model="prospect.dateNaissance" :rules="rules.dateEnRules" required label="Date de naissance*" prepend-inner-icon="mdi-calendar-outline" readonly v-bind="attrs" v-on="on"></v-text-field>
                                     </template>
-                                    <v-date-picker color="grey" locale="fr" first-day-of-week="1" v-model="livreur.dateNaissance" @input="isDialogDateNaissanceOpen = false" :rules="rules.dateEnRules" required></v-date-picker>
+                                    <v-date-picker color="pink" locale="fr" first-day-of-week="1" v-model="prospect.dateNaissance" @input="isDialogDateNaissanceOpen = false" :rules="rules.dateEnRules" required></v-date-picker>
                                 </v-menu>
                             </v-col>
                         </v-row>
                         <v-row class="mt-n4">
-                            <v-col cols="12" md="6">
-                                <v-text-field color="grey" label="Numéro de téléphone" v-model.trim="livreur.portable" prepend-inner-icon="mdi-deskphone" clearable />
+                            <v-col cols="12" md="4">
+                                <v-text-field color="pink" label="Numéro de téléphone" v-model.trim="prospect.portable" prepend-inner-icon="mdi-deskphone" clearable />
                             </v-col>
-                            <v-col cols="12" md="6">
-                                <v-text-field color="grey" label="Adresse" v-model.trim="livreur.adresse" prepend-inner-icon="mdi-walk" clearable />
+                            <v-col cols="12" md="4">
+                                <v-text-field color="pink" label="Adresse" v-model.trim="prospect.adresse" prepend-inner-icon="mdi-walk" clearable />
+                            </v-col>
+                            <v-col cols="12" md="4">
+                                <v-select color="pink" prepend-inner-icon="mdi-format-list-bulleted-type" :items="['entreprise1', 'entreprise2']" label="Entreprise*" :rules="rules.champRules" required></v-select>
+                            </v-col>
+                        </v-row>
+                        <v-row class="mt-n4">
+                            <v-col cols="12" md="12">
+                                <v-btn outlined color="pink" @click="isDialogNewEntreprise = true">
+                                    <v-icon>mdi-plus</v-icon> Ajouter une entreprise ?
+                                </v-btn>
                             </v-col>
                         </v-row>
                     </div>
@@ -60,7 +154,7 @@
     <v-dialog v-model="isDialogDeleteUtilisateur" width="500" overlay-opacity="0.8">
         <v-card outlined>
             <v-card-title>
-                Supprimer le livreur {{ utilisateurToDelete.firstname }}
+                Supprimer le client prospect {{ utilisateurToDelete.firstname }}
                 {{ utilisateurToDelete.lastname }} ?
                 <v-divider class="my-2" />
             </v-card-title>
@@ -75,16 +169,19 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
-    <base-material-card color="grey" icon="mdi-walk" max-width="100%" width="auto" inline class="px-5 py-3 mx-auto">
+    <base-material-card color="pink" icon="mdi-bank" max-width="100%" width="auto" inline class="px-5 py-3 mx-auto">
         <template v-slot:after-heading>
-            <div class="display-1 font-weight-light">Livreurs</div>
+            <div class="display-1 font-weight-light">Prospections</div>
         </template>
 
         <v-row class="mt-8 mr-1">
-            <v-btn color="grey" @click="isDialogNewUtilisateur = true" class="ml-3" :disabled="!isAdmin" dark>
-                <v-icon left>mdi-account-plus-outline</v-icon>Ajouter Livreur
+            <v-btn color="pink" @click="isDialogNewUtilisateur = true" class="ml-3" :disabled="!isAdmin" dark>
+                <v-icon left>mdi-account-plus-outline</v-icon>Ajouter client prospect
             </v-btn>
-            <v-btn color="grey" icon @click="getUtilisateursData" class="ml-3">
+            <v-btn color="pink" @click="isDialogNewDevis = true" class="ml-3" :disabled="!isAdmin" dark>
+                <v-icon left>mdi-bank-plus</v-icon>Ajouter un devis
+            </v-btn>
+            <v-btn color="pink" icon @click="getUtilisateursData" class="ml-3">
                 <v-icon large>mdi-refresh</v-icon>
             </v-btn>
             <v-text-field v-model="search" prepend-icon="mdi-magnify" class="ml-auto" label="Recherche" color="primary" hide-details single-line style="max-width: 250px" clearable />
@@ -110,6 +207,10 @@
                     <v-btn :disabled="!isAdmin || item.role.toLowerCase() === 'administrateur'" small outlined color="red" @click="dialogDeleteUtilisateur(item)" class="ml-3">
                         <v-icon left>mdi-account-remove-outline</v-icon>
                         Supprimer {{ item.civilite.toLowerCase() === "homme" ? 'M. '+ item.lastname : 'Mme '+ item.lastname }}
+                    </v-btn>
+                    <v-btn :disabled="!isAdmin || item.role.toLowerCase() === 'administrateur'" small outlined @click="isDialogEditEntreprise = true" class="ml-3">
+                        <v-icon left>mdi-pencil-outline</v-icon>
+                        Modifier entreprise
                     </v-btn>
                 </td>
             </template>
@@ -142,7 +243,7 @@ import {
 import moment from 'moment';
 
 export default Vue.extend({
-    name: 'Livreurs',
+    name: 'Prospections',
     mixins: [Gestion],
     props: {},
     components: {},
@@ -153,7 +254,7 @@ export default Vue.extend({
             isDialogDateNaissanceOpen: false as boolean,
             isDialogDeleteUtilisateur: false as boolean,
             utilisateurToDelete: [] as Array < any > ,
-            livreur: {
+            prospect: {
                 email: "",
                 password: "",
                 lastname: "",
@@ -196,6 +297,9 @@ export default Vue.extend({
                 },
             ] as Array < any > ,
             items: [] as Array < any > ,
+            isDialogNewEntreprise: false as boolean,
+            isDialogNewDevis: false as boolean,
+            isDialogEditEntreprise: false as boolean
         }
     },
     watch: {},
@@ -214,8 +318,8 @@ export default Vue.extend({
             this.isLoading = true;
             this.isFirstLoad = true;
             await axiosApi.post("/users", qs.stringify({
-                role: 'Livreur'
-            })) //tous les livreurs
+                role: 'Prospect'
+            })) //tous les clients prospects
             .then((response: AxiosResponse) => {
                 this.items = response.data.users;
                 for (let i = 0; i < this.items.length; i++) {
@@ -237,15 +341,15 @@ export default Vue.extend({
         saveNewUtilisateur: async function (): Promise < void > {
             if (!this.$refs.form.validate()) return this.errorMessage("Veuillez vérifier les champs !");
 
-            this.livreur.role = this.livreur.isAdmin === true ? 'Administrateur' : 'Livreur'
+            this.prospect.role = this.prospect.isAdmin === true ? 'Administrateur' : 'Prospect'
             await axiosApi.post(
                 "/register",
-                qs.stringify(this.livreur)
+                qs.stringify(this.prospect)
             )
             .then((response) => {
                 Object.assign(this.$data, this.$options.data()); //reset data
                 this.$refs.form.reset();
-                this.successMessage("Le livreur a bien été ajouté !");
+                this.successMessage("Le client prospect a bien été ajouté !");
                 setTimeout(() => {
                     this.getUtilisateursData();
                 }, 1000);
@@ -264,7 +368,7 @@ export default Vue.extend({
                 const utilisateurLastname = this.utilisateurToDelete.lastname;
                 Object.assign(this.$data, this.$options.data()); //reset data
                 //this.$refs.form.reset();
-                this.successMessage(`Le livreur ${utilisateurFirstname} ${utilisateurLastname} a été supprimé avec succès`);
+                this.successMessage(`Le client prospect ${utilisateurFirstname} ${utilisateurLastname} a été supprimé avec succès`);
                 setTimeout(() => {
                     this.getUtilisateursData();
                 }, 1000);
@@ -273,16 +377,16 @@ export default Vue.extend({
                 this.catchAxios(error)
             });
         },
-        dialogDeleteUtilisateur: function (infosLivreur: Record < string, any > ) {
+        dialogDeleteUtilisateur: function (infosProspect: Record < string, any > ) {
             this.isDialogDeleteUtilisateur = true;
-            this.utilisateurToDelete = infosLivreur;
+            this.utilisateurToDelete = infosProspect;
         },
-        PageInfosUtilisateur: function (infosLivreur: Record < string, any > , isEdit: boolean) {
+        PageInfosUtilisateur: function (infosProspect: Record < string, any > , isEdit: boolean) {
             this.$router.push({
-                name: "Informations-Livreur",
+                name: "Informations-Prospection",
                 params: {
                     isEdit: isEdit,
-                    infosLivreur: infosLivreur
+                    infosProspect: infosProspect
                 },
             });
         }

@@ -146,18 +146,12 @@
         <v-col cols="12" md="4">
             <v-skeleton-loader v-if="isFirstload" :loading="isLoading" type="table"></v-skeleton-loader>
             <div v-else>
-                <base-material-card class="v-card-profile">
+                <base-material-card color="indigo" class="v-card-profile">
                     <v-row v-if="$route.params.isEdit === false">
                         <v-col cols="12">
                             <h4 class="display-1 font-weight-light mb-2 text-md-center indigo--text">{{ client.firstname }} {{ client.lastname }}</h4>
                         </v-col>
                         <v-card-text>
-                            <v-col cols="12" class="mb-5">
-                                <h2 class="grey--text">
-                                    <v-icon large left color="indigo">mdi-web</v-icon>Site Web:
-                                    <span>Inconnu</span>
-                                </h2>
-                            </v-col>
                             <v-col cols="12">
                                 <h2 class="font-weight-light mb-n3 grey--text">
                                     <v-icon large left color="blue">mdi-skype</v-icon>
