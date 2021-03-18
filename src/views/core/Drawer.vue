@@ -60,7 +60,7 @@ export default Vue.extend({
             to: '/factures',
         },{
             title: 'Produits',
-            icon: 'mdi-table-chair',
+            icon: 'mdi-sofa-single',
             to: '/produits',
         },{
             title: 'Livreurs',

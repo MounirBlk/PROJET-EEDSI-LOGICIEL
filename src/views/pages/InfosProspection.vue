@@ -192,13 +192,13 @@
                             </v-col>
                             <v-col cols="12">
                                 <h2 class="font-weight-light grey--text">
-                                    <v-icon large left color="pink">mdi-linkedin</v-icon>
+                                    <v-icon large left color="indigo">mdi-linkedin</v-icon>
                                     Linkedin: {{ prospect.firstname }}.linkedin
                                 </h2>
                             </v-col>
                             <v-col cols="12">
                                 <h2 class="font-weight-light grey--text">
-                                    <v-icon large left color="pink">mdi-facebook</v-icon>
+                                    <v-icon large left color="indigo">mdi-facebook</v-icon>
                                     Facebook: {{ prospect.firstname }}.facebook
                                 </h2>
                             </v-col>

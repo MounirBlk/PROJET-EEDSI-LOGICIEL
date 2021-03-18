@@ -1,31 +1,79 @@
 <template>
 <v-container id="factures" tag="section" fluid>
-    <v-dialog v-model="isDialogSignalement" max-width="500px">
+    <v-dialog v-model="isDialogComposant" fullscreen hide-overlay transition="dialog-bottom-transition">
+        <v-card>
+            <v-toolbar dark color="brown lighten-2">
+                <v-btn icon dark @click="isDialogComposant = false">
+                    <v-icon>mdi-close</v-icon>
+                </v-btn>
+                <v-toolbar-title>Gestion des composants</v-toolbar-title>
+                <v-spacer></v-spacer>
+                <v-toolbar-items>
+                    <v-btn dark text @click="isDialogComposant = false">
+                        Fermer
+                    </v-btn>
+                </v-toolbar-items>
+            </v-toolbar>
+            <Composants />
+        </v-card>
+    </v-dialog>
+    <v-dialog v-model="isDialogNewProduit" max-width="800px">
         <v-card>
             <v-card-title>
                 <span class="headline">{{ formTitle }}</span>
             </v-card-title>
-
             <v-card-text>
                 <v-container>
                     <v-row>
                         <v-col cols="12" sm="6" md="4">
-                            <v-text-field></v-text-field>
+                            <v-text-field label="Nom"></v-text-field>
                         </v-col>
                         <v-col cols="12" sm="6" md="4">
-                            <v-text-field></v-text-field>
+                            <v-select label="Type" :items='["Chaise", "Table", "Armoire", "Lit"]'></v-select>
                         </v-col>
                         <v-col cols="12" sm="6" md="4">
-                            <v-text-field></v-text-field>
+                            <v-select label="Sous-type"></v-select>
+                        </v-col>
+                        <v-col cols="12" sm="6" md="3">
+                            <v-select label="Matiere" multiple :items='["Metal", "Bois", "Plastique", "Polymére"]'></v-select>
+                        </v-col>
+                        <v-col cols="12" sm="6" md="3">
+                            <v-select label="Couleur" multiple :items='["Noir", "Blanc", "Marron", "Gris"]'></v-select>
+                        </v-col>
+                        <v-col cols="12" sm="6" md="3">
+                            <v-text-field label="Quantité"></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="6" md="3">
+                            <v-file-input label="Image" truncate-length="15"></v-file-input>
+                        </v-col>
+                        <v-col cols="12" sm="6" md="3">
+                            <v-text-field label="Poids(kg)"></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="6" md="3">
+                            <v-text-field label="Longueur(cm)"></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="6" md="3">
+                            <v-text-field label="Largeur(cm)"></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="6" md="3">
+                            <v-text-field label="Profondeur(cm)"></v-text-field>
                         </v-col>
                         <v-col cols="12" sm="6" md="4">
-                            <v-text-field></v-text-field>
+                            <v-text-field label="Prix meuble(€)"></v-text-field>
                         </v-col>
                         <v-col cols="12" sm="6" md="4">
-                            <v-text-field></v-text-field>
+                            <v-text-field label="Taxe(%)"></v-text-field>
                         </v-col>
                         <v-col cols="12" sm="6" md="4">
-                            <v-text-field></v-text-field>
+                            <v-select label="Composants" :items='["Roulette en or", "Pied de meuble en marbre", "Mousse dorée", "Pied de meuble rouge"]' multiple></v-select>
+                        </v-col>
+                        <v-col cols="12" md="8">
+                            <v-btn outlined color="brown" @click="isDialogComposant = true">
+                                <v-icon>mdi-cog-outline</v-icon> Gestion des composants
+                            </v-btn>
+                        </v-col>
+                        <v-col cols="12" md="4">
+                            <strong> Prix total: 150 €</strong>
                         </v-col>
                     </v-row>
                 </v-container>
@@ -53,22 +101,28 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
-    <base-material-card color="green" icon="mdi-badge-account-alert-outline" max-width="100%" width="auto" inline class="px-5 py-3 mx-auto">
+    <base-material-card color="brown" icon="mdi-sofa-single-outline" max-width="100%" width="auto" inline class="px-5 py-3 mx-auto">
         <template v-slot:after-heading>
-            <div class="display-1 font-weight-light">Signalements</div>
+            <div class="display-1 font-weight-light">Produits</div>
         </template>
 
         <v-row class="mt-8 mr-1">
-            <v-btn color="green" icon class="ml-3">
+            <v-btn color="brown" @click="isDialogNewProduit = true" class="ml-3" dark>
+                <v-icon left>mdi-plus</v-icon>Ajouter un produit
+            </v-btn>
+            <v-btn color="brown" @click="isDialogComposant = true" class="ml-3" dark>
+                <v-icon left>mdi-cog-outline</v-icon>Gestion composant
+            </v-btn>
+            <v-btn color="brown" icon class="ml-3">
                 <v-icon large>mdi-refresh</v-icon>
             </v-btn>
-            <v-text-field v-model="search" prepend-icon="mdi-magnify" class="ml-auto" label="Recherche" color="green" hide-details single-line style="max-width: 250px" clearable />
+            <v-text-field v-model="search" prepend-icon="mdi-magnify" class="ml-auto" label="Recherche" color="primary" hide-details single-line style="max-width: 250px" clearable />
         </v-row>
         <v-divider class="mt-6" />
 
-        <v-data-table :headers="headers" :items="desserts" sort-by="client" class="elevation-1">
+        <v-data-table :headers="headers" :items="desserts" sort-by="nom" class="elevation-1">
             <template v-slot:[`item.actions`]="{ item }">
-                <v-icon small class="mr-2" @click="isDialogSignalement = true">
+                <v-icon small class="mr-2" @click="PageInfosProduit(item, false)">
                     mdi-information
                 </v-icon>
                 <v-icon small class="mr-2" @click="editItem(item)">
@@ -79,7 +133,7 @@
                 </v-icon>
             </template>
             <template v-slot:no-data>
-                <v-btn color="green" @click="initialize">
+                <v-btn color="primary" @click="initialize">
                     Reset
                 </v-btn>
             </template>
@@ -111,17 +165,20 @@ import {
     AxiosResponse
 } from 'axios';
 import Gestion from "../../mixins/Gestion"
-
+import Composants from "./Composants.vue"
 export default Vue.extend({
-    name: 'Signalements',
+    name: 'Factures',
     mixins: [Gestion],
     props: {},
-    components: {},
+    components: {
+        Composants
+    },
     //data: () => ({}),
     data(): any {
         return {
             search: undefined as string | null | undefined,
-            isDialogSignalement: false,
+            isDialogComposant: false,
+            isDialogNewProduit: false,
             dialog: false,
             dialogDelete: false,
             headers: [{
@@ -131,16 +188,16 @@ export default Vue.extend({
                     value: 'RefID',
                 },
                 {
-                    text: 'Client',
-                    value: 'client'
+                    text: 'Nom',
+                    value: 'nom'
                 },
                 {
-                    text: 'Date de livraison',
-                    value: 'dateLivraison'
+                    text: 'Type',
+                    value: 'type'
                 },
                 {
-                    text: 'Status',
-                    value: 'status'
+                    text: 'Prix total (€)',
+                    value: 'prixTotal'
                 },
                 {
                     text: 'Actions',
@@ -152,21 +209,21 @@ export default Vue.extend({
             editedIndex: -1,
             editedItem: {
                 RefID: 0,
-                client: '',
-                dateLivraison: "2021-03-16",
-                status: 'En cour',
+                nom: '',
+                type: "Chaise",
+                prixTotal: 100,
             },
             defaultItem: {
                 RefID: 0,
-                client: '',
-                dateLivraison: "2021-03-16",
-                status: 'En cour',
+                nom: '',
+                type: "Chaise",
+                prixTotal: 100,
             },
         }
     },
     computed: {
         formTitle() {
-            return this.editedIndex === -1 ? 'Signalement' : 'Modifier signalement'
+            return this.editedIndex === -1 ? 'Nouveau produit' : 'Modifier produit'
         },
     },
     watch: {
@@ -190,63 +247,63 @@ export default Vue.extend({
         initialize() {
             this.desserts = [{
                     RefID: 1525,
-                    client: 'Frozen Yogurt',
-                    dateLivraison: "2021-03-16",
-                    status: 'En cour',
+                    nom: 'Frozen Yogurt',
+                    type: "Chaise",
+                    prixTotal: 100,
                 },
                 {
                     RefID: 54554,
-                    client: 'Ice cream sandwich',
-                    dateLivraison: "2021-03-16",
-                    status: 'En cour',
+                    nom: 'Ice cream sandwich',
+                    type: "Table",
+                    prixTotal: 100,
                 },
                 {
                     RefID: 524,
-                    client: 'Eclair',
-                    dateLivraison: "2021-03-16",
-                    status: 'En cour',
+                    nom: 'Eclair',
+                    type: "Chaise",
+                    prixTotal: 100,
                 },
                 {
                     RefID: 4525,
-                    client: 'Cupcake',
-                    dateLivraison: "2021-03-16",
-                    status: 'En cour',
+                    nom: 'Cupcake',
+                    type: "Chaise",
+                    prixTotal: 100,
                 },
                 {
                     RefID: 356,
-                    client: 'Gingerbread',
-                    dateLivraison: "2021-03-16",
-                    status: 'En cour',
+                    nom: 'Gingerbread',
+                    type: "Chaise",
+                    prixTotal: 100,
                 },
                 {
                     RefID: 3455,
-                    client: 'Jelly bean',
-                    dateLivraison: "2021-03-16",
-                    status: 'En cour',
+                    nom: 'Jelly bean',
+                    type: "Chaise",
+                    prixTotal: 100,
                 },
                 {
                     RefID: 32552,
-                    client: 'Lollipop',
-                    dateLivraison: "2021-03-16",
-                    status: 'En cour',
+                    nom: 'Lollipop',
+                    type: "Chaise",
+                    prixTotal: 100,
                 },
                 {
                     RefID: 5452,
-                    client: 'Honeycomb',
-                    dateLivraison: "2021-03-16",
-                    status: 'En cour',
+                    nom: 'Honeycomb',
+                    type: "Chaise",
+                    prixTotal: 100,
                 },
                 {
                     RefID: 55,
-                    client: 'Donut',
-                    dateLivraison: "2021-03-16",
-                    status: 'En cour',
+                    nom: 'Donut',
+                    type: "Chaise",
+                    prixTotal: 100,
                 },
                 {
                     RefID: 55452,
-                    client: 'KitKat',
-                    dateLivraison: "2021-03-16",
-                    status: 'En cour',
+                    nom: 'KitKat',
+                    type: "Chaise",
+                    prixTotal: 100,
                 },
             ]
         },
@@ -254,7 +311,16 @@ export default Vue.extend({
         editItem(item) {
             this.editedIndex = this.desserts.indexOf(item)
             this.editedItem = Object.assign({}, item)
-            this.isDialogSignalement = true
+            this.isDialogNewProduit = true
+        },
+        PageInfosProduit: function (infosProduit: Record < string, any > , isEdit: boolean) {
+            this.$router.push({
+                name: "Informations-Produit",
+                params: {
+                    isEdit: isEdit,
+                    infosProduit: infosProduit
+                },
+            });
         },
         deleteItem(item) {
             this.editedIndex = this.desserts.indexOf(item)
@@ -268,7 +334,7 @@ export default Vue.extend({
         },
 
         close() {
-            this.isDialogSignalement = false
+            this.isDialogNewProduit = false
             this.$nextTick(() => {
                 this.editedItem = Object.assign({}, this.defaultItem)
                 this.editedIndex = -1
