@@ -56,9 +56,9 @@
                                         <v-col cols="12" md="4">
                                             <v-menu v-model="isDialogDateNaissanceOpen" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="290px" color="purple">
                                                 <template v-slot:activator="{ on, attrs }">
-                                                    <v-text-field color="purple" v-model="user.date_naissance" label="Date de naissance" prepend-inner-icon="mdi-calendar-outline" readonly v-bind="attrs" v-on="on" :disabled="!isUpdateUser"></v-text-field>
+                                                    <v-text-field color="purple" v-model="user.dateNaissance" label="Date de naissance" prepend-inner-icon="mdi-calendar-outline" readonly v-bind="attrs" v-on="on" :disabled="!isUpdateUser"></v-text-field>
                                                 </template>
-                                                <v-date-picker color="purple" v-model="user.date_naissance" first-day-of-week="1" @input="isDialogDateNaissanceOpen = false"></v-date-picker>
+                                                <v-date-picker color="purple" v-model="user.dateNaissance" first-day-of-week="1" @input="isDialogDateNaissanceOpen = false"></v-date-picker>
                                             </v-menu>
                                         </v-col>
                                         <v-col cols="12" md="4">

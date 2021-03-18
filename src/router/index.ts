@@ -131,7 +131,35 @@ const routes: Array<RouteConfig> = [{
       meta: {
         requiresAuth: true
       }
-    },]
+    },{
+      name: 'Livraisons',
+      path: '/livraisons',
+      component: () => import ('@/views/pages/Livraisons.vue'),
+      meta: {
+        requiresAuth: true
+      }
+    },{
+      name: 'Informations-Livraison',
+      path: '/livraisons/livraison',
+      component: () => import ('@/views/pages/InfosLivraison.vue'),
+      meta: {
+        requiresAuth: true
+      }
+    },{
+      name: 'Produits',
+      path: '/produits',
+      component: () => import ('@/views/pages/Produits.vue'),
+      meta: {
+        requiresAuth: true
+      }
+    },{
+      name: 'Informations-Produit',
+      path: '/produits/produit',
+      component: () => import ('@/views/pages/InfosProduit.vue'),
+      meta: {
+        requiresAuth: true
+      }
+    }]
   },
   {
     path: '*',

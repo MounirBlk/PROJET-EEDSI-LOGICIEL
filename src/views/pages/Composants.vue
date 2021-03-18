@@ -1,31 +1,45 @@
 <template>
 <v-container id="factures" tag="section" fluid>
-    <v-dialog v-model="isDialogSignalement" max-width="500px">
+    <v-dialog v-model="isDialogNewComposant" max-width="800px">
         <v-card>
             <v-card-title>
                 <span class="headline">{{ formTitle }}</span>
             </v-card-title>
-
             <v-card-text>
                 <v-container>
                     <v-row>
-                        <v-col cols="12" sm="6" md="4">
-                            <v-text-field></v-text-field>
+                        <v-col cols="12" sm="6" md="6">
+                            <v-text-field label="Nom"></v-text-field>
                         </v-col>
-                        <v-col cols="12" sm="6" md="4">
-                            <v-text-field></v-text-field>
+                        <v-col cols="12" sm="6" md="6">
+                            <v-select label="Type" :items='["Pied en mousse", "Table", "Armoire", "Lit"]'></v-select>
                         </v-col>
-                        <v-col cols="12" sm="6" md="4">
-                            <v-text-field></v-text-field>
+                        <v-col cols="12" sm="6" md="3">
+                            <v-select label="Matiere" multiple :items='["Metal", "Bois", "Plastique", "Polymére"]'></v-select>
                         </v-col>
-                        <v-col cols="12" sm="6" md="4">
-                            <v-text-field></v-text-field>
+                        <v-col cols="12" sm="6" md="3">
+                            <v-select label="Couleur" multiple :items='["Noir", "Blanc", "Marron", "Gris"]'></v-select>
                         </v-col>
-                        <v-col cols="12" sm="6" md="4">
-                            <v-text-field></v-text-field>
+                        <v-col cols="12" sm="6" md="3">
+                            <v-text-field label="Quantité"></v-text-field>
                         </v-col>
-                        <v-col cols="12" sm="6" md="4">
-                            <v-text-field></v-text-field>
+                        <v-col cols="12" sm="6" md="3">
+                            <v-file-input label="Image" truncate-length="15"></v-file-input>
+                        </v-col>
+                        <v-col cols="12" sm="6" md="3">
+                            <v-text-field label="Poids(kg)"></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="6" md="3">
+                            <v-text-field label="Longueur(cm)"></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="6" md="3">
+                            <v-text-field label="Largeur(cm)"></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="6" md="3">
+                            <v-text-field label="Profondeur(cm)"></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="6" md="12">
+                            <v-text-field label="Prix composant(€)"></v-text-field>
                         </v-col>
                     </v-row>
                 </v-container>
@@ -53,22 +67,25 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
-    <base-material-card color="green" icon="mdi-badge-account-alert-outline" max-width="100%" width="auto" inline class="px-5 py-3 mx-auto">
+    <base-material-card color="brown lighten-2" icon="mdi-table-chair"  width="auto" inline class="px-5 py-3 mx-auto">
         <template v-slot:after-heading>
-            <div class="display-1 font-weight-light">Signalements</div>
+            <div class="display-1 font-weight-light">Composants</div>
         </template>
 
         <v-row class="mt-8 mr-1">
-            <v-btn color="green" icon class="ml-3">
+            <v-btn color="brown lighten-2" @click="isDialogNewComposant = true" class="ml-3" dark>
+                <v-icon left>mdi-plus</v-icon>Ajouter un composant
+            </v-btn>
+            <v-btn color="brown lighten-2" icon class="ml-3">
                 <v-icon large>mdi-refresh</v-icon>
             </v-btn>
-            <v-text-field v-model="search" prepend-icon="mdi-magnify" class="ml-auto" label="Recherche" color="green" hide-details single-line style="max-width: 250px" clearable />
+            <v-text-field v-model="search" prepend-icon="mdi-magnify" class="ml-auto" label="Recherche" color="primary" hide-details single-line style="max-width: 250px" clearable />
         </v-row>
         <v-divider class="mt-6" />
 
-        <v-data-table :headers="headers" :items="desserts" sort-by="client" class="elevation-1">
+        <v-data-table :headers="headers" :items="desserts" sort-by="nom" class="elevation-1">
             <template v-slot:[`item.actions`]="{ item }">
-                <v-icon small class="mr-2" @click="isDialogSignalement = true">
+                <v-icon small class="mr-2" @click="editItem(item)">
                     mdi-information
                 </v-icon>
                 <v-icon small class="mr-2" @click="editItem(item)">
@@ -79,7 +96,7 @@
                 </v-icon>
             </template>
             <template v-slot:no-data>
-                <v-btn color="green" @click="initialize">
+                <v-btn color="primary" @click="initialize">
                     Reset
                 </v-btn>
             </template>
@@ -111,9 +128,8 @@ import {
     AxiosResponse
 } from 'axios';
 import Gestion from "../../mixins/Gestion"
-
 export default Vue.extend({
-    name: 'Signalements',
+    name: 'Factures',
     mixins: [Gestion],
     props: {},
     components: {},
@@ -121,7 +137,8 @@ export default Vue.extend({
     data(): any {
         return {
             search: undefined as string | null | undefined,
-            isDialogSignalement: false,
+            isDialogComposant: false,
+            isDialogNewComposant: false,
             dialog: false,
             dialogDelete: false,
             headers: [{
@@ -131,16 +148,16 @@ export default Vue.extend({
                     value: 'RefID',
                 },
                 {
-                    text: 'Client',
-                    value: 'client'
+                    text: 'Nom',
+                    value: 'nom'
                 },
                 {
-                    text: 'Date de livraison',
-                    value: 'dateLivraison'
+                    text: 'Type',
+                    value: 'type'
                 },
                 {
-                    text: 'Status',
-                    value: 'status'
+                    text: 'Prix total (€)',
+                    value: 'prixTotal'
                 },
                 {
                     text: 'Actions',
@@ -152,21 +169,21 @@ export default Vue.extend({
             editedIndex: -1,
             editedItem: {
                 RefID: 0,
-                client: '',
-                dateLivraison: "2021-03-16",
-                status: 'En cour',
+                nom: '',
+                type: "Pied en mousse",
+                prixTotal: 35,
             },
             defaultItem: {
                 RefID: 0,
-                client: '',
-                dateLivraison: "2021-03-16",
-                status: 'En cour',
+                nom: '',
+                type: "Pied en mousse",
+                prixTotal: 35,
             },
         }
     },
     computed: {
         formTitle() {
-            return this.editedIndex === -1 ? 'Signalement' : 'Modifier signalement'
+            return this.editedIndex === -1 ? 'Nouveau composant' : 'Modifier composant'
         },
     },
     watch: {
@@ -190,63 +207,63 @@ export default Vue.extend({
         initialize() {
             this.desserts = [{
                     RefID: 1525,
-                    client: 'Frozen Yogurt',
-                    dateLivraison: "2021-03-16",
-                    status: 'En cour',
+                    nom: 'Frozen Yogurt',
+                    type: "Pied en mousse",
+                    prixTotal: 35,
                 },
                 {
                     RefID: 54554,
-                    client: 'Ice cream sandwich',
-                    dateLivraison: "2021-03-16",
-                    status: 'En cour',
+                    nom: 'Ice cream sandwich',
+                    type: "Table",
+                    prixTotal: 35,
                 },
                 {
                     RefID: 524,
-                    client: 'Eclair',
-                    dateLivraison: "2021-03-16",
-                    status: 'En cour',
+                    nom: 'Eclair',
+                    type: "Pied en mousse",
+                    prixTotal: 35,
                 },
                 {
                     RefID: 4525,
-                    client: 'Cupcake',
-                    dateLivraison: "2021-03-16",
-                    status: 'En cour',
+                    nom: 'Cupcake',
+                    type: "Pied en mousse",
+                    prixTotal: 35,
                 },
                 {
                     RefID: 356,
-                    client: 'Gingerbread',
-                    dateLivraison: "2021-03-16",
-                    status: 'En cour',
+                    nom: 'Gingerbread',
+                    type: "Pied en mousse",
+                    prixTotal: 35,
                 },
                 {
                     RefID: 3455,
-                    client: 'Jelly bean',
-                    dateLivraison: "2021-03-16",
-                    status: 'En cour',
+                    nom: 'Jelly bean',
+                    type: "Pied en mousse",
+                    prixTotal: 35,
                 },
                 {
                     RefID: 32552,
-                    client: 'Lollipop',
-                    dateLivraison: "2021-03-16",
-                    status: 'En cour',
+                    nom: 'Lollipop',
+                    type: "Pied en mousse",
+                    prixTotal: 35,
                 },
                 {
                     RefID: 5452,
-                    client: 'Honeycomb',
-                    dateLivraison: "2021-03-16",
-                    status: 'En cour',
+                    nom: 'Honeycomb',
+                    type: "Pied en mousse",
+                    prixTotal: 35,
                 },
                 {
                     RefID: 55,
-                    client: 'Donut',
-                    dateLivraison: "2021-03-16",
-                    status: 'En cour',
+                    nom: 'Donut',
+                    type: "Pied en mousse",
+                    prixTotal: 35,
                 },
                 {
                     RefID: 55452,
-                    client: 'KitKat',
-                    dateLivraison: "2021-03-16",
-                    status: 'En cour',
+                    nom: 'KitKat',
+                    type: "Pied en mousse",
+                    prixTotal: 35,
                 },
             ]
         },
@@ -254,7 +271,7 @@ export default Vue.extend({
         editItem(item) {
             this.editedIndex = this.desserts.indexOf(item)
             this.editedItem = Object.assign({}, item)
-            this.isDialogSignalement = true
+            this.isDialogNewComposant = true
         },
         deleteItem(item) {
             this.editedIndex = this.desserts.indexOf(item)
@@ -268,7 +285,7 @@ export default Vue.extend({
         },
 
         close() {
-            this.isDialogSignalement = false
+            this.isDialogNewComposant = false
             this.$nextTick(() => {
                 this.editedItem = Object.assign({}, this.defaultItem)
                 this.editedIndex = -1
