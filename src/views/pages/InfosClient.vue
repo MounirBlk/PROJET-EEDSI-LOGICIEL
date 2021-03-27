@@ -259,7 +259,7 @@ export default Vue.extend({
 
             this.client.role = this.client.isAdmin === true ? 'Administrateur' : 'Client'
             await axiosApi
-                .put("/user/" + this.client._id, qs.stringify(this.client)) //update du utilisateur
+                .put("/user/update/" + this.client._id, qs.stringify(this.client)) //update du utilisateur
                 .then((response: AxiosResponse) => {
                     if (response.data.error == false) {
                         this.$refs.form.reset();

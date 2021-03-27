@@ -265,7 +265,7 @@ export default Vue.extend({
 
             this.livreur.role = this.livreur.isAdmin === true ? 'Administrateur' : 'Livreur'
             await axiosApi
-                .put("/user/" + this.livreur._id, qs.stringify(this.livreur)) //update du utilisateur
+                .put("/user/update/" + this.livreur._id, qs.stringify(this.livreur)) //update du utilisateur
                 .then((response: AxiosResponse) => {
                     if (response.data.error == false) {
                         this.$refs.form.reset();

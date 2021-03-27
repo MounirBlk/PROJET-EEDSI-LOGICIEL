@@ -295,7 +295,7 @@ export default Vue.extend({
 
             this.prospect.role = this.prospect.isAdmin === true ? 'Administrateur' : 'Prospect'
             await axiosApi
-                .put("/user/" + this.prospect._id, qs.stringify(this.prospect)) //update du utilisateur
+                .put("/user/update/" + this.prospect._id, qs.stringify(this.prospect)) //update du utilisateur
                 .then((response: AxiosResponse) => {
                     if (response.data.error == false) {
                         this.$refs.form.reset();

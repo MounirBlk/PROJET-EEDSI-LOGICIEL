@@ -203,7 +203,7 @@ export default Vue.extend({
         getUserData: async function () {
             this.isOverlay = true;
             await axiosApi
-                .get("/user")
+                .get("/user/own")
                 .then((response) => {
                     this.user = response.data.user;
                     this.isOverlay = false;
@@ -217,7 +217,7 @@ export default Vue.extend({
             this.isUpdateUser = false;
 
             await axiosApi
-                .put("/user/" + this.user._id, qs.stringify(this.user)) //update de l'user
+                .put("/user/update/" + this.user._id, qs.stringify(this.user)) //update de l'user
                 .then((response) => {
                     Object.assign(this.$data, this.$options.data()); //reset data
                     this.successMessage("Sauvegarde des modifications effectuée !");

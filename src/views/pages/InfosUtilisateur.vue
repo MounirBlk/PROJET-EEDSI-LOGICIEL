@@ -270,7 +270,7 @@ export default Vue.extend({
             this.user.role = this.user.isAdmin === true ? 'Administrateur' : 'Commercial'
             await axiosApi
                 .put(
-                    "/user/" + this.user._id,
+                    "/user/update/" + this.user._id,
                     qs.stringify(this.user),
                 ) //update du utilisateur
                 .then((response: AxiosResponse) => {

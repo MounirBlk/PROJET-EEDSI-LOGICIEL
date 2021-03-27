@@ -216,9 +216,7 @@ export default Vue.extend({
             //https://jsonplaceholder.typicode.com/users
             this.isLoading = true;
             this.isFirstLoad = true;
-            await axiosApi.post("/users", qs.stringify({
-                role: 'Commercial'
-            })) //tous les users
+            await axiosApi.get("/user/all/Commercial") //tous les users
             .then((response: AxiosResponse) => {
                 this.items = response.data.users;
                 for (let i = 0; i < this.items.length; i++) {
@@ -263,7 +261,7 @@ export default Vue.extend({
         deleteUtilisateur: async function (): Promise < void > {
             this.isDialogDeleteUtilisateur = false;
             await axiosApi
-            .delete("/user/" + this.utilisateurToDelete._id)
+            .delete("/user/delete/" + this.utilisateurToDelete._id)
             .then((response) => {
                 console.log(response.data.message)
                 const utilisateurFirstname = this.utilisateurToDelete.firstname;
