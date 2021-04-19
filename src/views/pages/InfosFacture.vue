@@ -50,7 +50,8 @@ import {
     AxiosResponse
 } from 'axios';
 import Gestion from "../../mixins/Gestion"
-import easyinvoice from 'easyinvoice'
+//import easyinvoice from 'easyinvoice'
+const easyinvoice = require("easyinvoice")
 
 export default Vue.extend({
     name: 'Facture',

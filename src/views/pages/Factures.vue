@@ -254,12 +254,12 @@ export default Vue.extend({
             ]
         },
 
-        editItem(item) {
+        editItem(item: any) {
             this.editedIndex = this.desserts.indexOf(item)
             this.editedItem = Object.assign({}, item)
             this.isDialogNewFacture = true
         },
-        informationsFacture(item) {
+        informationsFacture(item: any) {
             this.$router.push({
                 name: "Informations-Facture",
                 /*params: {
@@ -268,7 +268,7 @@ export default Vue.extend({
                 },*/
             });
         },
-        deleteItem(item) {
+        deleteItem(item: any) {
             this.editedIndex = this.desserts.indexOf(item)
             this.editedItem = Object.assign({}, item)
             this.dialogDelete = true

@@ -26,7 +26,7 @@ axiosApi.interceptors.response.use((response: any) => {
 }, error => {
     if (error.response.status) {
         switch (error.response.status) {
-            case 498:
+            case 401:
                 localStorage.clear();
                 router.replace({
                     path: "/login",

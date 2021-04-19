@@ -251,12 +251,12 @@ export default Vue.extend({
             ]
         },
 
-        editItem(item) {
+        editItem(item: any) {
             this.editedIndex = this.desserts.indexOf(item)
             this.editedItem = Object.assign({}, item)
             this.isDialogSignalement = true
         },
-        deleteItem(item) {
+        deleteItem(item: any) {
             this.editedIndex = this.desserts.indexOf(item)
             this.editedItem = Object.assign({}, item)
             this.dialogDelete = true

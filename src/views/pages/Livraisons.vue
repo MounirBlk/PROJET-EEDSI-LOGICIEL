@@ -275,12 +275,12 @@ export default Vue.extend({
                 },
             });
         },
-        editItem(item) {
+        editItem(item: any) {
             this.editedIndex = this.items.indexOf(item)
             this.editedItem = Object.assign({}, item)
             this.isDialogLivraison = true
         },
-        deleteItem(item) {
+        deleteItem(item: any) {
             this.editedIndex = this.items.indexOf(item)
             this.editedItem = Object.assign({}, item)
             this.dialogDelete = true
