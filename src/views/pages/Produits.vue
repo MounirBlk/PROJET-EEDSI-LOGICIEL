@@ -44,7 +44,7 @@
                             <v-text-field label="Quantité"></v-text-field>
                         </v-col>
                         <v-col cols="12" sm="6" md="3">
-                            <v-file-input label="Image" truncate-length="15"></v-file-input>
+                            <v-file-input small-chips v-model="chosenFile" accept="image/*" label="Image" truncate-length="15"></v-file-input>
                         </v-col>
                         <v-col cols="12" sm="6" md="3">
                             <v-text-field label="Poids(kg)"></v-text-field>
@@ -66,6 +66,11 @@
                         </v-col>
                         <v-col cols="12" sm="6" md="4">
                             <v-select label="Composants" :items='["Roulette en or", "Pied de meuble en marbre", "Mousse dorée", "Pied de meuble rouge"]' multiple></v-select>
+                        </v-col>
+                        <v-col cols="12" md="12" sm="12">
+                            <v-btn outlined color="green" @click="newProduct">
+                                <v-icon>mdi-check</v-icon> Sauvegarder
+                            </v-btn>
                         </v-col>
                         <v-col cols="12" md="8">
                             <v-btn outlined color="brown" @click="isDialogComposant = true">
@@ -176,6 +181,7 @@ export default Vue.extend({
     //data: () => ({}),
     data(): any {
         return {
+            chosenFile: null,
             search: undefined as string | null | undefined,
             isDialogComposant: false,
             isDialogNewProduit: false,
@@ -244,6 +250,39 @@ export default Vue.extend({
         //console.log('mounted')
     },
     methods: {
+        newProduct:  function () {
+            console.log(this.chosenFile)
+            const config = {
+                headers: {
+                    'Content-Type': 'multipart/form-data; ', //boundary=----WebKitFormBoundaryu2bwWC2UJRwib11V
+                    'Authorization': 'Bearer ' + localStorage.getItem("token")
+                },
+            };
+            const formData = new FormData()
+            formData.append('img', this.chosenFile)
+            formData.append('nom', 'Chaise en titane vue')
+            formData.append('description', 'test2 vue')
+            formData.append('type', 'chaise')
+            formData.append('matieres', 'Metal')
+            formData.append('matieres', 'Bois')
+            formData.append('couleurs', 'rouge')
+            formData.append('couleurs', 'vert')
+            formData.append('couleurs', 'bleu')
+            formData.append('poids', '500')
+            formData.append('longueur', '500')
+            formData.append('largeur', '500')
+            formData.append('profondeur', '50')
+            formData.append('prix', '50.52')
+            formData.append('taxe', '0.05')
+            formData.append('quantite', '5')
+            axiosApi.post("https://api-imie-e-commerce.herokuapp.com/product/add", formData, config)
+                .then((response) => {
+                    console.log(response.data)
+                })
+                .catch((error) => {
+                    throw error;
+                });
+        },
         initialize() {
             this.desserts = [{
                     RefID: 1525,
@@ -362,4 +401,10 @@ export default Vue.extend({
 </script>
 
 <style>
+.imgProduct {
+    width: 30%;
+    margin: auto;
+    display: block;
+    margin-bottom: 10px;
+}
 </style>
