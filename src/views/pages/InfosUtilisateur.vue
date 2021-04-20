@@ -9,7 +9,7 @@
                             <span v-if="user.role === 'Administrateur'">Administrateur</span>
                             <span v-else>Commercial</span><br />
                         </div>
-                        Dernière connexion : {{ user.lastLogin }}
+                        Dernière connexion : {{ user.lastLogin | moment("YYYY-MM-DD HH:mm") }}
                     </div>
                     <div v-else>
                         <div class="display-2 white--text mb-4">
@@ -55,11 +55,11 @@
                                     </tr>
                                     <tr>
                                         <td>Création</td>
-                                        <td>{{ user.createdAt }}</td>
+                                        <td>{{ user.createdAt | moment("YYYY-MM-DD HH:mm") }}</td>
                                     </tr>
                                     <tr>
                                         <td>Mise à jour</td>
-                                        <td>{{ user.updateAt }}</td>
+                                        <td>{{ user.updateAt | moment("YYYY-MM-DD HH:mm") }}</td>
                                     </tr>
                                 </tbody>
                             </template>
@@ -196,8 +196,8 @@
     </v-row>
     <v-snackbar v-model="isSnackbarOpened" elevation="24" :color="isSuccess ? 'success' : 'error'">
         <div class="text-center subtitle-1">
-            <v-icon v-if="!isSuccess" color="white">mdi-alert-outline</v-icon>
-            <v-icon v-else color="white">mdi-checkbox-marked-circle-outline</v-icon>
+            <v-icon v-if="!isSuccess" color="white" left>mdi-alert-outline</v-icon>
+            <v-icon v-else color="white" left>mdi-checkbox-marked-circle-outline</v-icon>
             <span>{{ snackbarMessage }}</span>
             <v-btn dark icon class="ml-6" @click="isSnackbarOpened = false">
                 <v-icon>mdi-close</v-icon>

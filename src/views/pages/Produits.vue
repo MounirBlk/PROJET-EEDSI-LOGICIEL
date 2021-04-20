@@ -2,7 +2,7 @@
 <v-container id="produits" tag="section" fluid>
     <v-dialog v-model="isDialogComposant" fullscreen hide-overlay transition="dialog-bottom-transition">
         <v-card>
-            <v-toolbar dark color="brown lighten-2">
+            <v-toolbar dark color="orange">
                 <v-btn icon dark @click="isDialogComposant = false">
                     <v-icon>mdi-close</v-icon>
                 </v-btn>
@@ -42,7 +42,7 @@
                             <v-col cols="12" sm="6" md="4">
                                 <v-select label="Matieres" small-chips chips counter deletable-chips disable-lookup multiple :items='matiereItems' color="brown" v-model="produit.matieres" prepend-inner-icon="mdi-format-list-checkbox" :rules="rules.champRules" required>
                                     <template v-slot:selection="{ item, index }">
-                                        <v-chip v-if="index === 0">
+                                        <v-chip small v-if="index === 0">
                                             <span>{{ item }}</span>
                                         </v-chip>
                                         <span v-if="index === 1" class="brown--text caption">
@@ -54,7 +54,7 @@
                             <v-col cols="12" sm="6" md="4">
                                 <v-select label="Couleurs" small-chips chips counter deletable-chips disable-lookup multiple :items='colorItems' color="brown" v-model="produit.couleurs" prepend-inner-icon="mdi-format-list-checkbox" :rules="rules.champRules" required>
                                     <template v-slot:selection="{ item, index }">
-                                        <v-chip v-if="index === 0">
+                                        <v-chip small v-if="index === 0">
                                             <span>{{ item }}</span>
                                         </v-chip>
                                         <span v-if="index === 1" class="brown--text caption">
@@ -90,7 +90,7 @@
                             <v-col cols="12" sm="6" md="4">
                                 <v-select prepend-inner-icon="mdi-video-input-component" label="Composants" small-chips chips counter deletable-chips disable-lookup :disabled="produit.type === null || produit.type === ''" :items="composants.filter((item) => item.type === produit.type && !item.archive)" item-text="nom" item-value="_id" v-model="produit.composants" multiple>
                                     <template v-slot:selection="{ item, index }">
-                                        <v-chip v-if="index === 0">
+                                        <v-chip small v-if="index === 0">
                                             <span>{{ item.nom }}</span>
                                         </v-chip>
                                         <span v-if="index === 1" class="brown--text caption">
@@ -120,7 +120,7 @@
     <v-dialog v-model="isDialogDeleteProduit" width="500" overlay-opacity="0.8">
         <v-card outlined>
             <v-card-title>
-                Supprimer le produit {{ produitToDelete.name }} ?
+                Supprimer le produit {{ produitToDelete.nom }} ?
             </v-card-title>
             <v-card-actions>
                 <v-spacer></v-spacer>
@@ -133,14 +133,22 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
-    <base-material-card color="brown" icon="mdi-sofa-single-outline" max-width="100%" width="auto" inline class="px-5 py-3 mx-auto">
+    <base-material-card color="brown" icon="mdi-sofa-outline" max-width="100%" width="auto" inline class="px-5 py-3 mx-auto">
         <template v-slot:after-heading>
             <div class="display-1 font-weight-light">Produits</div>
         </template>
         <v-row class="mt-8 mr-1">
             <v-btn color="brown" dark @click="isDialogNewProduit = true" class="ml-3">
-                <v-icon left>mdi-account-plus-outline</v-icon>Ajouter Produit
+                <v-icon left>mdi-plus-circle-outline</v-icon>Ajouter Produit
             </v-btn>
+            <v-tooltip top>
+                <template v-slot:activator="{ on, attrs }">
+                    <v-btn icon color="brown" class="ml-3" v-bind="attrs" v-on="on" @click="isDialogComposant = true">
+                        <v-icon large>mdi-cog-outline</v-icon>
+                    </v-btn>
+                </template>
+                <span>Gestion composants</span>
+            </v-tooltip>
             <v-btn color="brown" icon @click="getProduitsData" class="ml-3">
                 <v-icon large>mdi-refresh</v-icon>
             </v-btn>
@@ -148,10 +156,20 @@
         </v-row>
         <v-divider class="mt-6" />
         <v-skeleton-loader v-if="isFirstLoad" :loading="isLoading" type="table"></v-skeleton-loader>
-        <v-data-table v-else :headers="headers" :items="items" :search.sync="search" :sort-by="['name']" :sort-desc="[false]" item-key="email">
+        <v-data-table v-else :headers="headers" :items="items" :search.sync="search" :sort-by="['nom']" :sort-desc="[false]" item-key="nom">
+            <template v-slot:[`item.imgLink`]="{ item }">
+                <v-img v-if="item.imgLink !== null" :src="item.imgLink" height="80" width="120" aspect-ratio="1" class="grey lighten-2">
+                    <template v-slot:placeholder>
+                        <v-row class="fill-height ma-0" align="center" justify="center"> </v-row>
+                    </template>
+                </v-img>
+                <v-icon v-else color="red" x-large>
+                    mdi-close
+                </v-icon>
+            </template>
             <template v-slot:[`item.archive`]="{ item }">
-                <v-icon color="error" v-if="item.archive">mdi-close</v-icon>
-                <v-icon color="success" v-else>mdi-check</v-icon>
+                <v-icon color="error" v-if="item.archive">mdi-close-circle-outline</v-icon>
+                <v-icon color="success" v-else>mdi-checkbox-marked-circle-outline</v-icon>
             </template>
             <template v-slot:[`item.actions`]="{ item }">
                 <v-btn icon color="info" @click="PageInfosProduit(item, false)">
@@ -177,8 +195,8 @@
     </base-material-card>
     <v-snackbar v-model="isSnackbarOpened" elevation="24" :color="isSuccess ? 'success' : 'error'">
         <div class="text-center subtitle-1">
-            <v-icon v-if="!isSuccess" color="white">mdi-alert-outline</v-icon>
-            <v-icon v-else color="white">mdi-checkbox-marked-circle-outline</v-icon>
+            <v-icon v-if="!isSuccess" color="white" left>mdi-alert-outline</v-icon>
+            <v-icon v-else color="white" left>mdi-checkbox-marked-circle-outline</v-icon>
             <span>{{ snackbarMessage }}</span>
             <v-btn dark icon class="ml-6" @click="isSnackbarOpened = false">
                 <v-icon>mdi-close</v-icon>
@@ -218,13 +236,13 @@ export default Vue.extend({
                 description: "",
                 type: "",
                 sousType: "",
-                poids: "", //new Date().toISOString().substr(0, 10)
-                longueur: "",
-                largeur: "",
-                profondeur: "",
-                prix: "",
+                poids: 0, //new Date().toISOString().substr(0, 10)
+                longueur: 0,
+                largeur: 0,
+                profondeur: 0,
+                prix: 0.00,
                 taxe: 0.05,
-                quantite: "",
+                quantite: 0,
                 composants: [],
                 matieres: [],
                 couleurs: [],
@@ -234,8 +252,9 @@ export default Vue.extend({
             matiereItems: ["Metal", "Bois", "Plastique", "Polymére", "Cuir", "Fer", "Laque", "Teck", "Verre", "Pin", "Tissu"],
             search: undefined as string | null | undefined,
             headers: [{
-                    text: "ID",
-                    value: "refID",
+                    text: "Image",
+                    value: "imgLink",
+                    sortable: false,
                 },{
                     text: "Nom",
                     value: "nom",
@@ -309,9 +328,8 @@ export default Vue.extend({
             };
             if (this.produit.taxe < 0 || this.produit.taxe > 1) return this.errorMessage("Veuillez vérifier la taxe !");
             const payload = this.setProduitFormData();
-            axiosApi.post("http://localhost:3000/product/add", payload, config)
+            axiosApi.post("/product/add", payload, config)
                 .then((response) => {
-                    console.log(response)
                     Object.assign(this.$data, this.$options.data()); //reset data
                     this.$refs.form.reset();
                     this.successMessage("Le produit a bien été ajouté !");
@@ -320,6 +338,7 @@ export default Vue.extend({
                     }, 1000);
                 })
                 .catch((error) => {
+                    console.log(error)
                     this.catchAxios(error)
                 });
         },
@@ -348,7 +367,8 @@ export default Vue.extend({
                 name: "Informations-Produit",
                 params: {
                     isEdit: isEdit,
-                    infosProduit: infosProduit
+                    idProduit: infosProduit._id,
+                    composants: this.composants
                 },
             });
         },
