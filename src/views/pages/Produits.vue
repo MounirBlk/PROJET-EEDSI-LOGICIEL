@@ -1,8 +1,8 @@
 <template>
-<v-container id="factures" tag="section" fluid>
+<v-container id="produits" tag="section" fluid>
     <v-dialog v-model="isDialogComposant" fullscreen hide-overlay transition="dialog-bottom-transition">
         <v-card>
-            <v-toolbar dark color="brown lighten-2">
+            <v-toolbar dark color="orange">
                 <v-btn icon dark @click="isDialogComposant = false">
                     <v-icon>mdi-close</v-icon>
                 </v-btn>
@@ -17,137 +17,186 @@
             <Composants />
         </v-card>
     </v-dialog>
-    <v-dialog v-model="isDialogNewProduit" max-width="800px">
-        <v-card>
+    <v-dialog v-model="isDialogNewProduit" persistent max-width="1000px" overlay-opacity="0.8">
+        <v-card class="px-6" outlined>
+            <v-form ref="form" v-model="rules.valid" lazy-validation>
+                <v-card-title class="brown--text">
+                    Ajout Produit
+                    <v-icon aria-label="Close" class="ml-auto" @click="isDialogNewProduit = false;$refs.form.reset()">mdi-close</v-icon>
+                </v-card-title>
+                <v-card-text>
+                    <v-container>
+                        <v-row>
+                            <v-col cols="12" sm="6" md="4">
+                                <v-text-field label="Nom" color="brown" v-model.trim="produit.nom" prepend-inner-icon="mdi-card-text-outline" clearable :rules="rules.caractereRules" required></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="4">
+                                <v-select label="Type" :items='["Chaise", "Table", "Armoire", "Lit", "Autres"]' color="brown" v-model="produit.type" prepend-inner-icon="mdi-format-list-checkbox" clearable :rules="rules.champRules" required></v-select>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="4">
+                                <v-text-field label="Sous-type" color="brown" v-model.trim="produit.sousType" prepend-inner-icon="mdi-alphabetical" clearable></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="12" md="12">
+                                <v-textarea color="brown" label="Description" rows="3" v-model="produit.description" prepend-inner-icon="mdi-text-box-outline" />
+                            </v-col>
+                            <v-col cols="12" sm="6" md="4">
+                                <v-select label="Matieres" small-chips chips counter deletable-chips disable-lookup multiple :items='matiereItems' color="brown" v-model="produit.matieres" prepend-inner-icon="mdi-format-list-checkbox" :rules="rules.champRules" required>
+                                    <template v-slot:selection="{ item, index }">
+                                        <v-chip small v-if="index === 0">
+                                            <span>{{ item }}</span>
+                                        </v-chip>
+                                        <span v-if="index === 1" class="brown--text caption">
+                                            (+{{ produit.matieres.length - 1 }} autre(s))
+                                        </span>
+                                    </template>
+                                </v-select>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="4">
+                                <v-select label="Couleurs" small-chips chips counter deletable-chips disable-lookup multiple :items='colorItems' color="brown" v-model="produit.couleurs" prepend-inner-icon="mdi-format-list-checkbox" :rules="rules.champRules" required>
+                                    <template v-slot:selection="{ item, index }">
+                                        <v-chip small v-if="index === 0">
+                                            <span>{{ item }}</span>
+                                        </v-chip>
+                                        <span v-if="index === 1" class="brown--text caption">
+                                            (+{{ produit.couleurs.length - 1 }} autre(s))
+                                        </span>
+                                    </template>
+                                </v-select>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="2">
+                                <v-text-field label="Quantité" color="brown" v-model.trim="produit.quantite" prepend-inner-icon="mdi-numeric" clearable :rules="rules.numericRules" required></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="2">
+                                <v-file-input small-chips v-model="produit.chosenFile" accept="image/*" label="Image" truncate-length="15"></v-file-input>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="3">
+                                <v-text-field label="Poids" append-icon="kg" color="brown" v-model.trim="produit.poids" prepend-inner-icon="mdi-numeric" clearable :rules="rules.numericRules" required></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="3">
+                                <v-text-field label="Longueur" append-icon="cm" color="brown" v-model.trim="produit.longueur" prepend-inner-icon="mdi-numeric" clearable :rules="rules.numericRules" required></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="3">
+                                <v-text-field label="Largeur" append-icon="cm" color="brown" v-model.trim="produit.largeur" prepend-inner-icon="mdi-numeric" clearable :rules="rules.numericRules" required></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="3">
+                                <v-text-field label="Profondeur" append-icon="cm" color="brown" v-model.trim="produit.profondeur" prepend-inner-icon="mdi-numeric" clearable :rules="rules.numericRules" required></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="4">
+                                <v-text-field label="Prix" append-icon="€" color="brown" v-model.trim="produit.prix" prepend-inner-icon="mdi-currency-eur" clearable :rules="rules.floatRules" required></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="4">
+                                <v-text-field label="Taxe" disabled append-icon="/1" color="brown" v-model.trim="produit.taxe" prepend-inner-icon="mdi-brightness-percent" clearable></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="4">
+                                <v-select prepend-inner-icon="mdi-video-input-component" label="Composants" small-chips chips counter deletable-chips disable-lookup :disabled="produit.type === null || produit.type === ''" :items="composants.filter((item) => item.type === produit.type && !item.archive)" item-text="nom" item-value="_id" v-model="produit.composants" multiple>
+                                    <template v-slot:selection="{ item, index }">
+                                        <v-chip small v-if="index === 0">
+                                            <span>{{ item.nom }}</span>
+                                        </v-chip>
+                                        <span v-if="index === 1" class="brown--text caption">
+                                            (+{{ produit.composants.length - 1 }} autre(s))
+                                        </span>
+                                    </template>
+                                </v-select>
+                            </v-col>
+                            <v-col cols="12" md="12">
+                                <v-btn outlined color="brown" @click="isDialogComposant = true">
+                                    <v-icon left>mdi-cog-outline</v-icon> Gestion des composants
+                                </v-btn>
+                            </v-col>
+                        </v-row>
+                    </v-container>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn class="mr-1" color="error" text @click.prevent="isDialogNewProduit = false;$refs.form.reset()">Fermer</v-btn>
+                    <v-btn color="success" text @click.prevent="saveNewProduit">
+                        <v-icon left>mdi-check</v-icon> Sauvegarder
+                    </v-btn>
+                </v-card-actions>
+            </v-form>
+        </v-card>
+    </v-dialog>
+    <v-dialog v-model="isDialogDeleteProduit" width="500" overlay-opacity="0.8">
+        <v-card outlined>
             <v-card-title>
-                <span class="headline">{{ formTitle }}</span>
+                Supprimer le produit {{ produitToDelete.nom }} ?
             </v-card-title>
-            <v-card-text>
-                <v-container>
-                    <v-row>
-                        <v-col cols="12" sm="6" md="4">
-                            <v-text-field label="Nom"></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="6" md="4">
-                            <v-select label="Type" :items='["Chaise", "Table", "Armoire", "Lit"]'></v-select>
-                        </v-col>
-                        <v-col cols="12" sm="6" md="4">
-                            <v-select label="Sous-type"></v-select>
-                        </v-col>
-                        <v-col cols="12" sm="6" md="3">
-                            <v-select label="Matiere" multiple :items='["Metal", "Bois", "Plastique", "Polymére"]'></v-select>
-                        </v-col>
-                        <v-col cols="12" sm="6" md="3">
-                            <v-select label="Couleur" multiple :items='["Noir", "Blanc", "Marron", "Gris"]'></v-select>
-                        </v-col>
-                        <v-col cols="12" sm="6" md="3">
-                            <v-text-field label="Quantité"></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="6" md="3">
-                            <v-file-input small-chips v-model="chosenFile" accept="image/*" label="Image" truncate-length="15"></v-file-input>
-                        </v-col>
-                        <v-col cols="12" sm="6" md="3">
-                            <v-text-field label="Poids(kg)"></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="6" md="3">
-                            <v-text-field label="Longueur(cm)"></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="6" md="3">
-                            <v-text-field label="Largeur(cm)"></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="6" md="3">
-                            <v-text-field label="Profondeur(cm)"></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="6" md="4">
-                            <v-text-field label="Prix meuble(€)"></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="6" md="4">
-                            <v-text-field label="Taxe(%)"></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="6" md="4">
-                            <v-select label="Composants" :items='["Roulette en or", "Pied de meuble en marbre", "Mousse dorée", "Pied de meuble rouge"]' multiple></v-select>
-                        </v-col>
-                        <v-col cols="12" md="12" sm="12">
-                            <v-btn outlined color="green" @click="newProduct">
-                                <v-icon>mdi-check</v-icon> Sauvegarder
-                            </v-btn>
-                        </v-col>
-                        <v-col cols="12" md="8">
-                            <v-btn outlined color="brown" @click="isDialogComposant = true">
-                                <v-icon>mdi-cog-outline</v-icon> Gestion des composants
-                            </v-btn>
-                        </v-col>
-                        <v-col cols="12" md="4">
-                            <strong> Prix total: 150 €</strong>
-                        </v-col>
-                    </v-row>
-                </v-container>
-            </v-card-text>
-
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="red darken-1" text @click="close">
-                    Cancel
+                <v-btn @click="isDialogDeleteProduit = false" class="mx-2" fab dark>
+                    <v-icon dark>mdi-close</v-icon>
                 </v-btn>
-                <v-btn color="green darken-1" text @click="save">
-                    Save
+                <v-btn @click="deleteUtilisateur" class="mx-2" fab color="green darken-1">
+                    <v-icon dark>mdi-check-bold</v-icon>
                 </v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
-    <v-dialog v-model="dialogDelete" max-width="500px">
-        <v-card>
-            <v-card-title class="headline">Are you sure you want to delete this item?</v-card-title>
-            <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-                <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
-                <v-spacer></v-spacer>
-            </v-card-actions>
-        </v-card>
-    </v-dialog>
-    <base-material-card color="brown" icon="mdi-sofa-single-outline" max-width="100%" width="auto" inline class="px-5 py-3 mx-auto">
+    <base-material-card color="brown" icon="mdi-sofa-outline" max-width="100%" width="auto" inline class="px-5 py-3 mx-auto">
         <template v-slot:after-heading>
             <div class="display-1 font-weight-light">Produits</div>
         </template>
-
         <v-row class="mt-8 mr-1">
-            <v-btn color="brown" @click="isDialogNewProduit = true" class="ml-3" dark>
-                <v-icon left>mdi-plus</v-icon>Ajouter un produit
+            <v-btn color="brown" dark @click="isDialogNewProduit = true" class="ml-3">
+                <v-icon left>mdi-plus-circle-outline</v-icon>Ajouter Produit
             </v-btn>
-            <v-btn color="brown" @click="isDialogComposant = true" class="ml-3" dark>
-                <v-icon left>mdi-cog-outline</v-icon>Gestion composant
-            </v-btn>
-            <v-btn color="brown" icon class="ml-3">
+            <v-tooltip top>
+                <template v-slot:activator="{ on, attrs }">
+                    <v-btn icon color="brown" class="ml-3" v-bind="attrs" v-on="on" @click="isDialogComposant = true">
+                        <v-icon large>mdi-cog-outline</v-icon>
+                    </v-btn>
+                </template>
+                <span>Gestion composants</span>
+            </v-tooltip>
+            <v-btn color="brown" icon @click="getProduitsData" class="ml-3">
                 <v-icon large>mdi-refresh</v-icon>
             </v-btn>
-            <v-text-field v-model="search" prepend-icon="mdi-magnify" class="ml-auto" label="Recherche" color="primary" hide-details single-line style="max-width: 250px" clearable />
+            <v-text-field v-model="search" prepend-icon="mdi-magnify" class="ml-auto" label="Recherche" color="brown" hide-details single-line style="max-width: 250px" clearable />
         </v-row>
         <v-divider class="mt-6" />
-
-        <v-data-table :headers="headers" :items="desserts" sort-by="nom" class="elevation-1">
-            <template v-slot:[`item.actions`]="{ item }">
-                <v-icon small class="mr-2" @click="PageInfosProduit(item, false)">
-                    mdi-information
-                </v-icon>
-                <v-icon small class="mr-2" @click="editItem(item)">
-                    mdi-pencil
-                </v-icon>
-                <v-icon small @click="deleteItem(item)">
-                    mdi-delete
+        <v-skeleton-loader v-if="isFirstLoad" :loading="isLoading" type="table"></v-skeleton-loader>
+        <v-data-table v-else :headers="headers" :items="items" :search.sync="search" :sort-by="['nom']" :sort-desc="[false]" item-key="nom">
+            <template v-slot:[`item.imgLink`]="{ item }">
+                <v-img v-if="item.imgLink !== null" :src="item.imgLink" height="80" width="120" aspect-ratio="1" class="grey lighten-2">
+                    <template v-slot:placeholder>
+                        <v-row class="fill-height ma-0" align="center" justify="center"> </v-row>
+                    </template>
+                </v-img>
+                <v-icon v-else color="red" x-large>
+                    mdi-close
                 </v-icon>
             </template>
-            <template v-slot:no-data>
-                <v-btn color="primary" @click="initialize">
-                    Reset
+            <template v-slot:[`item.archive`]="{ item }">
+                <v-icon color="error" v-if="item.archive">mdi-close-circle-outline</v-icon>
+                <v-icon color="success" v-else>mdi-checkbox-marked-circle-outline</v-icon>
+            </template>
+            <template v-slot:[`item.actions`]="{ item }">
+                <v-btn icon color="info" @click="PageInfosProduit(item, false)">
+                    <v-icon>
+                        mdi-information-outline
+                    </v-icon>
+                </v-btn>
+                <v-btn icon color="orange" :disabled="item.archive" @click="PageInfosProduit(item, true)">
+                    <v-icon>
+                        mdi-pencil-outline
+                    </v-icon>
+                </v-btn>
+                <v-btn icon color="error" :disabled="item.archive" @click="dialogDeleteProduit(item)">
+                    <v-icon>
+                        mdi-delete-outline
+                    </v-icon>
                 </v-btn>
             </template>
+            <div slot="no-results" :value="true" icon="warning" class="error--text">
+                La recherche "{{ search }}" est inconnu.
+            </div>
         </v-data-table>
     </base-material-card>
     <v-snackbar v-model="isSnackbarOpened" elevation="24" :color="isSuccess ? 'success' : 'error'">
         <div class="text-center subtitle-1">
-            <v-icon v-if="!isSuccess" color="white">mdi-alert-outline</v-icon>
-            <v-icon v-else color="white">mdi-checkbox-marked-circle-outline</v-icon>
+            <v-icon v-if="!isSuccess" color="white" left>mdi-alert-outline</v-icon>
+            <v-icon v-else color="white" left>mdi-checkbox-marked-circle-outline</v-icon>
             <span>{{ snackbarMessage }}</span>
             <v-btn dark icon class="ml-6" @click="isSnackbarOpened = false">
                 <v-icon>mdi-close</v-icon>
@@ -158,21 +207,18 @@
 </template>
 
 <script lang="ts">
-import Vue, {
-    VNode
-} from 'vue';
-import {
-    bus
-} from "../../main";
-import axiosApi from "../../plugins/axiosApi";
+import Vue from 'vue';
+import Gestion from "../../mixins/Gestion"
+import axiosApi from '../../plugins/axiosApi';
 import qs from "qs";
 import {
     AxiosResponse
 } from 'axios';
-import Gestion from "../../mixins/Gestion"
+import moment from 'moment';
 import Composants from "./Composants.vue"
+
 export default Vue.extend({
-    name: 'Factures',
+    name: 'Produits',
     mixins: [Gestion],
     props: {},
     components: {
@@ -181,230 +227,198 @@ export default Vue.extend({
     //data: () => ({}),
     data(): any {
         return {
-            chosenFile: null,
+            isDialogComposant: false as boolean,
+            isDialogNewProduit: false as boolean,
+            isDialogDeleteProduit: false as boolean,
+            produitToDelete: [] as Array < any > ,
+            produit: {
+                nom: "",
+                description: "",
+                type: "",
+                sousType: "",
+                poids: 0, //new Date().toISOString().substr(0, 10)
+                longueur: 0,
+                largeur: 0,
+                profondeur: 0,
+                prix: 0.00,
+                taxe: 0.05,
+                quantite: 0,
+                composants: [],
+                matieres: [],
+                couleurs: [],
+                chosenFile: null as any
+            },
+            colorItems: ["rouge", "orange", "jaune", "chartreuse", "vert", "turquoise", "cyan", "outremer", "bleu", "violet", "magenta", "carmin"],
+            matiereItems: ["Metal", "Bois", "Plastique", "Polymére", "Cuir", "Fer", "Laque", "Teck", "Verre", "Pin", "Tissu"],
             search: undefined as string | null | undefined,
-            isDialogComposant: false,
-            isDialogNewProduit: false,
-            dialog: false,
-            dialogDelete: false,
             headers: [{
-                    text: 'RefID',
-                    align: 'start',
+                    text: "Image",
+                    value: "imgLink",
                     sortable: false,
-                    value: 'RefID',
+                },{
+                    text: "Nom",
+                    value: "nom",
                 },
                 {
-                    text: 'Nom',
-                    value: 'nom'
+                    text: "Type",
+                    value: "type",
                 },
                 {
-                    text: 'Type',
-                    value: 'type'
+                    text: "Quantité",
+                    value: "quantite",
                 },
                 {
-                    text: 'Prix total (€)',
-                    value: 'prixTotal'
+                    //sortable: false,
+                    text: "Prix(€)",
+                    value: "prix",
                 },
                 {
-                    text: 'Actions',
+                    text: "Disponible",
+                    value: "archive",
+                },
+                {
+                    text: '',
                     value: 'actions',
                     sortable: false
                 },
-            ],
-            desserts: [],
-            editedIndex: -1,
-            editedItem: {
-                RefID: 0,
-                nom: '',
-                type: "Chaise",
-                prixTotal: 100,
-            },
-            defaultItem: {
-                RefID: 0,
-                nom: '',
-                type: "Chaise",
-                prixTotal: 100,
-            },
+            ] as Array < any > ,
+            items: [] as Array < any > ,
+            composants: [] as Array < any > ,
         }
     },
-    computed: {
-        formTitle() {
-            return this.editedIndex === -1 ? 'Nouveau produit' : 'Modifier produit'
-        },
-    },
-    watch: {
-        dialog(val) {
-            val || this.close()
-        },
-        dialogDelete(val) {
-            val || this.closeDelete()
-        },
-    },
+    watch: {},
     created() {
-        this.initialize()
+        //console.log('created')
     },
     beforeMount() {
         //console.log('beforeMount')
     },
-    mounted() {
-        //console.log('mounted')
+    async mounted() {
+        await this.getProduitsData();
     },
     methods: {
-        newProduct:  function () {
-            console.log(this.chosenFile)
+        getProduitsData: function (): void {
+            this.isLoading = true;
+            this.isFirstLoad = true;
+            const requestProducts = axiosApi.get("/product/all");
+            const requestComposants = axiosApi.get("/composant/all");
+            Promise.all([requestProducts, requestComposants])
+                .then((response: AxiosResponse[]) => {
+                    this.items = response[0].data.products;
+                    this.composants = response[1].data.composants;
+                    setTimeout(() => {
+                        this.isLoading = false;
+                        this.isFirstLoad = false;
+                    }, 1000);
+                }).catch((error: any) => {
+                    this.catchAxios(error)
+                    setTimeout(() => {
+                        this.isLoading = false;
+                        this.isFirstLoad = false;
+                    }, 1000);
+                });
+        },
+        saveNewProduit: function (): void {
+            if (!this.$refs.form.validate()) return this.errorMessage("Veuillez vérifier les champs !");
             const config = {
                 headers: {
                     'Content-Type': 'multipart/form-data; ', //boundary=----WebKitFormBoundaryu2bwWC2UJRwib11V
                     'Authorization': 'Bearer ' + localStorage.getItem("token")
                 },
             };
-            const formData = new FormData()
-            formData.append('img', this.chosenFile)
-            formData.append('nom', 'Chaise en titane vue')
-            formData.append('description', 'test2 vue')
-            formData.append('type', 'chaise')
-            formData.append('matieres', 'Metal')
-            formData.append('matieres', 'Bois')
-            formData.append('couleurs', 'rouge')
-            formData.append('couleurs', 'vert')
-            formData.append('couleurs', 'bleu')
-            formData.append('poids', '500')
-            formData.append('longueur', '500')
-            formData.append('largeur', '500')
-            formData.append('profondeur', '50')
-            formData.append('prix', '50.52')
-            formData.append('taxe', '0.05')
-            formData.append('quantite', '5')
-            axiosApi.post("https://api-imie-e-commerce.herokuapp.com/product/add", formData, config)
+            if (this.produit.taxe < 0 || this.produit.taxe > 1) return this.errorMessage("Veuillez vérifier la taxe !");
+            const payload = this.setProduitFormData();
+            axiosApi.post("/product/add", payload, config)
                 .then((response) => {
-                    console.log(response.data)
+                    Object.assign(this.$data, this.$options.data()); //reset data
+                    this.$refs.form.reset();
+                    this.successMessage("Le produit a bien été ajouté !");
+                    setTimeout(() => {
+                        this.getProduitsData();
+                    }, 1000);
                 })
                 .catch((error) => {
-                    throw error;
+                    console.log(error)
+                    this.catchAxios(error)
                 });
         },
-        initialize() {
-            this.desserts = [{
-                    RefID: 1525,
-                    nom: 'Frozen Yogurt',
-                    type: "Chaise",
-                    prixTotal: 100,
-                },
-                {
-                    RefID: 54554,
-                    nom: 'Ice cream sandwich',
-                    type: "Table",
-                    prixTotal: 100,
-                },
-                {
-                    RefID: 524,
-                    nom: 'Eclair',
-                    type: "Chaise",
-                    prixTotal: 100,
-                },
-                {
-                    RefID: 4525,
-                    nom: 'Cupcake',
-                    type: "Chaise",
-                    prixTotal: 100,
-                },
-                {
-                    RefID: 356,
-                    nom: 'Gingerbread',
-                    type: "Chaise",
-                    prixTotal: 100,
-                },
-                {
-                    RefID: 3455,
-                    nom: 'Jelly bean',
-                    type: "Chaise",
-                    prixTotal: 100,
-                },
-                {
-                    RefID: 32552,
-                    nom: 'Lollipop',
-                    type: "Chaise",
-                    prixTotal: 100,
-                },
-                {
-                    RefID: 5452,
-                    nom: 'Honeycomb',
-                    type: "Chaise",
-                    prixTotal: 100,
-                },
-                {
-                    RefID: 55,
-                    nom: 'Donut',
-                    type: "Chaise",
-                    prixTotal: 100,
-                },
-                {
-                    RefID: 55452,
-                    nom: 'KitKat',
-                    type: "Chaise",
-                    prixTotal: 100,
-                },
-            ]
+        deleteUtilisateur: function (): void {
+            this.isDialogDeleteProduit = false;
+            axiosApi
+                .delete("/product/delete/" + this.produitToDelete._id)
+                .then((response) => {
+                    Object.assign(this.$data, this.$options.data()); //reset data
+                    //this.$refs.form.reset();
+                    this.successMessage(`Le produit a été archivé avec succès`);
+                    setTimeout(() => {
+                        this.getProduitsData();
+                    }, 1000);
+                })
+                .catch((error) => {
+                    this.catchAxios(error)
+                });
         },
-
-        editItem(item) {
-            this.editedIndex = this.desserts.indexOf(item)
-            this.editedItem = Object.assign({}, item)
-            this.isDialogNewProduit = true
+        dialogDeleteProduit: function (infosProduit: Record < string, any > ) {
+            this.isDialogDeleteProduit = true;
+            this.produitToDelete = infosProduit;
         },
         PageInfosProduit: function (infosProduit: Record < string, any > , isEdit: boolean) {
             this.$router.push({
                 name: "Informations-Produit",
                 params: {
                     isEdit: isEdit,
-                    infosProduit: infosProduit
+                    idProduit: infosProduit._id,
+                    composants: this.composants
                 },
             });
         },
-        deleteItem(item) {
-            this.editedIndex = this.desserts.indexOf(item)
-            this.editedItem = Object.assign({}, item)
-            this.dialogDelete = true
+        getFormData: function (object: any) {
+            const formData = new FormData();
+            Object.keys(object).forEach(key => formData.append(key, object[key]));
+            return formData;
         },
-
-        deleteItemConfirm() {
-            this.desserts.splice(this.editedIndex, 1)
-            this.closeDelete()
-        },
-
-        close() {
-            this.isDialogNewProduit = false
-            this.$nextTick(() => {
-                this.editedItem = Object.assign({}, this.defaultItem)
-                this.editedIndex = -1
-            })
-        },
-
-        closeDelete() {
-            this.dialogDelete = false
-            this.$nextTick(() => {
-                this.editedItem = Object.assign({}, this.defaultItem)
-                this.editedIndex = -1
-            })
-        },
-
-        save() {
-            if (this.editedIndex > -1) {
-                Object.assign(this.desserts[this.editedIndex], this.editedItem)
-            } else {
-                this.desserts.push(this.editedItem)
+        setProduitFormData: function (): FormData {
+            let payload = new FormData();
+            payload.append('img', this.produit.chosenFile)
+            payload.append('nom', this.produit.nom)
+            payload.append('description', this.produit.description)
+            payload.append('type', this.produit.type)
+            payload.append('sousType', this.produit.sousType)
+            payload.append('poids', this.produit.poids)
+            payload.append('longueur', this.produit.longueur)
+            payload.append('largeur', this.produit.largeur)
+            payload.append('profondeur', this.produit.profondeur)
+            payload.append('prix', this.produit.prix)
+            payload.append('taxe', this.produit.taxe)
+            payload.append('quantite', this.produit.quantite)
+            if(this.produit.matieres.length > 0){
+                this.produit.matieres.forEach((el:string) => {
+                    payload.append('matieres', el)
+                });
+                if(this.produit.matieres.length === 1) payload.append('matieres', '')
+            }else{
+                for(let i = 0 ; i < 2; i++) payload.append('matieres', '')
             }
-            this.close()
+            if(this.produit.couleurs.length > 0){
+                this.produit.couleurs.forEach((el:string) => {
+                    payload.append('couleurs', el)
+                });
+                if(this.produit.couleurs.length === 1) payload.append('couleurs', '')
+            }else{
+                for(let i = 0 ; i < 2; i++) payload.append('couleurs', '')
+            }
+            if(this.produit.composants.length > 0){
+                this.produit.composants.forEach((el:string) => {
+                    payload.append('composants', el)
+                });
+                if(this.produit.composants.length === 1) payload.append('composants', '')
+            }else{
+                for(let i = 0 ; i < 2; i++) payload.append('composants', '')
+            }
+            return payload;
         },
     }
 });
 </script>
 
-<style>
-.imgProduct {
-    width: 30%;
-    margin: auto;
-    display: block;
-    margin-bottom: 10px;
-}
-</style>
+<style></style>

@@ -214,6 +214,16 @@
                     </v-btn>
                 </td>
             </template>
+            <template v-slot:[`item.createdAt`]="{ item }"> {{ item.createdAt | moment("YYYY-MM-DD HH:mm") }} </template>
+            <template v-slot:[`item.lastLogin`]="{ item }"> {{ item.lastLogin | moment("YYYY-MM-DD HH:mm") }} </template>
+            <template v-slot:[`item.checked`]="{ item }">
+                <v-icon color="success" v-if="item.checked">mdi-checkbox-marked-circle-outline</v-icon>
+                <v-icon color="error" v-else>mdi-close-circle-outline</v-icon>
+            </template>
+            <template v-slot:[`item.disabled`]="{ item }">
+                <v-icon color="error" v-if="item.disabled">mdi-close-circle-outline</v-icon>
+                <v-icon color="success" v-else>mdi-checkbox-marked-circle-outline</v-icon>
+            </template>
             <div slot="no-results" :value="true" icon="warning" class="error--text">
                 La recherche "{{ search }}" est inconnu.
             </div>
@@ -221,8 +231,8 @@
     </base-material-card>
     <v-snackbar v-model="isSnackbarOpened" elevation="24" :color="isSuccess ? 'success' : 'error'">
         <div class="text-center subtitle-1">
-            <v-icon v-if="!isSuccess" color="white">mdi-alert-outline</v-icon>
-            <v-icon v-else color="white">mdi-checkbox-marked-circle-outline</v-icon>
+            <v-icon v-if="!isSuccess" color="white" left>mdi-alert-outline</v-icon>
+            <v-icon v-else color="white" left>mdi-checkbox-marked-circle-outline</v-icon>
             <span>{{ snackbarMessage }}</span>
             <v-btn dark icon class="ml-6" @click="isSnackbarOpened = false">
                 <v-icon>mdi-close</v-icon>
@@ -294,6 +304,14 @@ export default Vue.extend({
                     sortable: false,
                     text: "Dernière connexion",
                     value: "lastLogin",
+                }, {
+                    sortable: false,
+                    text: "Checked",
+                    value: "checked",
+                }, {
+                    sortable: false,
+                    text: "Actif",
+                    value: "disabled",
                 },
             ] as Array < any > ,
             items: [] as Array < any > ,

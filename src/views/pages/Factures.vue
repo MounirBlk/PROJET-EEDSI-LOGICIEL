@@ -90,8 +90,8 @@
     </base-material-card>
     <v-snackbar v-model="isSnackbarOpened" elevation="24" :color="isSuccess ? 'success' : 'error'">
         <div class="text-center subtitle-1">
-            <v-icon v-if="!isSuccess" color="white">mdi-alert-outline</v-icon>
-            <v-icon v-else color="white">mdi-checkbox-marked-circle-outline</v-icon>
+            <v-icon v-if="!isSuccess" color="white" left>mdi-alert-outline</v-icon>
+            <v-icon v-else color="white" left>mdi-checkbox-marked-circle-outline</v-icon>
             <span>{{ snackbarMessage }}</span>
             <v-btn dark icon class="ml-6" @click="isSnackbarOpened = false">
                 <v-icon>mdi-close</v-icon>
@@ -254,12 +254,12 @@ export default Vue.extend({
             ]
         },
 
-        editItem(item) {
+        editItem(item: any) {
             this.editedIndex = this.desserts.indexOf(item)
             this.editedItem = Object.assign({}, item)
             this.isDialogNewFacture = true
         },
-        informationsFacture(item) {
+        informationsFacture(item: any) {
             this.$router.push({
                 name: "Informations-Facture",
                 /*params: {
@@ -268,7 +268,7 @@ export default Vue.extend({
                 },*/
             });
         },
-        deleteItem(item) {
+        deleteItem(item: any) {
             this.editedIndex = this.desserts.indexOf(item)
             this.editedItem = Object.assign({}, item)
             this.dialogDelete = true

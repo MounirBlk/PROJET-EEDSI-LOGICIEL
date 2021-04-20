@@ -11,7 +11,7 @@ export default Vue.extend({
             
         }
     },
-    props: {
+    /*props: {
         title: {
             type: String,
             default: '',
@@ -24,7 +24,8 @@ export default Vue.extend({
             type: Array,
             default: () => ([]),
         },
-    },
+    },*/
+    props: ["title","labels","datasets"],
     /*watch: {
         datasets: {
             handler(val) {

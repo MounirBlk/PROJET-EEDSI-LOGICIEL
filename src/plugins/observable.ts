@@ -41,5 +41,9 @@ export const rules = Vue.observable({
         (v: any) => !!v || "Veuillez remplir le champ",
         (v: any) => (v && v.match(/^[0-9]+$/) != null) || "Seuls les chiffres sont autorisé",
     ],
+    floatRules:[  
+        (v: any) => !!v || "Veuillez remplir le champ",
+        (v: any) => (v && v.match(/^[0-9]+(\.[0-9]{0,})$/) != null) || "Seuls les nombres à virgule sont autorisé"
+    ],
     champRules: [(v: any) => !!v || "Veuillez remplir le champ"]
 });
