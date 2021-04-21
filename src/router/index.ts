@@ -125,23 +125,16 @@ const routes: Array<RouteConfig> = [{
         requiresAuth: true
       }
     },{
-      name: 'Signalements',
-      path: '/signalements',
-      component: () => import ('@/views/pages/Signalements.vue'),
+      name: 'Commandes',
+      path: '/commandes',
+      component: () => import ('@/views/pages/Commandes.vue'),
       meta: {
         requiresAuth: true
       }
     },{
-      name: 'Livraisons',
-      path: '/livraisons',
-      component: () => import ('@/views/pages/Livraisons.vue'),
-      meta: {
-        requiresAuth: true
-      }
-    },{
-      name: 'Informations-Livraison',
-      path: '/livraisons/livraison',
-      component: () => import ('@/views/pages/InfosLivraison.vue'),
+      name: 'Informations-Commande',
+      path: '/commandes/commande',
+      component: () => import ('@/views/pages/InfosCommande.vue'),
       meta: {
         requiresAuth: true
       }

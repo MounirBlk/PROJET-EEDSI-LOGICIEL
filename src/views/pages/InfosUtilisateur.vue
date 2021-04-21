@@ -44,11 +44,6 @@
                                         <td>{{ user.dateNaissance }}</td>
                                     </tr>
                                     <tr>
-                                        <td>Adresse</td>
-                                        <td v-if="user.adresse != ''">{{ user.adresse }}</td>
-                                        <td v-else>Inconnu</td>
-                                    </tr>
-                                    <tr>
                                         <td>Statut administrateur</td>
                                         <td v-if="user.role === 'Administrateur'">Oui</td>
                                         <td v-else>Non</td>

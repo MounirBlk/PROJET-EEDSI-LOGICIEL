@@ -44,16 +44,6 @@
                                         <td>{{ client.dateNaissance }}</td>
                                     </tr>
                                     <tr>
-                                        <td>Adresse</td>
-                                        <td v-if="client.adresse != ''">{{ client.adresse }}</td>
-                                        <td v-else>Inconnu</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Statut administrateur</td>
-                                        <td v-if="client.role === 'Administrateur'">Oui</td>
-                                        <td v-else>Non</td>
-                                    </tr>
-                                    <tr>
                                         <td>Création</td>
                                         <td>{{ client.createdAt | moment("YYYY-MM-DD HH:mm") }}</td>
                                     </tr>

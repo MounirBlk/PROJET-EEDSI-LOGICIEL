@@ -151,19 +151,18 @@
             </v-form>
         </v-card>
     </v-dialog>
-    <v-dialog v-model="isDialogDeleteUtilisateur" width="500" overlay-opacity="0.8">
+    <v-dialog v-model="isDialogDisableUtilisateur" width="500" overlay-opacity="0.8">
         <v-card outlined>
             <v-card-title>
-                Supprimer le client prospect {{ utilisateurToDelete.firstname }}
-                {{ utilisateurToDelete.lastname }} ?
-                <v-divider class="my-2" />
+                Désactivé le client prospect {{ utilisateurToDisable.firstname }}
+                {{ utilisateurToDisable.lastname }} ?
             </v-card-title>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn @click="isDialogDeleteUtilisateur = false" class="mx-2" fab dark>
+                <v-btn @click="isDialogDisableUtilisateur = false" class="mx-2" fab dark>
                     <v-icon dark>mdi-close</v-icon>
                 </v-btn>
-                <v-btn @click="deleteUtilisateur" class="mx-2" fab color="green darken-1">
+                <v-btn @click="disableUtilisateur" class="mx-2" fab color="green darken-1">
                     <v-icon dark>mdi-check-bold</v-icon>
                 </v-btn>
             </v-card-actions>
@@ -204,11 +203,11 @@
                         <v-icon left>mdi-account-edit-outline</v-icon>
                         Modifier {{ item.civilite.toLowerCase() === "homme" ? 'M. '+ item.lastname : 'Mme '+ item.lastname }}
                     </v-btn>
-                    <v-btn :disabled="!isAdmin || item.role.toLowerCase() === 'administrateur'" small outlined color="red" @click="dialogDeleteUtilisateur(item)" class="ml-3">
+                    <v-btn :disabled="item.disabled || !isAdmin || item.role.toLowerCase() === 'administrateur'" small outlined color="red" @click="dialogDeleteUtilisateur(item)" class="ml-3">
                         <v-icon left>mdi-account-remove-outline</v-icon>
-                        Supprimer {{ item.civilite.toLowerCase() === "homme" ? 'M. '+ item.lastname : 'Mme '+ item.lastname }}
+                        Désactiver {{ item.civilite.toLowerCase() === "homme" ? 'M. '+ item.lastname : 'Mme '+ item.lastname }}
                     </v-btn>
-                    <v-btn :disabled="!isAdmin || item.role.toLowerCase() === 'administrateur'" small outlined @click="isDialogEditEntreprise = true" class="ml-3">
+                    <v-btn :disabled="item.disabled || !isAdmin || item.role.toLowerCase() === 'administrateur'" small outlined @click="isDialogEditEntreprise = true" class="ml-3">
                         <v-icon left>mdi-pencil-outline</v-icon>
                         Modifier entreprise
                     </v-btn>
@@ -262,8 +261,8 @@ export default Vue.extend({
         return {
             isDialogNewUtilisateur: false as boolean,
             isDialogDateNaissanceOpen: false as boolean,
-            isDialogDeleteUtilisateur: false as boolean,
-            utilisateurToDelete: [] as Array < any > ,
+            isDialogDisableUtilisateur: false as boolean,
+            utilisateurToDisable: [] as Array < any > ,
             prospect: {
                 email: "",
                 password: "",
@@ -289,18 +288,7 @@ export default Vue.extend({
                 {
                     text: "Email",
                     value: "email",
-                },
-                {
-                    //sortable: false,
-                    text: "Phone",
-                    value: "portable",
-                },
-                {
-                    sortable: false,
-                    text: "Création",
-                    value: "createdAt",
-                },
-                {
+                },{
                     sortable: false,
                     text: "Dernière connexion",
                     value: "lastLogin",
@@ -374,17 +362,17 @@ export default Vue.extend({
                 this.catchAxios(error)
             });
         },
-        deleteUtilisateur: async function (): Promise < void > {
-            this.isDialogDeleteUtilisateur = false;
+        disableUtilisateur: async function (): Promise < void > {
+            this.isDialogDisableUtilisateur = false;
             await axiosApi
-            .delete("/user/delete/" + this.utilisateurToDelete._id)
+            .put("/user/disable/" + this.utilisateurToDisable._id)
             .then((response) => {
                 console.log(response.data.message)
-                const utilisateurFirstname = this.utilisateurToDelete.firstname;
-                const utilisateurLastname = this.utilisateurToDelete.lastname;
+                const utilisateurFirstname = this.utilisateurToDisable.firstname;
+                const utilisateurLastname = this.utilisateurToDisable.lastname;
                 Object.assign(this.$data, this.$options.data()); //reset data
                 //this.$refs.form.reset();
-                this.successMessage(`Le client prospect ${utilisateurFirstname} ${utilisateurLastname} a été supprimé avec succès`);
+                this.successMessage(`Le client prospect ${utilisateurFirstname} ${utilisateurLastname} a été désactivé avec succès`);
                 setTimeout(() => {
                     this.getUtilisateursData();
                 }, 1000);
@@ -394,8 +382,8 @@ export default Vue.extend({
             });
         },
         dialogDeleteUtilisateur: function (infosProspect: Record < string, any > ) {
-            this.isDialogDeleteUtilisateur = true;
-            this.utilisateurToDelete = infosProspect;
+            this.isDialogDisableUtilisateur = true;
+            this.utilisateurToDisable = infosProspect;
         },
         PageInfosUtilisateur: function (infosProspect: Record < string, any > , isEdit: boolean) {
             this.$router.push({

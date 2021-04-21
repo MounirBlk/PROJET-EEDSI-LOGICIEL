@@ -20,7 +20,7 @@
                                 <v-text-field label="Prix" append-icon="€" color="orange" v-model.trim="composant.prix" prepend-inner-icon="mdi-currency-eur" clearable :rules="rules.floatRules" required></v-text-field>
                             </v-col>
                             <v-col cols="12" sm="12" md="12">
-                                <v-textarea color="orange" label="Description" rows="3" v-model="composant.description" prepend-inner-icon="mdi-text-box-outline" />
+                                <v-textarea color="orange" label="Description" rows="3" v-model="composant.description" prepend-inner-icon="mdi-text-box-outline" :rules="rules.champRules" required/>
                             </v-col>
                             <v-col cols="12" sm="6" md="4">
                                 <v-select label="Matieres" small-chips chips counter deletable-chips disable-lookup multiple :items='matiereItems' color="orange" v-model="composant.matieres" prepend-inner-icon="mdi-format-list-checkbox" :rules="rules.champRules" required>
@@ -116,7 +116,7 @@
                                 <v-textarea color="orange" label="Description" rows="3" v-model="composantToUpdate.description" prepend-inner-icon="mdi-text-box-outline" />
                             </v-col>
                             <v-col cols="12" sm="6" md="4">
-                                <v-select label="Matieres" small-chips chips counter deletable-chips disable-lookup multiple :items='matiereItems' color="orange" v-model="composantToUpdate.matieres" prepend-inner-icon="mdi-format-list-checkbox">
+                                <v-select label="Matières" small-chips chips counter deletable-chips disable-lookup multiple :items='matiereItems' color="orange" v-model="composantToUpdate.matieres" prepend-inner-icon="mdi-format-list-checkbox">
                                     <template v-slot:selection="{ item, index }">
                                         <v-chip small v-if="index === 0">
                                             <span>{{ item }}</span>

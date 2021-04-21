@@ -51,16 +51,6 @@
                                         <td>{{ prospect.dateNaissance }}</td>
                                     </tr>
                                     <tr>
-                                        <td>Adresse</td>
-                                        <td v-if="prospect.adresse != ''">{{ prospect.adresse }}</td>
-                                        <td v-else>Inconnu</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Statut administrateur</td>
-                                        <td v-if="prospect.role === 'Administrateur'">Oui</td>
-                                        <td v-else>Non</td>
-                                    </tr>
-                                    <tr>
                                         <td>Création</td>
                                         <td>{{ prospect.createdAt }}</td>
                                     </tr>
@@ -254,8 +244,8 @@ export default Vue.extend({
         return {
             changePassword: false as boolean,
             isDialogDateNaissanceOpen: false as boolean,
-            isFirstload: false as boolean,
-            isLoading: false as boolean,
+            //isFirstload: false as boolean,
+            //isLoading: false as boolean,
             prospect: {},
             entreprise: {
                 name: 'IMIE PARIS',

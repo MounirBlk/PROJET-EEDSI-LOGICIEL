@@ -65,11 +65,6 @@
                                             <v-text-field color="purple" label="Numéro de téléphone" v-model="user.portable" prepend-inner-icon="mdi-deskphone" :clearable="isUpdateUser" :disabled="!isUpdateUser" />
                                         </v-col>
                                     </v-row>
-                                    <v-row class="mt-n4">
-                                        <v-col cols="12" md="12">
-                                            <v-text-field color="purple" label="Adresse" v-model="user.adresse" prepend-inner-icon="mdi-walk" :clearable="isUpdateUser" :disabled="!isUpdateUser" />
-                                        </v-col>
-                                    </v-row>
                                 </div>
                             </v-col>
                             <v-row>
@@ -178,7 +173,6 @@ export default Vue.extend({
                 prenom: "",
                 dateNaissance: null,
                 civilite: "",
-                adresse: "",
                 portable: "",
                 isAdmin: "",
             },

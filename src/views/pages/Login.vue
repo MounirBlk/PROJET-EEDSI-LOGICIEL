@@ -123,7 +123,7 @@ export default Vue.extend({
                     axiosApi.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem("token")}`;
                     if (localStorage.getItem("token") == null) return this.errorMessage("Token inconnu !");
                     this.isOverlay = false;
-                    const isAdmin = true;
+                    const isAdmin = response.data.user.role.toLowerCase() === "administrateur" ? true : false;
                     if (isAdmin === undefined || isAdmin === null) {
                         return;
                     } else {
@@ -139,6 +139,7 @@ export default Vue.extend({
                     }
                 })
                 .catch((error) => {
+                    console.log(error)
                     this.catchAxios(error);
                     this.isOverlay = false;
                 })
