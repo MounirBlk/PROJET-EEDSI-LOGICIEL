@@ -1,18 +1,17 @@
 <template>
 <v-container id="clients" tag="section" fluid>
-    <v-dialog v-model="isDialogDeleteUtilisateur" width="500" overlay-opacity="0.8">
+    <v-dialog v-model="isDialogDisableUtilisateur" width="500" overlay-opacity="0.8">
         <v-card outlined>
             <v-card-title>
-                Supprimer le client {{ utilisateurToDelete.firstname }}
-                {{ utilisateurToDelete.lastname }} ?
-                <v-divider class="my-2" />
+                Désactiver le client {{ utilisateurToDisable.firstname }}
+                {{ utilisateurToDisable.lastname }} ?
             </v-card-title>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn @click="isDialogDeleteUtilisateur = false" class="mx-2" fab dark>
+                <v-btn @click="isDialogDisableUtilisateur = false" class="mx-2" fab dark>
                     <v-icon dark>mdi-close</v-icon>
                 </v-btn>
-                <v-btn @click="deleteUtilisateur" class="mx-2" fab color="green darken-1">
+                <v-btn @click="disableUser" class="mx-2" fab color="green darken-1">
                     <v-icon dark>mdi-check-bold</v-icon>
                 </v-btn>
             </v-card-actions>
@@ -52,13 +51,13 @@
                         <v-icon left>mdi-card-account-details-outline</v-icon>
                         Informations {{ item.civilite.toLowerCase() === "homme" ? 'M. '+ item.lastname : 'Mme '+ item.lastname }}
                     </v-btn>
-                    <v-btn :disabled="!isAdmin || item.role.toLowerCase() === 'administrateur'" small outlined color="orange" @click="PageInfosUtilisateur(item, true)" class="ml-3">
+                    <v-btn :disabled="item.disabled || !isAdmin || item.role.toLowerCase() === 'administrateur'" small outlined color="orange" @click="PageInfosUtilisateur(item, true)" class="ml-3">
                         <v-icon left>mdi-account-edit-outline</v-icon>
                         Modifier {{ item.civilite.toLowerCase() === "homme" ? 'M. '+ item.lastname : 'Mme '+ item.lastname }}
                     </v-btn>
-                    <v-btn :disabled="!isAdmin || item.role.toLowerCase() === 'administrateur'" small outlined color="red" @click="dialogDeleteUtilisateur(item)" class="ml-3">
+                    <v-btn :disabled="item.disabled || !isAdmin || item.role.toLowerCase() === 'administrateur'" small outlined color="red" @click="dialogDeleteUtilisateur(item)" class="ml-3">
                         <v-icon left>mdi-account-remove-outline</v-icon>
-                        Supprimer {{ item.civilite.toLowerCase() === "homme" ? 'M. '+ item.lastname : 'Mme '+ item.lastname }}
+                        Désactiver {{ item.civilite.toLowerCase() === "homme" ? 'M. '+ item.lastname : 'Mme '+ item.lastname }}
                     </v-btn>
                 </td>
             </template>
@@ -98,8 +97,8 @@ export default Vue.extend({
     //data: () => ({}),
     data(): any {
         return {
-            isDialogDeleteUtilisateur: false as boolean,
-            utilisateurToDelete: [] as Array < any > ,
+            isDialogDisableUtilisateur: false as boolean,
+            utilisateurToDisable: [] as Array < any > ,
             client: {
                 email: "",
                 password: "",
@@ -125,18 +124,7 @@ export default Vue.extend({
                 {
                     text: "Email",
                     value: "email",
-                },
-                {
-                    //sortable: false,
-                    text: "Phone",
-                    value: "portable",
-                },
-                {
-                    sortable: false,
-                    text: "Création",
-                    value: "createdAt",
-                },
-                {
+                },{
                     sortable: false,
                     text: "Dernière connexion",
                     value: "lastLogin",
@@ -187,17 +175,17 @@ export default Vue.extend({
                 }, 1000);
             });
         },
-        deleteUtilisateur: async function (): Promise < void > {
-            this.isDialogDeleteUtilisateur = false;
+        disableUser: async function (): Promise < void > {
+            this.isDialogDisableUtilisateur = false;
             await axiosApi
-            .delete("/user/delete/" + this.utilisateurToDelete._id)
+            .put("/user/disable/" + this.utilisateurToDisable._id)
             .then((response) => {
                 console.log(response.data.message)
-                const utilisateurFirstname = this.utilisateurToDelete.firstname;
-                const utilisateurLastname = this.utilisateurToDelete.lastname;
+                const utilisateurFirstname = this.utilisateurToDisable.firstname;
+                const utilisateurLastname = this.utilisateurToDisable.lastname;
                 Object.assign(this.$data, this.$options.data()); //reset data
                 //this.$refs.form.reset();
-                this.successMessage(`Le client ${utilisateurFirstname} ${utilisateurLastname} a été supprimé avec succès`);
+                this.successMessage(`Le client ${utilisateurFirstname} ${utilisateurLastname} a été désactivé avec succès`);
                 setTimeout(() => {
                     this.getUtilisateursData();
                 }, 1000);
@@ -207,8 +195,8 @@ export default Vue.extend({
             });
         },
         dialogDeleteUtilisateur: function (infosClient: Record < string, any > ) {
-            this.isDialogDeleteUtilisateur = true;
-            this.utilisateurToDelete = infosClient;
+            this.isDialogDisableUtilisateur = true;
+            this.utilisateurToDisable = infosClient;
         },
         PageInfosUtilisateur: function (infosClient: Record < string, any > , isEdit: boolean) {
             this.$router.push({

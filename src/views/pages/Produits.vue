@@ -37,10 +37,10 @@
                                 <v-text-field label="Sous-type" color="brown" v-model.trim="produit.sousType" prepend-inner-icon="mdi-alphabetical" clearable></v-text-field>
                             </v-col>
                             <v-col cols="12" sm="12" md="12">
-                                <v-textarea color="brown" label="Description" rows="3" v-model="produit.description" prepend-inner-icon="mdi-text-box-outline" />
+                                <v-textarea color="brown" label="Description" rows="3" v-model="produit.description" prepend-inner-icon="mdi-text-box-outline" :rules="rules.champRules" required/>
                             </v-col>
                             <v-col cols="12" sm="6" md="4">
-                                <v-select label="Matieres" small-chips chips counter deletable-chips disable-lookup multiple :items='matiereItems' color="brown" v-model="produit.matieres" prepend-inner-icon="mdi-format-list-checkbox" :rules="rules.champRules" required>
+                                <v-select label="Matières" small-chips chips counter deletable-chips disable-lookup multiple :items='matiereItems' color="brown" v-model="produit.matieres" prepend-inner-icon="mdi-format-list-checkbox" :rules="rules.champRules" required>
                                     <template v-slot:selection="{ item, index }">
                                         <v-chip small v-if="index === 0">
                                             <span>{{ item }}</span>
@@ -127,7 +127,7 @@
                 <v-btn @click="isDialogDeleteProduit = false" class="mx-2" fab dark>
                     <v-icon dark>mdi-close</v-icon>
                 </v-btn>
-                <v-btn @click="deleteUtilisateur" class="mx-2" fab color="green darken-1">
+                <v-btn @click="deleteProduit" class="mx-2" fab color="green darken-1">
                     <v-icon dark>mdi-check-bold</v-icon>
                 </v-btn>
             </v-card-actions>
@@ -163,9 +163,7 @@
                         <v-row class="fill-height ma-0" align="center" justify="center"> </v-row>
                     </template>
                 </v-img>
-                <v-icon v-else color="red" x-large>
-                    mdi-close
-                </v-icon>
+                <v-icon v-else color="red" x-large> mdi-close</v-icon>
             </template>
             <template v-slot:[`item.archive`]="{ item }">
                 <v-icon color="error" v-if="item.archive">mdi-close-circle-outline</v-icon>
@@ -173,19 +171,13 @@
             </template>
             <template v-slot:[`item.actions`]="{ item }">
                 <v-btn icon color="info" @click="PageInfosProduit(item, false)">
-                    <v-icon>
-                        mdi-information-outline
-                    </v-icon>
+                    <v-icon> mdi-information-outline </v-icon>
                 </v-btn>
                 <v-btn icon color="orange" :disabled="item.archive" @click="PageInfosProduit(item, true)">
-                    <v-icon>
-                        mdi-pencil-outline
-                    </v-icon>
+                    <v-icon> mdi-pencil-outline </v-icon>
                 </v-btn>
                 <v-btn icon color="error" :disabled="item.archive" @click="dialogDeleteProduit(item)">
-                    <v-icon>
-                        mdi-delete-outline
-                    </v-icon>
+                    <v-icon> mdi-delete-outline </v-icon>
                 </v-btn>
             </template>
             <div slot="no-results" :value="true" icon="warning" class="error--text">
@@ -342,7 +334,7 @@ export default Vue.extend({
                     this.catchAxios(error)
                 });
         },
-        deleteUtilisateur: function (): void {
+        deleteProduit: function (): void {
             this.isDialogDeleteProduit = false;
             axiosApi
                 .delete("/product/delete/" + this.produitToDelete._id)

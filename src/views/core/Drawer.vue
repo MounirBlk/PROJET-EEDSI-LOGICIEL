@@ -12,7 +12,7 @@
     </center>
     <v-divider class="my-2"></v-divider>
     <v-list>
-        <v-list-item link v-for="(item, index) in items" :key="index" :to="item.to">
+        <v-list-item link v-for="(item, index) in items" :key="index" :to="item.to" v-if="item.disabled !== true">
             <v-list-item-action>
                 <v-icon style="text-shadow: 0.1em 0.1em 0.1em white">{{ item.icon }}</v-icon>
             </v-list-item-action>
@@ -58,6 +58,7 @@ export default Vue.extend({
             title: 'Factures',
             icon: 'mdi-receipt',
             to: '/factures',
+            disabled: true
         },{
             title: 'Produits',
             icon: 'mdi-sofa-single',
@@ -67,17 +68,13 @@ export default Vue.extend({
             icon: 'mdi-walk',
             to: '/livreurs',
         },{
-            title: 'Livraisons',
+            title: 'Commandes',
             icon: 'mdi-package-variant-closed',
-            to: '/livraisons',
+            to: '/commandes',
         },{
             title: 'Paramètres',
             icon: 'mdi-cogs',
             to: '/parametres',
-        },{
-            title: 'Signalements',
-            icon: 'mdi-badge-account-alert-outline',
-            to: '/signalements',
         },{
             title: 'Prospections',
             icon: 'mdi-bank',

@@ -83,6 +83,18 @@
                                 <v-toolbar-title v-if="$refs.calendar">
                                     {{ $refs.calendar.title }}
                                 </v-toolbar-title>
+                                <div class="mx-2">
+                                    <v-icon right color="indigo" left> mdi-sticker </v-icon> <span class="indigo--text">En attente de livreur</span>
+                                </div>
+                                <div class="mx-2">
+                                    <v-icon right color="orange" left> mdi-sticker </v-icon><span class="orange--text">En cours de livraison</span>
+                                </div>
+                                <div class="mx-2">
+                                    <v-icon right color="red" left> mdi-sticker </v-icon><span class="red--text">Livraison en signalement</span>
+                                </div>
+                                <div class="mx-2">
+                                    <v-icon right color="green" left> mdi-sticker </v-icon><span class="green--text">Livraison terminé</span>
+                                </div>
                                 <v-spacer></v-spacer>
                                 <v-menu bottom right>
                                     <template v-slot:activator="{ on, attrs }">
@@ -193,7 +205,7 @@ export default Vue.extend({
                             name: element.statut === "Attente" ? "En attente" : element.statut === "Livraison" ? "En cours de livraison" : element.statut === "Signalement" ? "Livraison en signalement" : element.statut === "Termine" ? "Livraison terminé" : "Commande",
                             start: new Date(element.dateLivraison),
                             end: new Date(element.dateLivraison),
-                            color: this.colors[this.rnd(0, this.colors.length - 1)],
+                            color: element.statut === "Attente" ? "indigo" : element.statut === "Livraison" ? "orange darken-2" : element.statut === "Signalement" ? "red" : element.statut === "Termine" ? 'green' : "grey darken-1",
                             timed: true,
                             adresseLivraison: element.adresseLivraison,
                             livreur: element.livreurID

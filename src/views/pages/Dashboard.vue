@@ -27,9 +27,31 @@
                     <base-pie-chart :labels="chartPie.labels" :datasets="chartPie.datasets" :title="chartPie.title" />
                 </base-material-card>
             </v-col>
+            <v-col cols="12" md="12">
+                <base-line-chart :key="resetComponentKey" :chartData="chartInit" :options="options" />
+                <!--<base-line-chart :labels="chart.labels" :datasets="chart.datasets" :title="chart.title" />-->
+            </v-col>
+            <v-col cols="12" md="12">
+                <v-expansion-panels style="z-index: 0" focusable v-model="panelCommandes">
+                    <v-expansion-panel>
+                        <v-expansion-panel-header class="green--text">Commandes</v-expansion-panel-header>
+                        <v-expansion-panel-content class="mb-n9">
+                            <Commandes class="px-0"></Commandes>
+                        </v-expansion-panel-content>
+                    </v-expansion-panel>
+                </v-expansion-panels>
+            </v-col>
+            <v-col cols="12" md="12">
+                <v-expansion-panels style="z-index: 0" focusable v-model="panelCalendrier">
+                    <v-expansion-panel>
+                        <v-expansion-panel-header class="red--text">Calendrier</v-expansion-panel-header>
+                        <v-expansion-panel-content class="mb-n9">
+                            <Calendar class="px-0"></Calendar>
+                        </v-expansion-panel-content>
+                    </v-expansion-panel>
+                </v-expansion-panels>
+            </v-col>
         </v-row>
-        <base-line-chart :key="resetComponentKey" :chartData="chartInit" :options="options" />
-        <!--<base-line-chart :labels="chart.labels" :datasets="chart.datasets" :title="chart.title" />-->
     </v-container>
 </div>
 </template>
@@ -37,13 +59,20 @@
 <script lang="ts">
 import Vue from 'vue';
 import Gestion from "../../mixins/Gestion"
+import Commandes from "./Commandes.vue"
+import Calendar from "./Calendar.vue"
 
 export default Vue.extend({
     name: 'Dashboard',
     props: {},
     mixins: [Gestion],
-    components: {},
+    components: {
+        Commandes,
+        Calendar
+    },
     data: (): any => ({
+        panelCalendrier: 0,
+        panelCommandes: 0,
         chart: {
             title: 'Chart',
             labels: ["January", "February", "March", "April", "May", "June", "July"],

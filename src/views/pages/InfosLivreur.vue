@@ -44,16 +44,6 @@
                                         <td>{{ livreur.dateNaissance }}</td>
                                     </tr>
                                     <tr>
-                                        <td>Adresse</td>
-                                        <td v-if="livreur.adresse != ''">{{ livreur.adresse }}</td>
-                                        <td v-else>Inconnu</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Statut administrateur</td>
-                                        <td v-if="livreur.role === 'Administrateur'">Oui</td>
-                                        <td v-else>Non</td>
-                                    </tr>
-                                    <tr>
                                         <td>Création</td>
                                         <td>{{ livreur.createdAt | moment("YYYY-MM-DD HH:mm") }}</td>
                                     </tr>
