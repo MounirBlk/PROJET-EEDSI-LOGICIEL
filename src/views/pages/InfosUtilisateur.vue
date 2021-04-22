@@ -95,10 +95,10 @@
                                             </v-col>
                                         </v-row>
                                         <v-row class="mt-n4">
-                                            <v-col cols="12" md="6">
+                                            <v-col cols="12" md="4">
                                                 <v-select color="info" prepend-inner-icon="mdi-format-list-bulleted-type" v-model="user.civilite" :items="['Homme', 'Femme']" label="Civilité*" :rules="rules.champRules" required solo></v-select>
                                             </v-col>
-                                            <v-col cols="12" md="6">
+                                            <v-col cols="12" md="4">
                                                 <v-menu v-model="isDialogDateNaissanceOpen" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="290px" color="info">
                                                     <template v-slot:activator="{ on, attrs }">
                                                         <v-text-field color="info" v-model="user.dateNaissance" label="Date de naissance" prepend-inner-icon="mdi-calendar-outline" readonly v-bind="attrs" v-on="on" solo></v-text-field>
@@ -106,13 +106,8 @@
                                                     <v-date-picker color="info" first-day-of-week="1" v-model="user.dateNaissance" @input="isDialogDateNaissanceOpen = false" :rules="rules.dateUsRules" required></v-date-picker>
                                                 </v-menu>
                                             </v-col>
-                                        </v-row>
-                                        <v-row class="mt-n4">
-                                            <v-col cols="12" md="6">
+                                            <v-col cols="12" md="4">
                                                 <v-text-field color="info" label="Numéro de téléphone" v-model="user.portable" prepend-inner-icon="mdi-deskphone" clearable solo />
-                                            </v-col>
-                                            <v-col cols="12" md="6">
-                                                <v-text-field color="info" label="Adresse" v-model="user.adresse" prepend-inner-icon="mdi-walk" clearable solo />
                                             </v-col>
                                         </v-row>
                                     </div>
@@ -258,16 +253,13 @@ export default Vue.extend({
         }
     },
     methods: {
-        modificationProfile: async function () {
+        modificationProfile: function () {
             if (!this.$refs.form.validate() && (!this.$refs.form.validate() && this.changePassword))
                 return this.errorMessage("Veuillez vérifier les champs !");
 
             this.user.role = this.user.isAdmin === true ? 'Administrateur' : 'Commercial'
-            await axiosApi
-                .put(
-                    "/user/update/" + this.user._id,
-                    qs.stringify(this.user),
-                ) //update du utilisateur
+            axiosApi
+                .put("/user/update/" + this.user._id, qs.stringify(this.user),) //update du utilisateur
                 .then((response: AxiosResponse) => {
                     if (response.data.error == false) {
                         this.$refs.form.reset();

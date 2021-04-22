@@ -27,10 +27,10 @@
                             </v-col>
                         </v-row>
                         <v-row class="mt-n4">
-                            <v-col cols="12" md="6">
+                            <v-col cols="12" md="4">
                                 <v-select color="grey" prepend-inner-icon="mdi-format-list-bulleted-type" v-model.trim="livreur.civilite" :items="['Homme', 'Femme']" label="Civilité*" :rules="rules.champRules" required></v-select>
                             </v-col>
-                            <v-col cols="12" md="6">
+                            <v-col cols="12" md="4">
                                 <v-menu v-model="isDialogDateNaissanceOpen" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="290px" color="grey">
                                     <template v-slot:activator="{ on, attrs }">
                                         <v-text-field color="grey" v-model="livreur.dateNaissance" :rules="rules.dateEnRules" required label="Date de naissance*" prepend-inner-icon="mdi-calendar-outline" readonly v-bind="attrs" v-on="on"></v-text-field>
@@ -38,13 +38,8 @@
                                     <v-date-picker color="grey" locale="fr" first-day-of-week="1" v-model="livreur.dateNaissance" @input="isDialogDateNaissanceOpen = false" :rules="rules.dateEnRules" required></v-date-picker>
                                 </v-menu>
                             </v-col>
-                        </v-row>
-                        <v-row class="mt-n4">
-                            <v-col cols="12" md="6">
+                            <v-col cols="12" md="4">
                                 <v-text-field color="grey" label="Numéro de téléphone" v-model.trim="livreur.portable" prepend-inner-icon="mdi-deskphone" clearable />
-                            </v-col>
-                            <v-col cols="12" md="6">
-                                <v-text-field color="grey" label="Adresse" v-model.trim="livreur.adresse" prepend-inner-icon="mdi-walk" clearable />
                             </v-col>
                         </v-row>
                     </div>
@@ -169,7 +164,6 @@ export default Vue.extend({
                 firstname: "",
                 dateNaissance: "", //new Date().toISOString().substr(0, 10)
                 civilite: "",
-                adresse: "",
                 portable: "",
                 isAdmin: false,
                 role: "Commercial",

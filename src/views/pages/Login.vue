@@ -9,13 +9,24 @@
                 Mot de passe oublié ?
                 <v-icon aria-label="Close" class="ml-auto" @click="isDialogForgotPassword = false">mdi-close</v-icon>
             </v-card-title>
-            <v-col cols="12">
-                <div class="text-center">
-                    IN PROGRESS, vous pouvez réinitialisé le mot de passe en contactant l'administrateur
-                    <p />
-                    <span class="grey--text">mounir.ballouk@gmail.com</span>
-                </div>
-            </v-col>
+            <v-card-text>
+                <v-col cols="12">
+                    <div class="text-center">
+                        <v-row>
+                            <v-col cols="12" md="12">
+                                <v-text-field color="info" label="Email*" v-model.trim="email_reset" prepend-inner-icon="mdi-email-outline" clearable />
+                            </v-col>
+                        </v-row>
+                    </div>
+                </v-col>
+            </v-card-text>
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn class="mr-1" color="error" text @click.prevent="isDialogForgotPassword = false;">Fermer</v-btn>
+                <v-btn color="success" text @click="resetPassword(email_reset)">
+                    <v-icon left>mdi-check</v-icon> Sauvegarder
+                </v-btn>
+            </v-card-actions>
         </v-card>
     </v-dialog>
     <v-row justify="center">
@@ -89,6 +100,7 @@ export default Vue.extend({
         isDialogForgotPassword: false as boolean,
         email: null as string | null,
         password: null as string | null,
+        email_reset: '',
     }),
     created() {
         //console.log('created')
@@ -144,6 +156,31 @@ export default Vue.extend({
                     this.isOverlay = false;
                 })
         },
+        resetPassword: function (email: string) {
+            if (email == null || email == "") return this.errorMessage("Email vide !");
+
+            this.isOverlay = true;
+            axiosApi
+                .put("/user/forgot", qs.stringify({
+                    email: email
+                }))
+                .then((response: AxiosResponse) => {
+                    if (response.data.error === false) {
+                        this.isOverlay = false;
+                        Object.assign(this.$data, this.$options.data()); //reset data
+                        this.$refs.form.reset();
+                        this.successMessage("Votre mot de passe a bien été réinitialisé, veuillez consulter votre boîte mail");
+                        setTimeout(() => {
+                            this.isDialogForgotPassword = false;
+                        }, 1000);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error)
+                    this.catchAxios(error);
+                    this.isOverlay = false;
+                })
+        }
     }
 });
 </script>

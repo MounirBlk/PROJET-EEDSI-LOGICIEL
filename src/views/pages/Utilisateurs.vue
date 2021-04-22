@@ -27,10 +27,10 @@
                             </v-col>
                         </v-row>
                         <v-row class="mt-n4">
-                            <v-col cols="12" md="6">
+                            <v-col cols="12" md="4">
                                 <v-select color="info" prepend-inner-icon="mdi-format-list-bulleted-type" v-model.trim="user.civilite" :items="['Homme', 'Femme']" label="Civilité*" :rules="rules.champRules" required></v-select>
                             </v-col>
-                            <v-col cols="12" md="6">
+                            <v-col cols="12" md="4">
                                 <v-menu v-model="isDialogDateNaissanceOpen" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="290px" color="info">
                                     <template v-slot:activator="{ on, attrs }">
                                         <v-text-field color="info" v-model="user.dateNaissance" :rules="rules.dateEnRules" required label="Date de naissance*" prepend-inner-icon="mdi-calendar-outline" readonly v-bind="attrs" v-on="on"></v-text-field>
@@ -38,13 +38,8 @@
                                     <v-date-picker color="info" locale="fr" first-day-of-week="1" v-model="user.dateNaissance" @input="isDialogDateNaissanceOpen = false" :rules="rules.dateEnRules" required></v-date-picker>
                                 </v-menu>
                             </v-col>
-                        </v-row>
-                        <v-row class="mt-n4">
-                            <v-col cols="12" md="6">
+                            <v-col cols="12" md="4">
                                 <v-text-field color="info" label="Numéro de téléphone" v-model.trim="user.portable" prepend-inner-icon="mdi-deskphone" clearable />
-                            </v-col>
-                            <v-col cols="12" md="6">
-                                <v-text-field color="info" label="Adresse" v-model.trim="user.adresse" prepend-inner-icon="mdi-walk" clearable />
                             </v-col>
                         </v-row>
                     </div>
@@ -197,7 +192,6 @@ export default Vue.extend({
                 firstname: "",
                 dateNaissance: "", //new Date().toISOString().substr(0, 10)
                 civilite: "",
-                adresse: "",
                 portable: "",
                 isAdmin: false,
                 role: "Commercial",
@@ -205,31 +199,30 @@ export default Vue.extend({
             search: undefined as string | null | undefined,
             expanded: [] as Array < any > ,
             headers: [{
-                    text: "Rôle",
-                    value: "role",
-                }, {
-                    text: "Nom",
-                    value: "lastname",
-                },{
-                    text: "Prénom",
-                    value: "firstname",
-                },{
-                    text: "Email",
-                    value: "email",
-                },{
-                    sortable: false,
-                    text: "Dernière connexion",
-                    value: "lastLogin",
-                },{
-                    sortable: false,
-                    text: "Checked",
-                    value: "checked",
-                },{
-                    sortable: false,
-                    text: "Actif",
-                    value: "disabled",
-                },
-            ] as Array < any > ,
+                text: "Rôle",
+                value: "role",
+            }, {
+                text: "Nom",
+                value: "lastname",
+            }, {
+                text: "Prénom",
+                value: "firstname",
+            }, {
+                text: "Email",
+                value: "email",
+            }, {
+                sortable: false,
+                text: "Dernière connexion",
+                value: "lastLogin",
+            }, {
+                sortable: false,
+                text: "Checked",
+                value: "checked",
+            }, {
+                sortable: false,
+                text: "Actif",
+                value: "disabled",
+            }, ] as Array < any > ,
             items: [] as Array < any > ,
         }
     },
@@ -287,21 +280,21 @@ export default Vue.extend({
         deleteUtilisateur: async function (): Promise < void > {
             this.isDialogDeleteUtilisateur = false;
             axiosApi
-            .delete("/user/delete/" + this.utilisateurToDelete._id)
-            .then((response) => {
-                console.log(response.data.message)
-                const utilisateurFirstname = this.utilisateurToDelete.firstname;
-                const utilisateurLastname = this.utilisateurToDelete.lastname;
-                Object.assign(this.$data, this.$options.data()); //reset data
-                //this.$refs.form.reset();
-                this.successMessage(`L'utilisateur ${utilisateurFirstname} ${utilisateurLastname} a été supprimé avec succès`);
-                setTimeout(() => {
-                    this.getUtilisateursData();
-                }, 1000);
-            })
-            .catch((error) => {
-                this.catchAxios(error)
-            });
+                .delete("/user/delete/" + this.utilisateurToDelete._id)
+                .then((response) => {
+                    console.log(response.data.message)
+                    const utilisateurFirstname = this.utilisateurToDelete.firstname;
+                    const utilisateurLastname = this.utilisateurToDelete.lastname;
+                    Object.assign(this.$data, this.$options.data()); //reset data
+                    //this.$refs.form.reset();
+                    this.successMessage(`L'utilisateur ${utilisateurFirstname} ${utilisateurLastname} a été supprimé avec succès`);
+                    setTimeout(() => {
+                        this.getUtilisateursData();
+                    }, 1000);
+                })
+                .catch((error) => {
+                    this.catchAxios(error)
+                });
         },
         disableUtilisateur: async function (): Promise < void > {
             this.isDialogDeleteUtilisateur = false;
