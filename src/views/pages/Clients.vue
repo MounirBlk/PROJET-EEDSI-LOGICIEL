@@ -106,7 +106,6 @@ export default Vue.extend({
                 firstname: "",
                 dateNaissance: "", //new Date().toISOString().substr(0, 10)
                 civilite: "",
-                adresse: "",
                 portable: "",
                 isAdmin: false,
                 role: "Client",

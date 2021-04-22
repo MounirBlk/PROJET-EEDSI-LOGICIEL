@@ -1,5 +1,8 @@
 <template>
 <v-container fluid tag="section">
+    <v-overlay :absolute="isAbsolute" opacity="1" :value="isOverlay">
+        <v-progress-circular color="success" indeterminate size="80"></v-progress-circular>
+    </v-overlay>
     <v-row justify="center">
         <v-col cols="12" md="8">
             <base-material-card color="success darken-1">
@@ -11,7 +14,7 @@
                     </div>
                 </template>
                 <div v-for="(item, index) in paginatedData" :key="index">
-                    <Article :article="item" />
+                    <Article :key="resetCounter" :article="item" />
                 </div>
                 <v-row>
                     <v-col cols="12" class="text-left">
@@ -107,16 +110,17 @@ export default Vue.extend({
             commande: {
                 articles: [],
                 livreurID: {
-                    lastname:'',
-                    firstname:'',
-                    email:'',
-                    portable:'',
+                    lastname: '',
+                    firstname: '',
+                    email: '',
+                    portable: '',
                     dateNaissance: '',
                     lastLogin: ''
                 }
             },
             pageNumber: 1 as number,
-            size: 1 as number
+            size: 1 as number,
+            resetCounter: 0 as number,
         };
     },
     computed: {
@@ -139,6 +143,7 @@ export default Vue.extend({
         //console.log('beforeMount')
     },
     mounted(): any {
+        this.isOverlay = true;
         if (this.$route.params.idCommande !== null && this.$route.params.idCommande !== undefined) {
             this.getCommandesData(this.$route.params.idCommande);
         } else {
@@ -149,28 +154,25 @@ export default Vue.extend({
     },
     methods: {
         getCommandesData: function (idCommande: string): void {
-            this.isLoading = true;
-            this.isFirstLoad = true;
+            this.isOverlay = true;
             axiosApi
                 .get("/commande/one/" + idCommande) //one commande
                 .then((response: AxiosResponse) => {
                     this.commande = response.data.commande;
-                    console.log(this.commande)
                     setTimeout(() => {
-                        this.isLoading = false;
-                        this.isFirstLoad = false;
+                        this.isOverlay = false;
                     }, 1000);
                 })
                 .catch(error => {
                     this.catchAxios(error);
                     setTimeout(() => {
-                        this.isLoading = false;
-                        this.isFirstLoad = false;
+                        this.isOverlay = false;
                     }, 1000);
                 });
         },
         nextPage(page: number) {
             this.pageNumber = page;
+            this.resetCounter++
         }
     }
 });

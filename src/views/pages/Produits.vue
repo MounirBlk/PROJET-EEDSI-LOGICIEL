@@ -17,8 +17,14 @@
             <Composants />
         </v-card>
     </v-dialog>
-    <v-dialog v-model="isDialogNewProduit" persistent max-width="1000px" overlay-opacity="0.8">
-        <v-card class="px-6" outlined>
+    <v-dialog v-model="isDialogNewProduit" v-if="" persistent max-width="1000px" overlay-opacity="0.8">
+        <v-card color="brown" class="px-6" outlined v-if="isOnLoading">
+            <v-card-text>
+                Chargement...
+                <v-progress-linear indeterminate color="white" class="mb-0"></v-progress-linear>
+            </v-card-text>
+        </v-card>
+        <v-card class="px-6" outlined v-else>
             <v-form ref="form" v-model="rules.valid" lazy-validation>
                 <v-card-title class="brown--text">
                     Ajout Produit
@@ -37,7 +43,7 @@
                                 <v-text-field label="Sous-type" color="brown" v-model.trim="produit.sousType" prepend-inner-icon="mdi-alphabetical" clearable></v-text-field>
                             </v-col>
                             <v-col cols="12" sm="12" md="12">
-                                <v-textarea color="brown" label="Description" rows="3" v-model="produit.description" prepend-inner-icon="mdi-text-box-outline" :rules="rules.champRules" required/>
+                                <v-textarea color="brown" label="Description" rows="3" v-model="produit.description" prepend-inner-icon="mdi-text-box-outline" :rules="rules.champRules" required />
                             </v-col>
                             <v-col cols="12" sm="6" md="4">
                                 <v-select label="Matières" small-chips chips counter deletable-chips disable-lookup multiple :items='matiereItems' color="brown" v-model="produit.matieres" prepend-inner-icon="mdi-format-list-checkbox" :rules="rules.champRules" required>
@@ -157,6 +163,10 @@
         <v-divider class="mt-6" />
         <v-skeleton-loader v-if="isFirstLoad" :loading="isLoading" type="table"></v-skeleton-loader>
         <v-data-table v-else :headers="headers" :items="items" :search.sync="search" :sort-by="['nom']" :sort-desc="[false]" item-key="nom">
+            <template v-slot:[`item.nom`]="{ item }">
+                <span class="red--text" v-if="item.archive">{{ item.nom }}</span>
+                <span v-else>{{ item.nom }}</span>
+            </template>
             <template v-slot:[`item.imgLink`]="{ item }">
                 <v-img v-if="item.imgLink !== null" :src="item.imgLink" height="80" width="120" aspect-ratio="1" class="grey lighten-2">
                     <template v-slot:placeholder>
@@ -247,7 +257,7 @@ export default Vue.extend({
                     text: "Image",
                     value: "imgLink",
                     sortable: false,
-                },{
+                }, {
                     text: "Nom",
                     value: "nom",
                 },
@@ -276,6 +286,7 @@ export default Vue.extend({
             ] as Array < any > ,
             items: [] as Array < any > ,
             composants: [] as Array < any > ,
+            isOnLoading: false as boolean
         }
     },
     watch: {},
@@ -319,11 +330,11 @@ export default Vue.extend({
                 },
             };
             if (this.produit.taxe < 0 || this.produit.taxe > 1) return this.errorMessage("Veuillez vérifier la taxe !");
+            this.isOnLoading = true;
             const payload = this.setProduitFormData();
             axiosApi.post("/product/add", payload, config)
                 .then((response) => {
                     Object.assign(this.$data, this.$options.data()); //reset data
-                    this.$refs.form.reset();
                     this.successMessage("Le produit a bien été ajouté !");
                     setTimeout(() => {
                         this.getProduitsData();
@@ -331,6 +342,7 @@ export default Vue.extend({
                 })
                 .catch((error) => {
                     console.log(error)
+                    this.isOnLoading = false;
                     this.catchAxios(error)
                 });
         },
@@ -340,7 +352,6 @@ export default Vue.extend({
                 .delete("/product/delete/" + this.produitToDelete._id)
                 .then((response) => {
                     Object.assign(this.$data, this.$options.data()); //reset data
-                    //this.$refs.form.reset();
                     this.successMessage(`Le produit a été archivé avec succès`);
                     setTimeout(() => {
                         this.getProduitsData();
@@ -383,29 +394,29 @@ export default Vue.extend({
             payload.append('prix', this.produit.prix)
             payload.append('taxe', this.produit.taxe)
             payload.append('quantite', this.produit.quantite)
-            if(this.produit.matieres.length > 0){
-                this.produit.matieres.forEach((el:string) => {
+            if (this.produit.matieres.length > 0) {
+                this.produit.matieres.forEach((el: string) => {
                     payload.append('matieres', el)
                 });
-                if(this.produit.matieres.length === 1) payload.append('matieres', '')
-            }else{
-                for(let i = 0 ; i < 2; i++) payload.append('matieres', '')
+                if (this.produit.matieres.length === 1) payload.append('matieres', '')
+            } else {
+                for (let i = 0; i < 2; i++) payload.append('matieres', '')
             }
-            if(this.produit.couleurs.length > 0){
-                this.produit.couleurs.forEach((el:string) => {
+            if (this.produit.couleurs.length > 0) {
+                this.produit.couleurs.forEach((el: string) => {
                     payload.append('couleurs', el)
                 });
-                if(this.produit.couleurs.length === 1) payload.append('couleurs', '')
-            }else{
-                for(let i = 0 ; i < 2; i++) payload.append('couleurs', '')
+                if (this.produit.couleurs.length === 1) payload.append('couleurs', '')
+            } else {
+                for (let i = 0; i < 2; i++) payload.append('couleurs', '')
             }
-            if(this.produit.composants.length > 0){
-                this.produit.composants.forEach((el:string) => {
+            if (this.produit.composants.length > 0) {
+                this.produit.composants.forEach((el: string) => {
                     payload.append('composants', el)
                 });
-                if(this.produit.composants.length === 1) payload.append('composants', '')
-            }else{
-                for(let i = 0 ; i < 2; i++) payload.append('composants', '')
+                if (this.produit.composants.length === 1) payload.append('composants', '')
+            } else {
+                for (let i = 0; i < 2; i++) payload.append('composants', '')
             }
             return payload;
         },

@@ -82,7 +82,7 @@
         </v-col>
         <v-col cols="12" md="5">
             <v-row>
-                <v-col cols="12" v-for="(img, index) in paginatedData" :key="index" v-if="article.tabImgLinks !== undefined">
+                <v-col cols="12" v-for="(img, index) in paginatedData" :key="index" v-if="article.idProduct.tabImgLinks !== undefined">
                     <v-img :src="img" height="300" width="auto" aspect-ratio="1" class="grey lighten-2">
                         <template v-slot:placeholder>
                             <v-row class="fill-height ma-0" align="center" justify="center">
@@ -91,19 +91,19 @@
                         </template>
                     </v-img>
                 </v-col>
-                <v-col cols="12" md="12" v-if="article.tabImgLinks !== undefined">
+                <v-col cols="12" md="12" v-if="article.idProduct.tabImgLinks !== undefined">
                     <div class="text-center">
-                        <v-pagination circle v-model="pageNumber" :length="article.tabImgLinks.length" @input="nextPage" />
+                        <v-pagination circle v-model="pageNumber" :length="article.idProduct.tabImgLinks.length" @input="nextPage" />
                     </div>
                 </v-col>
                 <v-col cols="12" md="12">
                     <v-simple-table dense>
                         <template v-slot:default>
                             <tbody>
-                                <th>Nom composant</th>
-                                <th>Couleur</th>
-                                <th>Matière</th>
-                                <th>Quantité</th>
+                                <th v-if="article.listeComposantsSelected.length !== 0">Nom composant</th>
+                                <th v-if="article.listeComposantsSelected.length !== 0">Couleur</th>
+                                <th v-if="article.listeComposantsSelected.length !== 0">Matière</th>
+                                <th v-if="article.listeComposantsSelected.length !== 0">Quantité</th>
                                 <tr v-for="(composant, index) in article.listeComposantsSelected" :key="index">
                                     <td>{{ composant.idComposant.nom }}</td>
                                     <td>{{ composant.couleur }}</td>
@@ -166,25 +166,30 @@ export default Vue.extend({
                 matieres: [],
                 couleurs: [],
                 chosenFile: null as any,
-                tabImgLinks: []
+                idProduct: {
+                    tabImgLinks: []
+                }
             }),
-        }
+        },
     },
     //props: ['article'],
     components: {},
     data(): any {
-        return {}
+        return {
+            pageNumber: 1 as number,
+            size: 1 as number,
+        }
     },
     computed: {
         pageCount() {
-            let l = this.article.tabImgLinks === undefined ? 1 : this.article.tabImgLinks.length,
+            let l = this.article.idProduct.tabImgLinks === undefined ? 1 : this.article.idProduct.tabImgLinks.length,
                 s = this.size;
             return Math.ceil(l / s) - 1;
         },
         paginatedData() {
             const start = this.pageNumber * this.size - this.size,
                 end = start + this.size;
-            return this.article.tabImgLinks === undefined ? [] : this.article.tabImgLinks.slice(start, end);
+            return this.article.idProduct.tabImgLinks === undefined ? [] : this.article.idProduct.tabImgLinks.slice(start, end);
         }
     },
     watch: {},

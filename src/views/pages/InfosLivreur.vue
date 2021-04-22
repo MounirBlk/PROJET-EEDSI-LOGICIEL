@@ -90,10 +90,10 @@
                                             </v-col>
                                         </v-row>
                                         <v-row class="mt-n4">
-                                            <v-col cols="12" md="6">
+                                            <v-col cols="12" md="4">
                                                 <v-select color="grey" prepend-inner-icon="mdi-format-list-bulleted-type" v-model="livreur.civilite" :items="['Homme', 'Femme']" label="Civilité*" :rules="rules.champRules" required solo></v-select>
                                             </v-col>
-                                            <v-col cols="12" md="6">
+                                            <v-col cols="12" md="4">
                                                 <v-menu v-model="isDialogDateNaissanceOpen" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="290px" color="grey">
                                                     <template v-slot:activator="{ on, attrs }">
                                                         <v-text-field color="grey" v-model="livreur.dateNaissance" label="Date de naissance" prepend-inner-icon="mdi-calendar-outline" readonly v-bind="attrs" v-on="on" solo></v-text-field>
@@ -101,13 +101,8 @@
                                                     <v-date-picker color="grey" first-day-of-week="1" v-model="livreur.dateNaissance" @input="isDialogDateNaissanceOpen = false" :rules="rules.dateUsRules" required></v-date-picker>
                                                 </v-menu>
                                             </v-col>
-                                        </v-row>
-                                        <v-row class="mt-n4">
-                                            <v-col cols="12" md="6">
+                                            <v-col cols="12" md="4">
                                                 <v-text-field color="grey" label="Numéro de téléphone" v-model="livreur.portable" prepend-inner-icon="mdi-deskphone" clearable solo />
-                                            </v-col>
-                                            <v-col cols="12" md="6">
-                                                <v-text-field color="grey" label="Adresse" v-model="livreur.adresse" prepend-inner-icon="mdi-walk" clearable solo />
                                             </v-col>
                                         </v-row>
                                     </div>

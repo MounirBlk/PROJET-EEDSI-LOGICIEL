@@ -1,7 +1,13 @@
 <template>
 <v-container id="composants" tag="section" fluid>
     <v-dialog v-model="isDialogNewComposant" persistent max-width="1000px" overlay-opacity="0.8">
-        <v-card class="px-6" outlined>
+        <v-card color="orange" class="px-6" outlined v-if="isOnLoading">
+            <v-card-text>
+                Chargement...
+                <v-progress-linear indeterminate color="white" class="mb-0"></v-progress-linear>
+            </v-card-text>
+        </v-card>
+        <v-card class="px-6" outlined v-else>
             <v-form ref="form" v-model="rules.valid" lazy-validation>
                 <v-card-title class="orange--text">
                     Ajout Composant
@@ -20,7 +26,7 @@
                                 <v-text-field label="Prix" append-icon="€" color="orange" v-model.trim="composant.prix" prepend-inner-icon="mdi-currency-eur" clearable :rules="rules.floatRules" required></v-text-field>
                             </v-col>
                             <v-col cols="12" sm="12" md="12">
-                                <v-textarea color="orange" label="Description" rows="3" v-model="composant.description" prepend-inner-icon="mdi-text-box-outline" :rules="rules.champRules" required/>
+                                <v-textarea color="orange" label="Description" rows="3" v-model="composant.description" prepend-inner-icon="mdi-text-box-outline" :rules="rules.champRules" required />
                             </v-col>
                             <v-col cols="12" sm="6" md="4">
                                 <v-select label="Matieres" small-chips chips counter deletable-chips disable-lookup multiple :items='matiereItems' color="orange" v-model="composant.matieres" prepend-inner-icon="mdi-format-list-checkbox" :rules="rules.champRules" required>
@@ -301,6 +307,10 @@
                     mdi-close
                 </v-icon>
             </template>
+            <template v-slot:[`item.nom`]="{ item }">
+                <span class="red--text" v-if="item.archive">{{ item.nom }}</span>
+                <span v-else>{{ item.nom }}</span>
+            </template>
             <template v-slot:[`item.archive`]="{ item }">
                 <v-icon color="error" v-if="item.archive">mdi-close-circle-outline</v-icon>
                 <v-icon color="success" v-else>mdi-checkbox-marked-circle-outline</v-icon>
@@ -438,6 +448,7 @@ export default Vue.extend({
             items: [] as Array < any > ,
             pageNumber: 1 as number,
             size: 1 as number,
+            isOnLoading: false as boolean
         }
     },
     watch: {},
@@ -490,11 +501,13 @@ export default Vue.extend({
                 },
             };
             if (this.composant.taxe < 0 || this.composant.taxe > 1) return this.errorMessage("Veuillez vérifier la taxe !");
+            this.isOnLoading = true;
             const payload = this.setComposantFormData(this.composant);
             axiosApi.post("/composant/add", payload, config)
                 .then((response) => {
+                    //this.isOnLoading = false;
                     Object.assign(this.$data, this.$options.data()); //reset data
-                    this.$refs.form.reset();
+                    //this.$refs.form.reset();
                     this.successMessage("Le composant a bien été ajouté !");
                     setTimeout(() => {
                         this.getComposantsData();
@@ -502,6 +515,7 @@ export default Vue.extend({
                 })
                 .catch((error) => {
                     console.log(error)
+                    this.isOnLoading = false;
                     this.catchAxios(error)
                 });
         },

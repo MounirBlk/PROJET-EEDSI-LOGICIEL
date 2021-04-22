@@ -14,7 +14,8 @@
     <v-list>
         <v-list-item link v-for="(item, index) in items" :key="index" :to="item.to" v-if="item.disabled !== true">
             <v-list-item-action>
-                <v-icon style="text-shadow: 0.1em 0.1em 0.1em white">{{ item.icon }}</v-icon>
+                <v-icon v-if="!$vuetify.theme.dark" style="text-shadow: 0.1em 0.1em 0.1em white">{{ item.icon }}</v-icon>
+                <v-icon v-else>{{ item.icon }}</v-icon>
             </v-list-item-action>
             <v-list-item-content>
                 <v-list-item-title>
@@ -36,7 +37,7 @@ export default Vue.extend({
     name: "DashboardCoreDrawer",
     data: (): any => ({
         //barImageJour: 'https://www.imgonline.com.ua/result_img/imgonline-com-ua-Color-filter-e5SkyjA303JL.jpg' as string,
-        barImageNuit: "https://cdn.tomsguide.fr/content/uploads/sites/2/2019/10/voie-lactee-explosion.jpg",
+        barImageNuit: "https://www.euractiv.fr/wp-content/uploads/sites/3/2019/07/shutterstock_233084350-800x450.jpg",
         name: 'Dashboard',
         items: [{
             icon: 'mdi-home-outline',
