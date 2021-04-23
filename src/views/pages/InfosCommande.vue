@@ -10,6 +10,8 @@
                     <div>
                         <div class="display-1 white--text">
                             <span>Articles de la commande</span><br />
+                            <span class="text-h6">{{ commande.statut }} - {{ commande.dateLivraison }} - {{ commande.adresseLivraison }}</span><br />
+                            <span class="text-h6">Prix total : {{ commande.prixTotal }} €</span>
                         </div>
                     </div>
                 </template>
@@ -108,7 +110,11 @@ export default Vue.extend({
     data(): any {
         return {
             commande: {
+                statut: '',
+                dateLivraison: '',
+                adresseLivraison: '',
                 articles: [],
+                prixTotal: '',
                 livreurID: {
                     lastname: '',
                     firstname: '',
