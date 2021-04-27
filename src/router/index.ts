@@ -166,9 +166,9 @@ const routes: Array<RouteConfig> = [{
     }]
 }]
 
-
+const isElectron: boolean = false;//String(process.env.IS_WEB).trim()
 const router = new VueRouter({
-  mode: process.env.IS_WEB.trim() ? 'history' : 'hash',// hash mode for electron
+  mode: isElectron ? 'hash' : 'history',// hash mode for electron
   base: process.env.BASE_URL,
   routes
 })
