@@ -166,8 +166,9 @@ const routes: Array<RouteConfig> = [{
     }]
 }]
 
+
 const router = new VueRouter({
-  mode: 'hash',// hash mode for electron
+  mode: process.env.IS_WEB ? 'history' : 'hash',// hash mode for electron
   base: process.env.BASE_URL,
   routes
 })

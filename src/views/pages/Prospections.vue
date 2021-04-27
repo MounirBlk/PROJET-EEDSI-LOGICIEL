@@ -411,7 +411,7 @@ export default Vue.extend({
                 .post("/devis/add/" + item._id, qs.stringify(payload)) //generate devis
                 .then((response: AxiosResponse) => {
                     Object.assign(this.$data, this.$options.data()); //reset data
-                    this.successMessage("Le devis a bien été créer !");
+                    this.successMessage("Le devis a bien été créé !");
                     setTimeout(() => {
                         this.getProspectionsData();
                     }, 1000);
