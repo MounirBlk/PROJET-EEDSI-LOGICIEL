@@ -1,5 +1,14 @@
 module.exports = {
-  transpileDependencies: [
-    'vuetify'
-  ]
+    transpileDependencies: [
+        'vuetify'
+    ],
+    pluginOptions: {
+        electronBuilder: {
+            builderOptions: {
+                win: {
+                    icon: 'icons/icon_commerce.ico'
+                }
+            }
+        }
+    }
 }
