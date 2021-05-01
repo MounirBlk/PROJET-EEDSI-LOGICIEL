@@ -3,20 +3,32 @@ import Vue from 'vue';
 import {
     Bar
 } from "vue-chartjs";
+import Gestion from '@/mixins/Gestion';
 
 export default Vue.extend({
     extends: Bar,
     data(): any {
-        return {}
+        return {
+            gradColors: [],
+        }
     },
-    props: ["title","labels","datasets"],
+    mixins: [Gestion],
+    props: ["title", "labels", "datasets"],
     mounted() {
         this.renderChartjs();
     },
     methods: {
         renderChartjs: function () {
             for (let i = 0; i < this.datasets.length; i++) {
-                this.datasets[i].backgroundColor = i === 1 ? "#f87979" : 'lightblue'
+                this.gradColors.push(this.$refs.canvas.getContext("2d").createLinearGradient(0, 0, 0, 450)) //
+                this.gradColors[i].addColorStop(0, this.radientColors[this.datasets.length - i].colorOne);
+                this.gradColors[i].addColorStop(0.5, this.radientColors[this.datasets.length - i].colorTwo);
+                this.gradColors[i].addColorStop(1, this.radientColors[this.datasets.length - i].colorThree);
+                this.datasets[i].backgroundColor = this.gradColors[i];
+                this.datasets[i].borderColor = this.radientColors[this.datasets.length - i].color
+                this.datasets[i].pointBackgroundColor = 'white'
+                this.datasets[i].borderWidth = 1
+                this.datasets[i].pointBorderColor = 'white'
             }
             this.renderChart({
                 labels: this.labels,
@@ -25,8 +37,8 @@ export default Vue.extend({
                 responsive: true,
                 maintainAspectRatio: false,
                 title: {
-                    display: true,
-                    text: this.title
+                    display: this.title === null || this.title === undefined ? false : true,
+                    text: this.title === null || this.title === undefined ? '' : this.title
                 }
             });
         }

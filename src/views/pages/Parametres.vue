@@ -83,7 +83,7 @@
                                     </v-btn>
                                 </v-col>
                                 <v-col cols="12" md="5" class="ml-auto" v-if="!isUpdateUser">
-                                    <v-btn small color="purple" @click="isUpdateUser = true" class="mx-2">
+                                    <v-btn dark small color="purple" @click="isUpdateUser = true" class="mx-2">
                                         <v-icon left>mdi-account-edit-outline</v-icon>Modifier le
                                         Profil
                                     </v-btn>

@@ -32,7 +32,7 @@
     <v-row justify="center">
         <v-col cols="10">
             <v-slide-y-transition appear>
-                <base-material-card color="primary" max-width="100%" width="600" class="px-5 mt-10 py-3 mx-auto">
+                <base-material-card :color="$vuetify.theme.dark ? 'indigo' : 'primary'" max-width="100%" width="600" class="px-5 mt-10 py-3 mx-auto">
                     <template v-slot:heading>
                         <div class="text-center">
                             <h1 class="display-1 font-weight-bold">
@@ -44,15 +44,15 @@
                     <v-card-text class="text-center">
                         <v-form ref="form">
                             <v-col cols="12" class="py-2">
-                                <v-text-field color="primary" @keyup.enter="connexion(email, password)" label="Email" v-model="email" prepend-icon="mdi-face" clearable />
+                                <v-text-field :color="$vuetify.theme.dark ? 'indigo' : 'primary'" @keyup.enter="connexion(email, password)" label="Email" v-model="email" prepend-icon="mdi-face" clearable />
                             </v-col>
                             <v-col cols="12" class="py-2">
-                                <v-text-field color="primary" @keyup.enter="connexion(email, password)" label="Password" v-model="password" prepend-icon="mdi-lock-outline" :type="showPassword ? 'text' : 'password'" @click:append="showPassword = !showPassword" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" clearable />
+                                <v-text-field :color="$vuetify.theme.dark ? 'indigo' : 'primary'" @keyup.enter="connexion(email, password)" label="Password" v-model="password" prepend-icon="mdi-lock-outline" :type="showPassword ? 'text' : 'password'" @click:append="showPassword = !showPassword" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" clearable />
                             </v-col>
                             <v-col cols="12" class="py-2">
                                 <span @click="isDialogForgotPassword = true" style="cursor: pointer">Mot de passe oublié ?</span>
                             </v-col>
-                            <v-btn color="primary" @click="connexion(email, password)">
+                            <v-btn :color="$vuetify.theme.dark ? 'indigo' : 'primary'" @click="connexion(email, password)">
                                 <v-icon :color="!$vuetify.theme.dark ? 'black' : 'white'" left>mdi-lock-outline</v-icon>
                                 <span :class="!$vuetify.theme.dark ? 'black--text' : 'white--text'">Connexion</span>
                             </v-btn>

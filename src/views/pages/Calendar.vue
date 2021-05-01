@@ -56,9 +56,14 @@
                         <v-card>
                             <v-toolbar flat>
                                 <v-toolbar-title v-if="$vuetify.breakpoint.mdAndUp">{{ new Date() | moment("YYYY-MM-DD HH:mm") }}</v-toolbar-title>
-                                <v-btn color="red" icon class="ml-3" @click="getData">
-                                    <v-icon large>mdi-refresh</v-icon>
-                                </v-btn>
+                                <v-tooltip right>
+                                    <template v-slot:activator="{ on, attrs }">
+                                        <v-btn color="red" v-bind="attrs" v-on="on" icon class="ml-3" @click="getData">
+                                            <v-icon large>mdi-database-refresh-outline</v-icon>
+                                        </v-btn>
+                                    </template>
+                                    <span>Refresh</span>
+                                </v-tooltip>
                             </v-toolbar>
                         </v-card>
                     </v-col>

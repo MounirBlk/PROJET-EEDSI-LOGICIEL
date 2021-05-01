@@ -197,10 +197,10 @@
         </template>
 
         <v-row class="mt-8 mr-1">
-            <v-btn color="pink" @click="isDialogNewUtilisateur = true" class="ml-3" :disabled="!isAdmin" dark outlined>
+            <v-btn color="pink" @click="isDialogNewUtilisateur = true" class="ml-3" :disabled="!isAdmin" outlined>
                 <v-icon left>mdi-account-plus-outline</v-icon>Ajouter client prospect
             </v-btn>
-            <v-btn color="pink" @click="isDialogNewEntreprise = true" class="ml-3" :disabled="!isAdmin" dark outlined>
+            <v-btn color="pink" @click="isDialogNewEntreprise = true" class="ml-3" :disabled="!isAdmin" outlined>
                 <v-icon left>mdi-domain-plus</v-icon>Ajouter une entreprise
             </v-btn>
             <v-btn color="pink" icon @click="getProspectionsData" class="ml-3">
@@ -234,7 +234,7 @@
                         <v-icon left>mdi-pencil-outline</v-icon>
                         Modifier entreprise
                     </v-btn>
-                    <v-btn color="pink" @click="dialogNewDevis(item)" class="ml-3" :disabled="!isAdmin" dark small outlined>
+                    <v-btn color="pink" @click="dialogNewDevis(item)" class="ml-3" :disabled="!isAdmin" small outlined>
                         <v-icon left>mdi-bank-plus</v-icon>Créer un devis
                     </v-btn>
                 </td>

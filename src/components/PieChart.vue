@@ -8,32 +8,19 @@ const {
     reactiveData
 } = mixins
 import Vue from 'vue';
+import Gestion from '@/mixins/Gestion';
 
 export default Vue.extend({
     extends: Pie,
-    //mixins: [reactiveProp],
+    mixins: [Gestion],
     data(): any {
         return {
-
+            gradColors: [],
         }
     },
-    /*props: {
-        title: {
-            type: String,
-            default: '',
-        },
-        labels: {
-            type: Array,
-            default: () => ([]),
-        },
-        datasets: {
-            type: Object,
-            default: () => ({}),
-        },
-    },*/
-    props: ["title", "labels", "datasets", "colors"],
+    props: ["title", "labels", "datasets"],
     watch: {
-        datasets: {
+        /*datasets: {
             handler(val) {
                 this.renderChartjs();
             },
@@ -50,31 +37,31 @@ export default Vue.extend({
                 this.renderChartjs();
             },
             deep: true
-        },
-        colors: {
-            handler(val) {
-                this.renderChartjs();
-            },
-            deep: true
-        },
+        },*/
     },
     mounted() {
         this.renderChartjs();
     },
     methods: {
         renderChartjs: function () {
+            for (let i = 0; i < this.datasets.data.length; i++) {
+                this.gradColors.push(this.$refs.canvas.getContext("2d").createLinearGradient(0, 0, 0, 450)) //
+                this.gradColors[i].addColorStop(0, this.radientColors[i].colorOne);
+                this.gradColors[i].addColorStop(0.5, this.radientColors[i].colorTwo);
+                this.gradColors[i].addColorStop(1, this.radientColors[i].colorThree);
+            }
             this.renderChart({
                 labels: this.labels,
                 datasets: [{
-                    backgroundColor: this.colors,
+                    backgroundColor: this.gradColors,
                     data: this.datasets.data
                 }]
             }, {
                 responsive: true,
                 maintainAspectRatio: false,
                 title: {
-                    display: true,
-                    text: this.title
+                    display: this.title === null || this.title === undefined ? false : true,
+                    text: this.title === null || this.title === undefined ? '' : this.title
                 }
             });
         }

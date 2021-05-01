@@ -3,7 +3,16 @@
     <v-container>
         <v-row>
             <v-col cols="12" md="12" sm="12">
-                <base-area-chart :key="resetComponentKey" :labels="chartCommandes.labels" :datasets="chartCommandes.datasets" :title="chartCommandes.title" />
+                <base-material-card color="red" max-width="100%" width="auto" class="px-5 py-3 mx-auto">
+                    <template v-slot:heading>
+                        <div class="text-center">
+                            <h1 class="display-1 font-weight-bold">
+                                <v-icon large left>mdi-package-variant</v-icon>Commandes
+                            </h1>
+                        </div>
+                    </template>
+                    <base-area-chart :key="resetComponentKey" :labels="chartCommandes.labels" :datasets="chartCommandes.datasets" />
+                </base-material-card>
             </v-col>
             <v-col cols="12" md="6" sm="12">
                 <base-material-card color="indigo" max-width="100%" width="auto" class="px-5 py-3 mx-auto">
@@ -18,7 +27,7 @@
                 </base-material-card>
             </v-col>
             <v-col cols="12" md="6" sm="12">
-                <base-material-card color="red" max-width="100%" width="auto" class="px-5 py-3 mx-auto">
+                <base-material-card color="pink" max-width="100%" width="auto" class="px-5 py-3 mx-auto">
                     <template v-slot:heading>
                         <div class="text-center">
                             <h1 class="display-1 font-weight-bold">
@@ -26,16 +35,25 @@
                             </h1>
                         </div>
                     </template>
-                    <base-pie-chart :colors="chartPieUsers.colors" :labels="chartPieUsers.labels" :datasets="chartPieUsers.datasets" :title="chartPieUsers.title" />
+                    <base-pie-chart :key="resetComponentKey" :labels="chartPieUsers.labels" :datasets="chartPieUsers.datasets" :title="chartPieUsers.title" />
                 </base-material-card>
             </v-col>
-            <v-col cols="12" md="12">
-                <base-line-chart :key="resetComponentKey" :chartData="chartBudget" :options="optionsChartBudget" />
+            <v-col cols="12" md="12" sm="12">
+                <base-material-card color="orange" max-width="100%" width="auto" class="px-5 py-3 mx-auto">
+                    <template v-slot:heading>
+                        <div class="text-center">
+                            <h1 class="display-1 font-weight-bold">
+                                <v-icon large left>mdi-currency-eur</v-icon>Budgétisation
+                            </h1>
+                        </div>
+                    </template>
+                    <base-line-chart :key="resetComponentKey" :chartData="chartBudget" :options="optionsChartBudget" />
+                </base-material-card>
             </v-col>
             <v-col cols="12" md="12">
                 <v-expansion-panels style="z-index: 0" focusable v-model="panelCommandes">
                     <v-expansion-panel>
-                        <v-expansion-panel-header class="green--text">Commandes</v-expansion-panel-header>
+                        <v-expansion-panel-header class="green--text">Liste de commandes</v-expansion-panel-header>
                         <v-expansion-panel-content class="mb-n9">
                             <Commandes class="px-0"></Commandes>
                         </v-expansion-panel-content>
@@ -45,7 +63,7 @@
             <v-col cols="12" md="12">
                 <v-expansion-panels style="z-index: 0" focusable v-model="panelCalendrier">
                     <v-expansion-panel>
-                        <v-expansion-panel-header class="red--text">Calendrier</v-expansion-panel-header>
+                        <v-expansion-panel-header class="red--text">Calendrier de commandes</v-expansion-panel-header>
                         <v-expansion-panel-content class="mb-n9">
                             <Calendar class="px-0"></Calendar>
                         </v-expansion-panel-content>
@@ -69,6 +87,9 @@ import {
     AxiosError
 } from 'axios';
 import moment from 'moment';
+import {
+    bus
+} from "../../main";
 
 export default Vue.extend({
     name: 'Dashboard',
@@ -86,12 +107,10 @@ export default Vue.extend({
             labels: ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"],
             datasets: [{
                     label: "Commandes client",
-                    typeGradient: 1,
                     data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                 },
                 {
                     label: "Commandes Devis Prospect",
-                    typeGradient: 2,
                     data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                 }
             ]
@@ -101,46 +120,46 @@ export default Vue.extend({
             labels: ["Chaise", "Table", "Armoire", "Lit", "Autres"],
             datasets: [{
                     label: "Produits",
-                    typeGradient: 1,
                     data: [0, 0, 0, 0, 0]
                 },
                 {
                     label: "Composants",
-                    typeGradient: 2,
                     data: [0, 0, 0, 0, 0]
                 }
             ]
         },
         chartPieUsers: {
-            title: 'Utilisateurs',
+            title: 'Utilisateurs de l\'entreprise',
             labels: ["Administrateurs", "Commerciaux", "Clients", "Livreurs", "Prospects"],
             datasets: {
                 data: [0, 0, 0, 0, 0]
-            },
-            colors: ["indigo", "orange", "green", "purple", "red"]
+            }
         },
         chartBudget: {
             title: 'Chart',
             labels: ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"],
             datasets: [{
-                    label: "Revenus par mois",
-                    typeGradient: 1,
-                    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    borderColor: "orange",//#05CBE1
-                    pointBackgroundColor: 'indigo',//rgba(171, 71, 188, 1)
-                    backgroundColor: "transparent"
-                }]
+                label: "Revenus par mois",
+                data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                borderColor: "orange", //#05CBE1
+                pointBackgroundColor: 'white', //rgba(171, 71, 188, 1)
+                backgroundColor: "transparent" //transparent
+            }]
         },
         optionsChartBudget: {
             responsive: true,
             maintainAspectRatio: false,
             title: {
-                display: true,
+                display: false,
                 text: "Budgétisation (€)"
             }
         },
     }),
-    created() {},
+    created() {
+        bus.$on("synchro", async () => {
+            await this.getData();
+        });
+    },
     beforeMount() {},
     async mounted() {
         await this.getData();
@@ -181,31 +200,27 @@ export default Vue.extend({
                     }
                     if (!response[1].data.error) {
                         let pieUsersData = [0, 0, 0, 0, 0]
+                        const tabRoles = ["Administrateur", "Commercial", "Client", "Livreur", "Prospect"]
                         response[1].data.users.forEach((user: any) => {
-                            pieUsersData[0] = user.role === "Administrateur" ? pieUsersData[0] + 1 : pieUsersData[0]
-                            pieUsersData[1] = user.role === "Commercial" ? pieUsersData[1] + 1 : pieUsersData[1]
-                            pieUsersData[2] = user.role === "Client" ? pieUsersData[2] + 1 : pieUsersData[2]
-                            pieUsersData[3] = user.role === "Livreur" ? pieUsersData[3] + 1 : pieUsersData[3]
-                            pieUsersData[4] = user.role === "Prospect" ? pieUsersData[4] + 1 : pieUsersData[4]
+                            tabRoles.forEach((role: string, index: number) => {
+                                pieUsersData[index] = user.role === role ? pieUsersData[index] + 1 : pieUsersData[index]
+                            });
                         });
                         this.chartPieUsers.datasets.data = pieUsersData;
                     }
                     if (!response[2].data.error && !response[3].data.error) {
+                        const tabTypes = ["Chaise", "Table", "Armoire", "Lit", "Autres"]
                         let pieProductData = [0, 0, 0, 0, 0]
                         response[2].data.products.forEach((product: any) => {
-                            pieProductData[0] = product.type === "Chaise" ? pieProductData[0] + 1 : pieProductData[0]
-                            pieProductData[1] = product.type === "Table" ? pieProductData[1] + 1 : pieProductData[1]
-                            pieProductData[2] = product.type === "Armoire" ? pieProductData[2] + 1 : pieProductData[2]
-                            pieProductData[3] = product.type === "Lit" ? pieProductData[3] + 1 : pieProductData[3]
-                            pieProductData[4] = product.type === "Autres" ? pieProductData[4] + 1 : pieProductData[4]
+                            tabTypes.forEach((type: string, index: number) => {
+                                pieProductData[index] = product.type === type ? pieProductData[index] + 1 : pieProductData[index]
+                            });
                         });
                         let pieCompData = [0, 0, 0, 0, 0]
                         response[3].data.composants.forEach((composant: any) => {
-                            pieCompData[0] = composant.type === "Chaise" ? pieCompData[0] + 1 : pieCompData[0]
-                            pieCompData[1] = composant.type === "Table" ? pieCompData[1] + 1 : pieCompData[1]
-                            pieCompData[2] = composant.type === "Armoire" ? pieCompData[2] + 1 : pieCompData[2]
-                            pieCompData[3] = composant.type === "Lit" ? pieCompData[3] + 1 : pieCompData[3]
-                            pieCompData[4] = composant.type === "Autres" ? pieCompData[4] + 1 : pieCompData[4]
+                            tabTypes.forEach((type: string, index: number) => {
+                                pieCompData[index] = composant.type === type ? pieCompData[index] + 1 : pieCompData[index]
+                            });
                         });
                         this.chartProductComp.datasets[0].data = pieProductData;
                         this.chartProductComp.datasets[1].data = pieCompData;
