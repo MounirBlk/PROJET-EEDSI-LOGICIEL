@@ -14,7 +14,7 @@ export default Vue.extend({
     //mixins: [reactiveProp],
     data(): any {
         return {
-            
+
         }
     },
     /*props: {
@@ -31,7 +31,7 @@ export default Vue.extend({
             default: () => ({}),
         },
     },*/
-    props: ["title","labels","datasets"],
+    props: ["title", "labels", "datasets", "colors"],
     watch: {
         datasets: {
             handler(val) {
@@ -51,6 +51,12 @@ export default Vue.extend({
             },
             deep: true
         },
+        colors: {
+            handler(val) {
+                this.renderChartjs();
+            },
+            deep: true
+        },
     },
     mounted() {
         this.renderChartjs();
@@ -60,7 +66,7 @@ export default Vue.extend({
             this.renderChart({
                 labels: this.labels,
                 datasets: [{
-                    backgroundColor: ["blue", "red", "green", "purple"],
+                    backgroundColor: this.colors,
                     data: this.datasets.data
                 }]
             }, {
