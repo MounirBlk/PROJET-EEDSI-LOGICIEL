@@ -1,8 +1,8 @@
 {
-    "name": "e-commerce",
+    "name": "dashboard-ecommerce",
     "version": "2.0.0",
     "author": "Mounir Ballouk",
-    "description": "DASHBOARD E-COMMERCE",
+    "description": "Dashboard e-commerce administrateurs/commerciaux",
     "private": true,
     "scripts": {
         "serve": "vue-cli-service serve --open",

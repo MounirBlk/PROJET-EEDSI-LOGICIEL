@@ -28,8 +28,6 @@ export default Vue.extend({
       this.connected = data;
     })
   },
-  computed: {
-
-  }
+  computed: {}
 });
 </script>

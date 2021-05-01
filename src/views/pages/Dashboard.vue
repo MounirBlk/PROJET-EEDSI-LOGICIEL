@@ -71,6 +71,7 @@
                 </v-expansion-panels>
             </v-col>
         </v-row>
+        <base-go-to-up />
     </v-container>
 </div>
 </template>
