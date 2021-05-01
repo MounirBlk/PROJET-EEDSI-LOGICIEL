@@ -21,6 +21,32 @@ export default Vue.extend({
         isOverlay: true as boolean, //overlay
         isLoading: true as boolean,//squeleton-loader
         isFirstLoad: true as boolean,//squeleton-loader
+        radientColors: [{
+            color: "#FC2525",
+            colorOne: "rgba(255, 0,0, 0.6)",
+            colorTwo: "rgba(255, 0, 0, 0.25)",
+            colorThree: "rgba(255, 0, 0, 0)",
+        }, {
+            color: "#05CBE1",
+            colorOne: "rgba(0, 231, 255, 0.9)",
+            colorTwo: "rgba(0, 231, 255, 0.25)",
+            colorThree: "rgba(0, 231, 255, 0)",
+        }, {
+            color: "#ff9800",
+            colorOne: "rgba(255, 152, 0, 0.9)",
+            colorTwo: "rgba(255, 152, 0, 0.4)",
+            colorThree: "rgba(255, 152, 0, 0)",
+        }, {
+            color: "#4caf50",
+            colorOne: "rgba(76, 175, 80, 0.9)",
+            colorTwo: "rgba(76, 175, 80, 0.25)",
+            colorThree: "rgba(76, 175, 80, 0)",
+        }, {
+            color: "#c122d6",
+            colorOne: "rgba(193, 34, 214, 0.9)",
+            colorTwo: "rgba(193, 34, 214, 0.25)",
+            colorThree: "rgba(193, 34, 214, 0)",
+        }]
     }),
     computed: {
         rules(){
@@ -31,15 +57,9 @@ export default Vue.extend({
             return this.$store.state.isAdmin;
         },*/
     },
-    created() {
-      //console.log('created')
-    },
-    beforeMount() {
-      //console.log('beforeMount')
-    },
-    mounted(){
-      //console.log('mounted')
-    },
+    created() {},
+    beforeMount() {},
+    mounted(){},
     methods: {
         ...mapMutations({
             setAdminStatus: "SET_IS_ADMIN"
@@ -55,21 +75,13 @@ export default Vue.extend({
             this.isSnackbarOpened = true;
         },
         catchAxios: function (errorObj: any): void {
-            console.log(
-                "ERROR " +
-                JSON.stringify(errorObj.status) +
-                " : " +
-                JSON.stringify(errorObj.data.message)
-            );
-            this.errorMessage(
-                "ERROR " +
-                JSON.stringify(errorObj.status) +
-                " : " +
-                JSON.stringify(errorObj.data.message)
-            );
-        },
-        resetRenderChart: function(): void {
-            this.resetComponentKey += 1;
+            if(errorObj.data.message){
+                console.log(`ERROR ${JSON.stringify(errorObj.status)} : ${JSON.stringify(errorObj.data.message)}`);
+                this.errorMessage(`ERROR ${JSON.stringify(errorObj.status)} : ${JSON.stringify(errorObj.data.message)}`);
+            }else{
+                console.log(errorObj)
+                this.errorMessage(errorObj)
+            }
         },
         changeToFormatDateFr (input: string): string{
             return moment(input).format('DD-MM-YYYY')

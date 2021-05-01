@@ -4,52 +4,19 @@ import {
     Line,
     mixins
 } from "vue-chartjs";
+import Gestion from "../mixins/Gestion"
 const {
     reactiveProp,
     reactiveData
 } = mixins
+
 export default Vue.extend({
     extends: Line,
-    //mixins: [reactiveProp],
-    /*props: {
-        title: {
-            type: String,
-            default: '',
-        },
-        labels: {
-            type: Array,
-            default: () => ([]),
-        },
-        datasets: {
-            type: Array,
-            default: () => ([]),
-        },
-    },*/
-    props: ["title","labels","datasets"],
-    /*watch: {
-        datasets: {
-            handler(val) {
-                this.renderChartjs();
-            },
-            deep: true
-        },
-        title: {
-            handler(val) {
-                this.renderChartjs();
-            },
-            deep: true
-        },
-        labels: {
-            handler(val) {
-                this.renderChartjs();
-            },
-            deep: true
-        },
-    },*/
+    mixins: [Gestion],
+    props: ["title", "labels", "datasets"],
     data(): any {
         return {
-            gradient: null,
-            gradient2: null
+            gradColors: [],
         };
     },
     mounted() {
@@ -57,27 +24,16 @@ export default Vue.extend({
     },
     methods: {
         renderChartjs: function () {
-            this.gradient = this.$refs.canvas
-                .getContext("2d")
-                .createLinearGradient(0, 0, 0, 450);
-            this.gradient2 = this.$refs.canvas
-                .getContext("2d")
-                .createLinearGradient(0, 0, 0, 450);
-
-            this.gradient.addColorStop(0, "rgba(255, 0,0, 0.5)");
-            this.gradient.addColorStop(0.5, "rgba(255, 0, 0, 0.25)");
-            this.gradient.addColorStop(1, "rgba(255, 0, 0, 0)");
-
-            this.gradient2.addColorStop(0, "rgba(0, 231, 255, 0.9)");
-            this.gradient2.addColorStop(0.5, "rgba(0, 231, 255, 0.25)");
-            this.gradient2.addColorStop(1, "rgba(0, 231, 255, 0)");
-
             for (let i = 0; i < this.datasets.length; i++) {
-                this.datasets[i].borderColor = parseInt(this.datasets[i].typeGradient) === 1 ? "#FC2525" : "#05CBE1"
-                this.datasets[i].pointBackgroundColor = 'white'
-                this.datasets[i].borderWidth = 1
-                this.datasets[i].pointBorderColor = 'white'
-                this.datasets[i].backgroundColor = parseInt(this.datasets[i].typeGradient) === 1 ? this.gradient : this.gradient2
+                this.gradColors.push(this.$refs.canvas.getContext("2d").createLinearGradient(0, 0, 0, 450)); //
+                this.gradColors[i].addColorStop(0, this.radientColors[i].colorOne);
+                this.gradColors[i].addColorStop(0.5, this.radientColors[i].colorTwo);
+                this.gradColors[i].addColorStop(1, this.radientColors[i].colorThree);
+                this.datasets[i].backgroundColor = this.gradColors[i];
+                this.datasets[i].borderColor = this.radientColors[i].color;
+                this.datasets[i].pointBackgroundColor = 'white';
+                this.datasets[i].borderWidth = 1;
+                this.datasets[i].pointBorderColor = 'white';
             }
             this.renderChart({
                 labels: this.labels,
@@ -86,8 +42,8 @@ export default Vue.extend({
                 responsive: true,
                 maintainAspectRatio: false,
                 title: {
-                    display: true,
-                    text: this.title
+                    display: this.title === null || this.title === undefined ? false : true,
+                    text: this.title === null || this.title === undefined ? '' : this.title
                 }
             });
         }
