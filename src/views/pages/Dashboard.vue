@@ -5,7 +5,7 @@
             <v-col cols="12" md="12" sm="12">
                 <base-area-chart :key="resetComponentKey" :labels="chartCommandes.labels" :datasets="chartCommandes.datasets" :title="chartCommandes.title" />
             </v-col>
-            <v-col cols="6" md="6" sm="12">
+            <v-col cols="12" md="6" sm="12">
                 <base-material-card color="indigo" max-width="100%" width="auto" class="px-5 py-3 mx-auto">
                     <template v-slot:heading>
                         <div class="text-center">
@@ -17,7 +17,7 @@
                     <base-bar-chart :key="resetComponentKey" :labels="chartProductComp.labels" :datasets="chartProductComp.datasets" :title="chartProductComp.title" />
                 </base-material-card>
             </v-col>
-            <v-col cols="6" md="6" sm="12">
+            <v-col cols="12" md="6" sm="12">
                 <base-material-card color="red" max-width="100%" width="auto" class="px-5 py-3 mx-auto">
                     <template v-slot:heading>
                         <div class="text-center">
