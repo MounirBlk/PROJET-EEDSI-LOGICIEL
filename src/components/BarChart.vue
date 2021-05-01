@@ -7,51 +7,10 @@ import {
 export default Vue.extend({
     extends: Bar,
     data(): any {
-        return {
-            
-        }
+        return {}
     },
-    /*props: {
-        title: {
-            type: String,
-            default: '',
-        },
-        labels: {
-            type: Array,
-            default: () => ([]),
-        },
-        datasets: {
-            type: Array,
-            default: () => ([]),
-        },
-    },*/
     props: ["title","labels","datasets"],
-    /*watch: {
-        datasets: {
-            handler(val) {
-                this.renderChartjs();
-            },
-            deep: true
-        },
-        title: {
-            handler(val) {
-                this.renderChartjs();
-            },
-            deep: true
-        },
-        labels: {
-            handler(val) {
-                this.renderChartjs();
-            },
-            deep: true
-        },
-    },*/
     mounted() {
-        /*this.$watch('datasets', function () {
-            console.log('a thing changed')
-        }, {
-            deep: true
-        })*/
         this.renderChartjs();
     },
     methods: {
