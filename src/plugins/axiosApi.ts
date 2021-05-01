@@ -28,6 +28,7 @@ axiosApi.interceptors.response.use((response: any) => {
         switch (error.response.status) {
             case 401:
                 localStorage.clear();
+                router.push({ path: '/login' })
                 /*router.replace({
                     path: "/login",
                     query: {
