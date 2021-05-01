@@ -79,8 +79,8 @@ export default Vue.extend({
         Calendar
     },
     data: (): any => ({
-        panelCalendrier: 0,
-        panelCommandes: 0,
+        panelCalendrier: 1,
+        panelCommandes: 1,
         chartCommandes: {
             title: 'Commandes',
             labels: ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"],
