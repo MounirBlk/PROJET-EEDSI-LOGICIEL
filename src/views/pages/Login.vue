@@ -134,20 +134,23 @@ export default Vue.extend({
                     localStorage.setItem("token", response.data.token);
                     axiosApi.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem("token")}`;
                     if (localStorage.getItem("token") == null) return this.errorMessage("Token inconnu !");
-                    this.isOverlay = false;
+                    //this.isOverlay = false;
                     const isAdmin = response.data.user.role.toLowerCase() === "administrateur" ? true : false;
-                    if (isAdmin === undefined || isAdmin === null) {
-                        return;
-                    } else {
-                        //this.$store.commit("SET_IS_ADMIN", isAdmin);
-                        this.setAdminStatus(isAdmin)
-                        bus.$emit("connected", true);
-                        return this.$router.push({
-                            name: "Accueil",
-                            /*params: {
-                                logged: true
-                            },*/
-                        });
+                    if(response.data.user.role.toLowerCase() !== "administrateur" && response.data.user.role.toLowerCase() !== "commercial"){
+                        this.isOverlay = false;
+                        return this.errorMessage('Vous n\'avez pas l\'autorisation d\'accéder à la plateforme');
+                    }else{
+                        if (isAdmin === undefined || isAdmin === null) {
+                            this.isOverlay = false;
+                            return this.errorMessage('Erreur');
+                        } else {
+                            //this.$store.commit("SET_IS_ADMIN", isAdmin);
+                            this.setAdminStatus(isAdmin)
+                            bus.$emit("connected", true);
+                            return this.$router.push({
+                                name: "Accueil",
+                            });
+                        }
                     }
                 })
                 .catch((error) => {
