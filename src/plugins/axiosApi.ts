@@ -2,7 +2,7 @@ import router from '@/router';
 import axios from 'axios';
 
 const axiosApi = axios.create({
-    baseURL: 'https://api-imie-e-commerce.herokuapp.com/',//http://localhost:3000
+    baseURL: 'https://api-imie-e-commerce.herokuapp.com',//http://localhost:3000
     headers: {
         "Accept": 'application/json',
         "Content-Type": "application/x-www-form-urlencoded;charset=utf-8"

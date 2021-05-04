@@ -108,7 +108,7 @@
         <v-skeleton-loader v-if="isFirstLoad" :loading="isLoading" type="table"></v-skeleton-loader>
         <v-data-table v-else :headers="headers" :items="items" :search.sync="search" :sort-by="['lastname']" :sort-desc="[false]" show-expand single-expand item-key="email" :expanded.sync="expanded">
             <template v-slot:[`item.role`]="{ item }">
-                <v-chip :color="item.role.toLowerCase() === 'administrateur' ? 'indigo' : 'orange'">{{ item.role }}</v-chip>
+                <v-chip :color="item.role.toLowerCase() !== 'administrateur' ? 'indigo' : 'orange'">{{ item.role }}</v-chip>
             </template>
             <template v-slot:[`item.createdAt`]="{ item }"> {{ item.createdAt | moment("YYYY-MM-DD HH:mm") }} </template>
             <template v-slot:[`item.lastLogin`]="{ item }"> {{ item.lastLogin | moment("YYYY-MM-DD HH:mm") }} </template>
