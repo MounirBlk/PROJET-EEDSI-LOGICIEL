@@ -25,7 +25,7 @@ export default Vue.extend({
     components: {},
     data(): any {
         return {
-            socket: io("http://localhost:3000"),
+            socket: io("https://api-imie-e-commerce.herokuapp.com"),
             messages: [],
             users: [],
         }
