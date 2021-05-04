@@ -6,7 +6,7 @@
 
     <dashboard-core-view />
 
-    <!--<dashboard-core-settings v-model="expandOnHover" />-->
+    <dashboard-core-settings v-model="expandOnHover" />
   </v-app>
 </template>
 
@@ -19,7 +19,7 @@ export default Vue.extend({
   components: {
     DashboardCoreAppBar: () => import('./core/AppBar.vue'),
     DashboardCoreDrawer: () => import('./core/Drawer.vue'),
-    //DashboardCoreSettings: () => import('./core/Settings.txt'),
+    DashboardCoreSettings: () => import('./core/Settings.vue'),
     DashboardCoreView: () => import('./core/View.vue'),
   },
   data: () => ({

@@ -5,7 +5,7 @@
             <v-img :src="avatar" />
         </v-avatar>
 
-        <v-sheet dark v-else style="border-radius: 4px;" :class="{
+        <v-sheet dark v-else style="border-radius: 4px;" v-ripple :class="{
             'pa-7': !$slots.image
         }" :color="color" :max-height="icon ? 90 : undefined" :width="icon ? 'auto' : '100%'" elevation="6" class="text-start v-card--material__heading mb-n6">
             <slot v-if="$slots.heading" name="heading" />

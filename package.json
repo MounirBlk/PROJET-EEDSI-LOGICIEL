@@ -18,6 +18,7 @@
     },
     "main": "background.js",
     "dependencies": {
+        "@types/socket.io-client": "^1.4.36",
         "@types/vue-moment": "^4.0.2",
         "axios": "^0.21.1",
         "chart.js": "^2.9.4",
@@ -27,6 +28,7 @@
         "nodemailer": "^6.5.0",
         "qs": "^6.9.6",
         "roboto-fontface": "*",
+        "socket.io-client": "^4.0.1",
         "vue": "^2.6.11",
         "vue-chartjs": "^3.5.1",
         "vue-document-editor": "^1.2.3",

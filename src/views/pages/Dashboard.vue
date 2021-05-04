@@ -111,13 +111,13 @@ export default Vue.extend({
                     data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                 },
                 {
-                    label: "Commandes Devis Prospect",
+                    label: "Commandes prospect (devis)",
                     data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                 }
             ]
         },
         chartProductComp: {
-            title: 'Produits et Composants en fonction du type',
+            title: 'Produits et composants en fonction du type',
             labels: ["Chaise", "Table", "Armoire", "Lit", "Autres"],
             datasets: [{
                     label: "Produits",

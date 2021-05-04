@@ -196,7 +196,7 @@ export default Vue.extend({
     methods: {
         getUserData: async function () {
             this.isOverlay = true;
-            await axiosApi
+            axiosApi
                 .get("/user/own")
                 .then((response) => {
                     this.user = response.data.user;
@@ -210,7 +210,7 @@ export default Vue.extend({
         saveUpdate: async function () {
             this.isUpdateUser = false;
 
-            await axiosApi
+            axiosApi
                 .put("/user/update/" + this.user._id, qs.stringify(this.user)) //update de l'user
                 .then((response) => {
                     Object.assign(this.$data, this.$options.data()); //reset data
