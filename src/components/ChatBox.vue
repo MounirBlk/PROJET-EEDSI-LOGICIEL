@@ -25,7 +25,7 @@
             <v-pagination circle color="indigo" v-model="pageNumber" :length="Math.ceil(messages.length/size)" prev-icon="mdi-menu-left" next-icon="mdi-menu-right" total-visible="5" @input="nextPage" />
         </v-col>
         <v-col cols="12" md="12" sm="12">
-            <v-text-field class="mx-3 mb-1" color="indigo" hint="Les messages seront automatiquement supprimés dans les 24h" label="Taper un message" @keyup.enter="sendMessage(msg)" v-model.trim="msg" prepend-inner-icon="mdi-alphabetical" clearable />
+            <v-text-field class="mx-3 mb-1" color="indigo" hint="Les messages seront automatiquement supprimés" label="Taper un message" @keyup.enter="sendMessage(msg)" v-model.trim="msg" prepend-inner-icon="mdi-alphabetical" clearable />
             <v-btn class="float-right" color="indigo" @click.prevent="sendMessage(msg)" :disabled="!msg" outlined>
                 <v-icon left>mdi-send</v-icon>Envoyer
             </v-btn>
