@@ -77,10 +77,10 @@ export default Vue.extend({
         catchAxios: function (errorObj: any): void {
             if(errorObj.data.message){
                 console.log(`ERROR ${JSON.stringify(errorObj.status)} : ${JSON.stringify(errorObj.data.message)}`);
-                this.errorMessage(`ERROR ${JSON.stringify(errorObj.status)} : ${JSON.stringify(errorObj.data.message)}`);
+                this.errorMessage(errorObj.data.message);
             }else{
-                console.log(errorObj)
-                this.errorMessage(errorObj)
+                console.log(JSON.stringify(errorObj))
+                this.errorMessage(JSON.stringify(errorObj))
             }
         },
         changeToFormatDateFr (input: string): string{
