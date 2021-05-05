@@ -88,16 +88,16 @@
                                 <v-toolbar-title v-if="$refs.calendar">
                                     {{ $refs.calendar.title }}
                                 </v-toolbar-title>
-                                <div class="mx-2">
+                                <div class="mx-2" v-if="$vuetify.breakpoint.mdAndUp">
                                     <v-icon right color="indigo" left> mdi-sticker </v-icon> <span class="indigo--text">En attente de livreur</span>
                                 </div>
-                                <div class="mx-2">
+                                <div class="mx-2" v-if="$vuetify.breakpoint.mdAndUp">
                                     <v-icon right color="orange" left> mdi-sticker </v-icon><span class="orange--text">En cours de livraison</span>
                                 </div>
-                                <div class="mx-2">
+                                <div class="mx-2" v-if="$vuetify.breakpoint.mdAndUp">
                                     <v-icon right color="red" left> mdi-sticker </v-icon><span class="red--text">Livraison en signalement</span>
                                 </div>
-                                <div class="mx-2">
+                                <div class="mx-2" v-if="$vuetify.breakpoint.mdAndUp">
                                     <v-icon right color="green" left> mdi-sticker </v-icon><span class="green--text">Livraison terminé</span>
                                 </div>
                                 <v-spacer></v-spacer>
