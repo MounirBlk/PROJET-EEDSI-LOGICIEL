@@ -222,7 +222,7 @@
                         <v-icon left>mdi-card-account-details-outline</v-icon>
                         Informations {{ item.civilite.toLowerCase() === "homme" ? 'M. '+ item.lastname : 'Mme '+ item.lastname }}
                     </v-btn>
-                    <v-btn :disabled="!isAdmin || item.role.toLowerCase() === 'administrateur'" small outlined color="orange" @click="PageInfosUtilisateur(item, true)" class="ml-3">
+                    <v-btn :disabled="item.disabled || !isAdmin || item.role.toLowerCase() === 'administrateur'" small outlined color="orange" @click="PageInfosUtilisateur(item, true)" class="ml-3">
                         <v-icon left>mdi-account-edit-outline</v-icon>
                         Modifier {{ item.civilite.toLowerCase() === "homme" ? 'M. '+ item.lastname : 'Mme '+ item.lastname }}
                     </v-btn>
@@ -234,7 +234,7 @@
                         <v-icon left>mdi-pencil-outline</v-icon>
                         Modifier entreprise
                     </v-btn>
-                    <v-btn color="pink" @click="dialogNewDevis(item)" class="ml-3" :disabled="!isAdmin" small outlined>
+                    <v-btn color="pink" @click="dialogNewDevis(item)" class="ml-3" :disabled="item.disabled || !isAdmin" small outlined>
                         <v-icon left>mdi-bank-plus</v-icon>Créer un devis
                     </v-btn>
                 </td>
@@ -273,7 +273,8 @@ import Gestion from "../../mixins/Gestion"
 import axiosApi from '../../plugins/axiosApi';
 import qs from "qs";
 import {
-    AxiosResponse
+    AxiosResponse,
+    AxiosError
 } from 'axios';
 import moment from 'moment';
 
@@ -356,6 +357,9 @@ export default Vue.extend({
             isNotFound: false as boolean,
             isDialogDateCreationOpen: false as boolean,
             isDialogDateEditOpen: false as boolean,
+            products: [] as any[],
+            composants: [] as any[],
+            isRandomArticles: true as boolean
         }
     },
     watch: {},
@@ -376,12 +380,14 @@ export default Vue.extend({
             let ttPromise: any[] = []
             ttPromise.push(axiosApi.get("/user/all/Prospect")) //tous les clients prospects
             ttPromise.push(axiosApi.get("/entreprises")) //tous les entreprises
-            ttPromise.push(axiosApi.get("/product/all")) //tous les entreprises
+            ttPromise.push(axiosApi.get("/product/all")) //tous les produits
+            //ttPromise.push(axiosApi.get("/composant/all")) //tous les composants
             Promise.all(ttPromise)
             .then((response: AxiosResponse[]) => {
                 this.prospects = response[0].data.users;
                 this.entreprises = response[1].data.entreprises;
                 this.products = response[2].data.products;
+                //this.composants = response[3].data.composants;
                 for (let i = 0; i < this.prospects.length; i++) {
                     this.prospects[i].isAdmin = this.prospects[i].role.toLowerCase() === "administrateur" ? true : false
                 }
@@ -389,7 +395,7 @@ export default Vue.extend({
                     this.isLoading = false;
                     this.isFirstLoad = false;
                 }, 1000);
-            }).catch((error: any) => {
+            }).catch((error: AxiosError) => {
                 this.catchAxios(error)
                 setTimeout(() => {
                     this.isLoading = false;
@@ -397,35 +403,71 @@ export default Vue.extend({
                 }, 1000);
             });
         },
-        dialogNewDevis: function (item: any){        
+        dialogNewDevis: function (item: any) {
             this.isLoading = true;
             this.isFirstLoad = true;
-            let randomProductNum: number = this.randNumber(0 ,this.products.length - 1)
-            let payload = {
-                idProduct: this.products[randomProductNum]._id,
-                matiere: this.products[randomProductNum].matieres[this.randNumber(0 ,this.products[randomProductNum].matieres.length - 1)],
-                couleur: this.products[randomProductNum].couleurs[this.randNumber(0 ,this.products[randomProductNum].couleurs.length - 1)],
-                quantite: 1,
+            const products: any[] = this.shuffle(this.products);
+            let articles: any[] = []
+            if (this.isRandomArticles) {
+                for (let i = 0; i < this.randNumber(0, products.length - 1); i++) {
+                    let listeComposants: any[] = []
+                    products[i].composants.forEach((el: any) => {
+                        listeComposants.push({
+                            "idComposant": el._id,
+                            "matiere": el.matieres[this.randNumber(0, el.matieres.length - 1)],
+                            "couleur": el.couleurs[this.randNumber(0, el.couleurs.length - 1)],
+                            "quantite": this.randNumber(1, 2)
+                        })
+                    });
+                    articles.push({
+                        "idProduct": products[i]._id,
+                        "matiere": products[i].matieres[this.randNumber(0, products[i].matieres.length - 1)],
+                        "couleur": products[i].couleurs[this.randNumber(0, products[i].couleurs.length - 1)],
+                        "quantite": this.randNumber(1, 1),
+                        "listeComposantsSelected": listeComposants as any[],
+                    });
+                }
             }
             axiosApi
-                .post("/devis/add/" + item._id, qs.stringify(payload)) //generate devis
+                .post("/devis/add/" + item._id, {
+                    "articles": articles
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json;charset=utf-8',
+                    }
+                }) //generate devis
                 .then((response: AxiosResponse) => {
-                    Object.assign(this.$data, this.$options.data()); //reset data
-                    this.successMessage("Le devis a bien été créé !");
-                    setTimeout(() => {
-                        this.getProspectionsData();
-                    }, 1000);
+                    if (!response.data.error) {
+                        Object.assign(this.$data, this.$options.data()); //reset data
+                        this.successMessage("Le devis a bien été créé - réf: " + response.data.refID);
+                        setTimeout(() => {
+                            this.getProspectionsData();
+                        }, 1000);
+                    }
                 })
-                .catch((error) => {
+                .catch((error: AxiosError) => {
                     this.catchAxios(error)
                     setTimeout(() => {
                         this.isOverlay = false;
                     }, 1000);
                 });
         },
-        randNumber : function(min: number, max: number): number {
+        randNumber: function (min: number, max: number): number {
             return Math.floor(Math.random() * (max - min + 1) + min);
         },
+
+        /**
+         * Shuffles array in place. ES6 version
+         * @param {Array} a items An array containing the items.
+         */
+        shuffle: function (a: any[]): any[] {
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        },
+
         getDataCompagny: function (siret: string = '') {
             if (siret === '') return this.errorMessage("Le SIRET ne peut pas être vide !");
             if (siret.length !== 14) return this.errorMessage("Le SIRET doit contenir 14 chiffres !")
@@ -450,7 +492,7 @@ export default Vue.extend({
                         this.isSaisieEntData = true;
                     }
                 })
-                .catch(error => {
+                .catch((error: AxiosError) => {
                     console.log(error);
                     this.errorMessage("Le SIRET est introuvable ou inconnu, réessayer !");
                 });
@@ -468,7 +510,7 @@ export default Vue.extend({
                     this.getProspectionsData();
                 }, 1000);
             })
-            .catch((error) => {
+            .catch((error: AxiosError) => {
                 this.catchAxios(error)
             });
         },
@@ -485,7 +527,7 @@ export default Vue.extend({
                         this.getProspectionsData();
                     }, 1000);
                 })
-                .catch((error) => {
+                .catch((error: AxiosError) => {
                     this.catchAxios(error)
                 });
         },
@@ -516,7 +558,7 @@ export default Vue.extend({
                         }, 1000);
                     }
                 })
-                .catch((error: any) => {
+                .catch((error: AxiosError) => {
                     this.catchAxios(error)
                 });
         },
@@ -535,7 +577,7 @@ export default Vue.extend({
                         this.getProspectionsData();
                     }, 1000);
                 })
-                .catch((error) => {
+                .catch((error: AxiosError) => {
                     this.catchAxios(error)
                 });
         },
@@ -569,5 +611,4 @@ export default Vue.extend({
     }
 });
 </script>
-
 <style></style>

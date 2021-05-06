@@ -14,7 +14,7 @@
                     <div class="text-center">
                         <v-row>
                             <v-col cols="12" md="12">
-                                <v-text-field color="info" label="Email*" v-model.trim="email_reset" prepend-inner-icon="mdi-email-outline" clearable />
+                                <v-text-field color="indigo" label="Email*" v-model.trim="email_reset" prepend-inner-icon="mdi-email-outline" clearable />
                             </v-col>
                         </v-row>
                     </div>

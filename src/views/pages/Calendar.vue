@@ -73,33 +73,47 @@
                         <v-sheet height="64">
                             <v-toolbar flat>
                                 <v-btn outlined class="mr-4" color="red darken-2" @click="focus = ''">
-                                    Today
+                                    Aujourd'hui
                                 </v-btn>
                                 <v-btn fab text small color="red darken-2" @click="$refs.calendar.prev()">
-                                    <v-icon small>
+                                    <v-icon>
                                         mdi-chevron-left
                                     </v-icon>
                                 </v-btn>
                                 <v-btn fab text small color="red darken-2" @click="$refs.calendar.next()">
-                                    <v-icon small>
+                                    <v-icon>
                                         mdi-chevron-right
                                     </v-icon>
                                 </v-btn>
-                                <v-toolbar-title v-if="$refs.calendar">
-                                    {{ $refs.calendar.title }}
+                                <v-toolbar-title v-if="$refs.calendar" class="ml-2">
+                                    <span class="mr-5">{{ $refs.calendar.title }}</span>
+                                    <v-tooltip top v-if="$vuetify.breakpoint.mdAndUp">
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <v-icon v-bind="attrs" v-on="on" color="indigo" left> mdi-sticker </v-icon>
+                                        </template>
+                                        <span>En attente de livreur</span>
+                                    </v-tooltip>
+                                    <v-tooltip top v-if="$vuetify.breakpoint.mdAndUp">
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <v-icon v-bind="attrs" v-on="on" color="orange" left> mdi-sticker </v-icon>
+                                        </template>
+                                        <span>En cours de livraison</span>
+                                    </v-tooltip>
+                                    <v-tooltip top v-if="$vuetify.breakpoint.mdAndUp">
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <v-icon v-bind="attrs" v-on="on" color="red" left> mdi-sticker </v-icon>
+                                        </template>
+                                        <span>Livraison en signalement</span>
+                                    </v-tooltip>
+
+                                    <v-tooltip top v-if="$vuetify.breakpoint.mdAndUp">
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <v-icon v-bind="attrs" v-on="on" color="green" left> mdi-sticker </v-icon>
+                                        </template>
+                                        <span>Livraison terminé</span>
+                                    </v-tooltip>
                                 </v-toolbar-title>
-                                <div class="mx-2" v-if="$vuetify.breakpoint.mdAndUp">
-                                    <v-icon right color="indigo" left> mdi-sticker </v-icon> <span class="indigo--text">En attente de livreur</span>
-                                </div>
-                                <div class="mx-2" v-if="$vuetify.breakpoint.mdAndUp">
-                                    <v-icon right color="orange" left> mdi-sticker </v-icon><span class="orange--text">En cours de livraison</span>
-                                </div>
-                                <div class="mx-2" v-if="$vuetify.breakpoint.mdAndUp">
-                                    <v-icon right color="red" left> mdi-sticker </v-icon><span class="red--text">Livraison en signalement</span>
-                                </div>
-                                <div class="mx-2" v-if="$vuetify.breakpoint.mdAndUp">
-                                    <v-icon right color="green" left> mdi-sticker </v-icon><span class="green--text">Livraison terminé</span>
-                                </div>
+
                                 <v-spacer></v-spacer>
                                 <v-menu bottom right>
                                     <template v-slot:activator="{ on, attrs }">
@@ -112,16 +126,16 @@
                                     </template>
                                     <v-list>
                                         <v-list-item @click="type = 'day'">
-                                            <v-list-item-title>Day</v-list-item-title>
+                                            <v-list-item-title>Jour</v-list-item-title>
                                         </v-list-item>
                                         <v-list-item @click="type = 'week'">
-                                            <v-list-item-title>Week</v-list-item-title>
+                                            <v-list-item-title>Semaine</v-list-item-title>
                                         </v-list-item>
                                         <v-list-item @click="type = 'month'">
-                                            <v-list-item-title>Month</v-list-item-title>
+                                            <v-list-item-title>Mois</v-list-item-title>
                                         </v-list-item>
                                         <v-list-item @click="type = '4day'">
-                                            <v-list-item-title>4 days</v-list-item-title>
+                                            <v-list-item-title>4 jours</v-list-item-title>
                                         </v-list-item>
                                     </v-list>
                                 </v-menu>
@@ -169,10 +183,10 @@ export default Vue.extend({
             focus: '',
             type: 'month',
             typeToLabel: {
-                'month': 'Month',
-                'week': 'Week',
-                'day': 'Day',
-                '4day': '4 Days',
+                'month': 'Mois',
+                'week': 'Semaine',
+                'day': 'Jour',
+                '4day': '4 jours',
             },
             selectedEvent: {},
             selectedElement: null,
