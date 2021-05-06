@@ -13,6 +13,7 @@
     "sourceMap": true,
     "noImplicitThis": false,
     "strictNullChecks": false,
+    //"noImplicitAny": false,
     //"strictFunctionTypes": false,
     "baseUrl": ".",
     "types": [

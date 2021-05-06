@@ -50,6 +50,9 @@
                     <base-line-chart :key="resetComponentKey" :chartData="chartBudget" :options="optionsChartBudget" />
                 </base-material-card>
             </v-col>
+            <!--<v-col cols="12" md="12" sm="12">
+                <v-audio-player src="../../test.mp3" track-title="Your Music" track-subtitle="Best of Electro Swing" allow-previous allow-next :compact="$vuetify.breakpoint.smAndDown" :autoplay="false" album-art="https://zdnet1.cbsistatic.com/hub/i/r/2020/05/11/703e8b53-6149-47dd-9969-f7de6b044b3e/resize/1200xauto/311e6c882043a19e7b68cef0de73456f/apple-music.png" @next-audio="nextSrc()" @previous-audio="prevSrc()" prev-track-icon="mdi-skip-previous" next-track-icon="mdi-skip-next" back-forward-icon="mdi-rewind-5" fast-forward-icon="fast-forward-5" play-icon="mdi-play" pause-icon="mdi-pause" mute-volume-icon="mdi-volume-off" low-volume-icon="mdi-volume-low" medium-volume-icon="mdi-volume-medium" high-volume-icon="mdi-volume-high"></v-audio-player>
+            </v-col>-->
             <v-col cols="12" md="12">
                 <v-expansion-panels style="z-index: 0" focusable v-model="panelCommandes">
                     <v-expansion-panel>
@@ -98,7 +101,8 @@ export default Vue.extend({
     mixins: [Gestion],
     components: {
         Commandes,
-        Calendar
+        Calendar,
+        VAudioPlayer: () => import("@woodydark/vuetify-audio-player"),
     },
     data: (): any => ({
         panelCalendrier: 1,

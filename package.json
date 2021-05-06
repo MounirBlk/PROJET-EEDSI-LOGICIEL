@@ -20,6 +20,7 @@
     "dependencies": {
         "@types/socket.io-client": "^1.4.36",
         "@types/vue-moment": "^4.0.2",
+        "@woodydark/vuetify-audio-player": "^1.0.2",
         "axios": "^0.21.1",
         "chart.js": "^2.9.4",
         "core-js": "^3.6.5",

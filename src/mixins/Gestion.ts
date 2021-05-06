@@ -75,12 +75,12 @@ export default Vue.extend({
             this.isSnackbarOpened = true;
         },
         catchAxios: function (errorObj: any): void {
-            if(errorObj.data.message){
+            if(errorObj.data){
                 console.log(`ERROR ${JSON.stringify(errorObj.status)} : ${JSON.stringify(errorObj.data.message)}`);
                 this.errorMessage(errorObj.data.message);
             }else{
                 console.log(JSON.stringify(errorObj))
-                this.errorMessage(JSON.stringify(errorObj))
+                this.errorMessage('Erreur serveur !')
             }
         },
         changeToFormatDateFr (input: string): string{
