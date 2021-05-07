@@ -31,7 +31,7 @@
                     <template v-slot:heading>
                         <div class="text-center">
                             <h1 class="display-1 font-weight-bold">
-                                <v-icon large left>mdi-account-group-outline</v-icon>Utilisateurs
+                                <v-icon large left>mdi-account-group-outline</v-icon>Utilisateurs actif
                             </h1>
                         </div>
                     </template>
@@ -134,7 +134,7 @@ export default Vue.extend({
             ]
         },
         chartPieUsers: {
-            title: 'Utilisateurs de l\'entreprise',
+            title: 'Utilisateurs actif de l\'entreprise',
             labels: ["Administrateurs", "Commerciaux", "Clients", "Livreurs", "Prospects"],
             datasets: {
                 data: [0, 0, 0, 0, 0]
@@ -206,7 +206,7 @@ export default Vue.extend({
                     if (!response[1].data.error) {
                         let pieUsersData = [0, 0, 0, 0, 0]
                         const tabRoles = ["Administrateur", "Commercial", "Client", "Livreur", "Prospect"]
-                        response[1].data.users.forEach((user: any) => {
+                        response[1].data.users.filter((user: any) => user.disabled === false).forEach((user: any) => {
                             tabRoles.forEach((role: string, index: number) => {
                                 pieUsersData[index] = user.role === role ? pieUsersData[index] + 1 : pieUsersData[index]
                             });
