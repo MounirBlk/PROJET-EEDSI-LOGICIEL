@@ -406,10 +406,10 @@ export default Vue.extend({
         dialogNewDevis: function (item: any) {
             this.isLoading = true;
             this.isFirstLoad = true;
-            const products: any[] = this.shuffle(this.products);
+            const products: any[] = this.shuffle(this.products.filter((product: any) => product.archive === false));
             let articles: any[] = []
             if (this.isRandomArticles) {
-                for (let i = 0; i < this.randNumber(0, products.length - 1); i++) {
+                for (let i = 0; i < this.randNumber(1, products.length); i++) {
                     let listeComposants: any[] = []
                     products[i].composants.forEach((el: any) => {
                         listeComposants.push({
