@@ -211,7 +211,15 @@
         <v-divider class="mt-6" />
 
         <v-skeleton-loader v-if="isFirstLoad" :loading="isLoading" type="table"></v-skeleton-loader>
-        <v-data-table v-else :headers="headers" :items="prospects" :search.sync="search" :sort-by="['lastname']" :sort-desc="[false]" show-expand single-expand item-key="email" :expanded.sync="expanded">
+        <v-data-table v-else v-model="prospectsSelected" @toggle-select-all="selectAllToggle" show-select :headers="headers" :items="prospects" :search.sync="search" :sort-by="['lastname']" :sort-desc="[false]" show-expand single-expand item-key="email" :expanded.sync="expanded">
+            <template v-slot:top>
+                <v-btn color="pink" class="ma-3" :disabled="!isAdmin || prospectsSelected.length < 1" @click="generateMultipleDevis(prospectsSelected)" outlined>
+                    <v-icon left>mdi-file-document-multiple-outline</v-icon>Génération devis multiple
+                </v-btn>
+            </template>
+            <template v-slot:[`item.data-table-select`]="{ item, isSelected, select }">
+                <v-simple-checkbox color="pink" :ripple="false" :value="!item.disabled ? isSelected : false" :disabled="item.disabled || !isAdmin " @input="select($event)"></v-simple-checkbox>
+            </template>
             <template v-slot:expanded-item="{ headers, item }">
                 <td :colspan="headers.length">
                     <span v-if="item.role.toLowerCase() === 'administrateur'" class="purple--text mr-3 pa-1 mt-1" style="border: solid 1px purple">Admin</span>
@@ -235,7 +243,7 @@
                         Modifier entreprise
                     </v-btn>
                     <v-btn color="pink" @click="dialogNewDevis(item)" class="ml-3" :disabled="item.disabled || !isAdmin" small outlined>
-                        <v-icon left>mdi-bank-plus</v-icon>Créer un devis
+                        <v-icon left>mdi-file-document-outline</v-icon>Générer un devis
                     </v-btn>
                 </td>
             </template>
@@ -359,16 +367,14 @@ export default Vue.extend({
             isDialogDateEditOpen: false as boolean,
             products: [] as any[],
             composants: [] as any[],
-            isRandomArticles: true as boolean
+            isRandomArticles: true as boolean,
+            prospectsSelected: [] as any[],
+            disabledCount: 0 as number
         }
     },
     watch: {},
-    created() {
-        //console.log('created')
-    },
-    beforeMount() {
-        //console.log('beforeMount')
-    },
+    created() {},
+    beforeMount() {},
     async mounted() {
         await this.getProspectionsData();
     },
@@ -403,59 +409,86 @@ export default Vue.extend({
                 }, 1000);
             });
         },
-        dialogNewDevis: function (item: any) {
+        generateMultipleDevis: async function (prospectsSelected: any[] = []) {
+            this.isLoading = true;
+            this.isFirstLoad = true;
+            const products: any[] = this.shuffle(this.products.filter((product: any) => product.archive === false));
+            let devis: any[] = []
+            if (this.isRandomArticles) {
+                prospectsSelected.filter((pp: any) => pp.disabled === false).forEach((prospect: any) => {
+                    devis.push({
+                        prospectID: prospect._id,
+                        articles: this.getRandomProduct(products)
+                    })
+                });
+            }
+            return await this.newDevisRequest(devis);
+        },
+        dialogNewDevis: async function (item: any) {
             this.isLoading = true;
             this.isFirstLoad = true;
             const products: any[] = this.shuffle(this.products.filter((product: any) => product.archive === false));
             let articles: any[] = []
             if (this.isRandomArticles) {
-                for (let i = 0; i < this.randNumber(1, products.length); i++) {
-                    let listeComposants: any[] = []
-                    products[i].composants.forEach((el: any) => {
-                        listeComposants.push({
-                            "idComposant": el._id,
-                            "matiere": el.matieres[this.randNumber(0, el.matieres.length - 1)],
-                            "couleur": el.couleurs[this.randNumber(0, el.couleurs.length - 1)],
-                            "quantite": this.randNumber(1, 2)
-                        })
-                    });
-                    articles.push({
-                        "idProduct": products[i]._id,
-                        "matiere": products[i].matieres[this.randNumber(0, products[i].matieres.length - 1)],
-                        "couleur": products[i].couleurs[this.randNumber(0, products[i].couleurs.length - 1)],
-                        "quantite": this.randNumber(1, 1),
-                        "listeComposantsSelected": listeComposants as any[],
-                    });
-                }
+                articles = this.getRandomProduct(products)
             }
+            const devis = [{
+                "prospectID": item._id,
+                "articles": articles
+            }]
+            return await this.newDevisRequest(devis);
+        },
+        newDevisRequest: async function (devis: any[] = []): Promise < void > {
+            console.log(devis);
             axiosApi
-                .post("/devis/add/" + item._id, {
-                    "articles": articles
-                }, {
-                    headers: {
-                        'Content-Type': 'application/json;charset=utf-8',
-                    }
-                }) //generate devis
-                .then((response: AxiosResponse) => {
-                    if (!response.data.error) {
-                        Object.assign(this.$data, this.$options.data()); //reset data
-                        this.successMessage("Le devis a bien été créé - réf: " + response.data.refID);
-                        setTimeout(() => {
-                            this.getProspectionsData();
-                        }, 1000);
-                    }
-                })
-                .catch((error: AxiosError) => {
-                    this.catchAxios(error)
+            .post("/devis/add", {
+                "devis": devis
+            }, {
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8',
+                }
+            }) //generate devis
+            .then((response: AxiosResponse) => {
+                if (!response.data.error) {
+                    Object.assign(this.$data, this.$options.data()); //reset data
+                    this.successMessage(devis.length === 1 ? "Le devis a bien été envoyé par mail" : "Les devis ont bien été envoyé par mail");
                     setTimeout(() => {
-                        this.isOverlay = false;
+                        this.getProspectionsData();
                     }, 1000);
+                }
+            })
+            .catch((error: AxiosError) => {
+                this.catchAxios(error)
+                setTimeout(() => {
+                    this.isOverlay = false;
+                }, 1000);
+            });
+        },
+        getRandomProduct: function (products: any[]): any[] {
+            let articles: any[] = []
+            for (let i = 0; i < this.randNumber(1, products.length); i++) {
+                let listeComposants: any[] = []
+                products[i].composants.forEach((el: any) => {
+                    listeComposants.push({
+                        "idComposant": el._id,
+                        "matiere": el.matieres[this.randNumber(0, el.matieres.length - 1)],
+                        "couleur": el.couleurs[this.randNumber(0, el.couleurs.length - 1)],
+                        "quantite": this.randNumber(1, 2)
+                    })
                 });
+                articles.push({
+                    "idProduct": products[i]._id,
+                    "matiere": products[i].matieres[this.randNumber(0, products[i].matieres.length - 1)],
+                    "couleur": products[i].couleurs[this.randNumber(0, products[i].couleurs.length - 1)],
+                    "quantite": this.randNumber(1, 1),
+                    "listeComposantsSelected": listeComposants as any[],
+                });
+            }
+            return articles;
         },
         randNumber: function (min: number, max: number): number {
             return Math.floor(Math.random() * (max - min + 1) + min);
         },
-
         /**
          * Shuffles array in place. ES6 version
          * @param {Array} a items An array containing the items.
@@ -467,12 +500,21 @@ export default Vue.extend({
             }
             return a;
         },
-
+        selectAllToggle: function (props: any) {
+            if (this.prospectsSelected.length != this.prospects.length - this.disabledCount) {
+                this.prospectsSelected = [];
+                const self = this;
+                props.items.forEach((item: any) => {
+                    if (!item.disabled) {
+                        self.prospectsSelected.push(item);
+                    }
+                });
+            } else this.prospectsSelected = [];
+        },
         getDataCompagny: function (siret: string = '') {
             if (siret === '') return this.errorMessage("Le SIRET ne peut pas être vide !");
             if (siret.length !== 14) return this.errorMessage("Le SIRET doit contenir 14 chiffres !")
             if (siret.match(/^[0-9]*$/gm) == null) return this.errorMessage("Le SIRET doit contenir seulement des chiffres !")
-
             axiosApi
                 .get('https://entreprise.data.gouv.fr/api/sirene/v3/etablissements/' + siret)
                 .then(({
@@ -496,11 +538,9 @@ export default Vue.extend({
                     console.log(error);
                     this.errorMessage("Le SIRET est introuvable ou inconnu, réessayer !");
                 });
-            //.finally(() => {});
         },
         saveNewEntreprise: async function (): Promise < void > {
             if (!this.$refs.form.validate()) return this.errorMessage("Veuillez vérifier les champs !");
-
             axiosApi.post("/entreprise", qs.stringify(this.entreprise))
             .then((response) => {
                 Object.assign(this.$data, this.$options.data()); //reset data
@@ -516,7 +556,6 @@ export default Vue.extend({
         },
         saveNewUtilisateur: function (): void {
             if (!this.$refs.form.validate()) return this.errorMessage("Veuillez vérifier les champs !");
-
             this.prospect.role = this.prospect.isAdmin === true ? 'Administrateur' : 'Prospect'
             axiosApi.post("/register", qs.stringify(this.prospect))
                 .then((response) => {
@@ -611,4 +650,5 @@ export default Vue.extend({
     }
 });
 </script>
+
 <style></style>
