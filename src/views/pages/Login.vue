@@ -53,8 +53,8 @@
                                 <span @click="isDialogForgotPassword = true" style="cursor: pointer">Mot de passe oublié ?</span>
                             </v-col>
                             <v-badge bordered color="indigo" icon="mdi-lock-open-outline" overlap>
-                                <v-btn dpressed :color="$vuetify.theme.dark ? 'indigo' : 'primary'" @click="connexion(email, password)">
-                                    <v-icon :color="!$vuetify.theme.dark ? 'black' : 'white'" left>mdi-check</v-icon>
+                                <v-btn :color="$vuetify.theme.dark ? 'indigo' : 'primary'" @click="connexion(email, password)">
+                                    <v-icon :color="!$vuetify.theme.dark ? 'black' : 'white'" left>mdi-checkboxes-marked-circle-outline</v-icon>
                                     <span :class="!$vuetify.theme.dark ? 'black--text' : 'white--text'">Connexion</span>
                                 </v-btn>
                             </v-badge>
