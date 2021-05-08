@@ -13,6 +13,10 @@
                     <template v-slot:default>
                         <tbody>
                             <tr>
+                                <td>Référence ID:</td>
+                                <td>{{ infoEvenement.refID }}</td>
+                            </tr>
+                            <tr>
                                 <td>Statut</td>
                                 <td>{{ infoEvenement.statut }}</td>
                             </tr>
@@ -227,7 +231,8 @@ export default Vue.extend({
                             color: element.statut === "Attente" ? "indigo" : element.statut === "Livraison" ? "orange darken-2" : element.statut === "Signalement" ? "red" : element.statut === "Termine" ? 'green' : "grey darken-1",
                             timed: true,
                             adresseLivraison: element.adresseLivraison,
-                            livreur: element.livreurID
+                            livreur: element.livreurID,
+                            refID: element.refID
                         })
                     });
                     this.$refs.calendar.checkChange()
@@ -243,16 +248,18 @@ export default Vue.extend({
         },
         saveAssignage: function (infoEvenement: any, livreurID: string) {
             if (livreurID === '' || livreurID === null || livreurID === undefined) return this.errorMessage("Veuillez sélectionner un livreur !");
+            this.isOverlay = true;
             axiosApi.put("/commande/update/" + infoEvenement.idCommande, qs.stringify({
                     livreurID: livreurID,
                     statut: "Livraison"
                 })) //update
                 .then((response: AxiosResponse) => {
-                    Object.assign(this.$data, this.$options.data()); //reset data
+                    //Object.assign(this.$data, this.$options.data()); //reset data
                     this.successMessage("L'assignage a bien été effectué !");
+                    this.isDialogEvent = false;
                     setTimeout(() => {
                         this.getData();
-                    }, 1000);
+                    }, 4000);
                 })
                 .catch((error) => {
                     this.catchAxios(error)

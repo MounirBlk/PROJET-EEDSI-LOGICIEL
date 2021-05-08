@@ -5,7 +5,6 @@
             mdi-chat-processing-outline
         </v-icon>
     </v-card>
-
     <v-menu v-model="menu" :close-on-content-click="false" activator="#settings" bottom content-class="v-settings" left nudge-left="30" offset-x origin="top right" transition="scale-transition">
         <v-card class="mb-0" width="500" max-height="800">
             <v-card-text class="px-0 pb-0">
@@ -17,7 +16,7 @@
                 <v-item-group v-model="color" class="text-center">
                     <v-item v-for="color in colors" :key="color" :value="color" class="ma-1">
                         <template v-slot="{ active, toggle }">
-                            <v-avatar :class="active && 'v-settings__item--active'" :color="color" style="cursor: pointer" class="v-settings__item" size="25" @click="toggle" />
+                            <v-avatar :class="active" :color="color" style="cursor: pointer" size="25" @click="toggle" />
                         </template>
                     </v-item>
                 </v-item-group>
@@ -46,7 +45,6 @@ export default Vue.extend({
         Chat: () => import('../pages/Chat.vue'),
     },
     data: () => ({
-        fab: false as boolean,
         isChatReload: false as boolean,
         color: '#4CAF50',
         colors: [
@@ -60,6 +58,7 @@ export default Vue.extend({
             '#FF5252'
         ],
         menu: false,
+        chatNbMsgs: 0 as number,
     }),
     mounted() {},
     computed: {},

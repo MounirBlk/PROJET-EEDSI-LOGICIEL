@@ -1,5 +1,97 @@
 <template>
 <v-container id="prospections" tag="section" fluid>
+    <v-dialog v-model="isDialogConfigurator" fullscreen hide-overlay transition="dialog-bottom-transition">
+        <v-card>
+            <v-toolbar tile dark color="pink darken-2">
+                <v-btn icon dark @click="isDialogConfigurator = false">
+                    <v-icon>mdi-close</v-icon>
+                </v-btn>
+                <v-toolbar-title>Configurateur d'articles</v-toolbar-title>
+                <v-spacer></v-spacer>
+                <v-toolbar-items>
+                    <v-btn dark color="success lighten-2" text @click="isDialogConfigurator = false">
+                        Sauvegarder
+                    </v-btn>
+                </v-toolbar-items>
+            </v-toolbar>
+            <div class="mx-15 mt-5">
+                <v-row v-for="(product, index) in products" :key="index" class="mt-0">
+                    <v-col cols="12" md="12">
+                        <v-row class="mt-0">
+                            <v-col cols="12" md="2">
+                                <v-img v-if="product.imgLink !== null" :src="product.imgLink" height="80" width="120" aspect-ratio="1" class="grey lighten-2">
+                                    <template v-slot:placeholder>
+                                        <v-row class="fill-height ma-0" align="center" justify="center"> </v-row>
+                                    </template>
+                                </v-img>
+                                <v-img v-else height="80" width="120" :src="require('@/assets/ecommerce_logo.png')" aspect-ratio="1" class="grey lighten-2">
+                                    <template v-slot:placeholder>
+                                        <v-row class="fill-height ma-0" align="center" justify="center"> </v-row>
+                                    </template>
+                                </v-img>
+                            </v-col>
+                            <v-col cols="12" md="2" align-self="center">
+                                <span>{{ product.nom }}</span>
+                            </v-col>
+                            <v-col cols="12" md="2" align-self="center">
+                                <v-select label="Couleur" small-chips chips deletable-chips disable-lookup :items="product.couleurs" color="pink darken-2" prepend-inner-icon="mdi-format-list-checkbox"></v-select>
+                            </v-col>
+                            <v-col cols="12" md="2" align-self="center">
+                                <v-select label="Matière" small-chips chips deletable-chips disable-lookup :items="product.matieres" color="pink darken-2" prepend-inner-icon="mdi-format-list-checkbox"></v-select>
+                            </v-col>
+                            <v-col cols="12" md="2" align-self="center">
+                                <v-text-field label="Quantité" color="pink darken-2" prepend-inner-icon="mdi-numeric" clearable></v-text-field>
+                            </v-col>
+                            <v-col cols="12" md="2" align-self="center">
+                                <v-tooltip top>
+                                    <template v-slot:activator="{ on, attrs }">
+                                        <v-btn color="success darken-2" v-bind="attrs" v-on="on" text outlined>
+                                            <v-icon left>mdi-content-save</v-icon>Sauvegarder
+                                        </v-btn>
+                                    </template>
+                                    <span>Sauvegarder pour la liste d'articles</span>
+                                </v-tooltip>
+                            </v-col>
+                        </v-row>
+                        <v-expansion-panels focusable class="mt-2">
+                            <v-expansion-panel v-for="(composant, i) in product.composants" :key="i">
+                                <v-expansion-panel-header class="orange--text">Composants</v-expansion-panel-header>
+                                <v-expansion-panel-content>
+                                    <v-row class="mt-0">
+                                        <v-col cols="12" md="2" class="ml-7">
+                                            <v-img v-if="composant.imgLink !== null" :src="composant.imgLink" height="80" width="120" aspect-ratio="1" class="grey lighten-2">
+                                                <template v-slot:placeholder>
+                                                    <v-row class="fill-height ma-0" align="center" justify="center"> </v-row>
+                                                </template>
+                                            </v-img>
+                                            <v-img v-else height="80" width="120" :src="require('@/assets/ecommerce_logo.png')" aspect-ratio="1" class="grey lighten-2">
+                                                <template v-slot:placeholder>
+                                                    <v-row class="fill-height ma-0" align="center" justify="center"> </v-row>
+                                                </template>
+                                            </v-img>
+                                        </v-col>
+                                        <v-col cols="12" md="2" align-self="center">
+                                            <span>{{ composant.nom }}</span>
+                                        </v-col>
+                                        <v-col cols="12" md="2" align-self="center">
+                                            <v-select label="Couleur" small-chips chips deletable-chips disable-lookup :items="composant.couleurs" color="pink darken-2" prepend-inner-icon="mdi-format-list-checkbox"></v-select>
+                                        </v-col>
+                                        <v-col cols="12" md="2" align-self="center">
+                                            <v-select label="Matière" small-chips chips deletable-chips disable-lookup :items="composant.matieres" color="pink darken-2" prepend-inner-icon="mdi-format-list-checkbox"></v-select>
+                                        </v-col>
+                                        <v-col cols="12" md="2" align-self="center">
+                                            <v-text-field label="Quantité" color="pink darken-2" prepend-inner-icon="mdi-numeric" clearable></v-text-field>
+                                        </v-col>
+                                    </v-row>
+                                </v-expansion-panel-content>
+                            </v-expansion-panel>
+                        </v-expansion-panels>
+                        <v-divider class="my-5"></v-divider>
+                    </v-col>
+                </v-row>
+            </div>
+        </v-card>
+    </v-dialog>
     <v-dialog v-model="isDialogNewEntreprise" persistent max-width="1000px" overlay-opacity="0.8">
         <v-card class="px-6" outlined>
             <v-form ref="form" v-model="rules.valid" lazy-validation>
@@ -182,10 +274,10 @@
             </v-card-title>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn @click="isDialogDisableUtilisateur = false" class="mx-2" fab dark>
+                <v-btn @click="isDialogDisableUtilisateur = false" class="mx-2" icon outlined dark>
                     <v-icon dark>mdi-close</v-icon>
                 </v-btn>
-                <v-btn @click="disableUtilisateur" class="mx-2" fab color="green darken-1">
+                <v-btn @click="disableUtilisateur" class="mx-2" icon outlined color="green darken-1">
                     <v-icon dark>mdi-check-bold</v-icon>
                 </v-btn>
             </v-card-actions>
@@ -203,22 +295,53 @@
             <v-btn color="pink" @click="isDialogNewEntreprise = true" class="ml-3" :disabled="!isAdmin" outlined>
                 <v-icon left>mdi-domain-plus</v-icon>Ajouter une entreprise
             </v-btn>
-            <v-btn color="pink" icon @click="getProspectionsData" class="ml-3">
-                <v-icon large>mdi-refresh</v-icon>
-            </v-btn>
-            <v-text-field v-model="search" prepend-icon="mdi-magnify" class="ml-auto" label="Recherche" color="primary" hide-details single-line style="max-width: 250px" clearable />
+            <v-tooltip right>
+                <template v-slot:activator="{ on, attrs }">
+                    <v-btn color="pink" outlined icon v-bind="attrs" v-on="on" @click="getProspectionsData" class="ml-3">
+                        <v-icon large>mdi-refresh</v-icon>
+                    </v-btn>
+                </template>
+                <span>Refresh</span>
+            </v-tooltip>
+            <v-text-field v-model="search" prepend-icon="mdi-magnify" class="ml-auto" label="Recherche" color="pink" hide-details single-line style="max-width: 250px" clearable />
         </v-row>
         <v-divider class="mt-6" />
-
         <v-skeleton-loader v-if="isFirstLoad" :loading="isLoading" type="table"></v-skeleton-loader>
         <v-data-table v-else v-model="prospectsSelected" @toggle-select-all="selectAllToggle" show-select :headers="headers" :items="prospects" :search.sync="search" :sort-by="['lastname']" :sort-desc="[false]" show-expand single-expand item-key="email" :expanded.sync="expanded">
             <template v-slot:top>
-                <v-btn color="pink" class="ma-3" :disabled="!isAdmin || prospectsSelected.length < 1" @click="generateMultipleDevis(prospectsSelected)" outlined>
-                    <v-icon left>mdi-file-document-multiple-outline</v-icon>Génération devis multiple
-                </v-btn>
+                <v-divider></v-divider>
+                <v-row class="py-3">
+                    <v-badge class="my-3 ml-3 mr-5" :color="isCheckedProspect ? 'success darken-1' : 'indigo'" overlap :content="prospectsSelected.length === 0 ? '0' : prospectsSelected.length">
+                        <v-btn color="pink darken-2" :disabled="prospectsSelected.length < 1" @click="generateMultipleDevis(prospectsSelected)" text outlined>
+                            <v-icon left>mdi-file-document-multiple-outline</v-icon>Génération devis multiple
+                        </v-btn>
+                    </v-badge>
+                    <v-badge :value="isHoverCheckboxChecked" class="mr-10 mt-0" color="deep-purple accent-4" content="Seuls les prospects vérifié recevront un mail" right overlap transition="slide-x-transition">
+                        <v-hover v-model="isHoverCheckboxChecked">
+                            <v-checkbox color="pink darken-2" v-model="isCheckedProspect" :disabled="prospectsSelected.length < 1" dense label="Checked prospect"></v-checkbox>
+                        </v-hover>
+                    </v-badge>
+                    <v-checkbox color="pink darken-2" class="mr-5" v-model="isRandomArticles" dense label="Articles aléatoire"></v-checkbox>
+                    <v-badge  class="my-3 ml-3 mr-5" v-if="!isRandomArticles" color="indigo" overlap :content="productsConfigurator.length === 0 ? '0' : productsConfigurator.length">
+                        <v-btn disabled color="pink darken-2" @click="isDialogConfigurator = true" text outlined>
+                            <v-icon left>mdi-cog-transfer-outline</v-icon>Configurateur
+                        </v-btn>
+                    </v-badge>
+                    <v-tooltip right>
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-badge class="my-3" color="indigo" dot>
+                                <v-btn color="pink darken-2" v-bind="attrs" v-on="on" icon to="/produits" outlined text>
+                                    <v-icon>mdi-sofa</v-icon>
+                                </v-btn>
+                            </v-badge>
+                        </template>
+                        <span>Page produits</span>
+                    </v-tooltip>
+                </v-row>
+                <v-divider></v-divider>
             </template>
             <template v-slot:[`item.data-table-select`]="{ item, isSelected, select }">
-                <v-simple-checkbox color="pink" :ripple="false" :value="!item.disabled ? isSelected : false" :disabled="item.disabled || !isAdmin " @input="select($event)"></v-simple-checkbox>
+                <v-simple-checkbox color="pink" :ripple="false" :value="isSelected" :disabled="item.disabled" @input="select($event)"></v-simple-checkbox>
             </template>
             <template v-slot:expanded-item="{ headers, item }">
                 <td :colspan="headers.length">
@@ -239,10 +362,10 @@
                         Désactiver {{ item.civilite.toLowerCase() === "homme" ? 'M. '+ item.lastname : 'Mme '+ item.lastname }}
                     </v-btn>
                     <v-btn :disabled="item.disabled || !isAdmin || item.role.toLowerCase() === 'administrateur'" small outlined @click="dialogUpdateEntreprise(item.idEntreprise)" class="ml-3">
-                        <v-icon left>mdi-pencil-outline</v-icon>
+                        <v-icon left>mdi-square-edit-outline</v-icon>
                         Modifier entreprise
                     </v-btn>
-                    <v-btn color="pink" @click="dialogNewDevis(item)" class="ml-3" :disabled="item.disabled || !isAdmin" small outlined>
+                    <v-btn color="pink" @click="generateOneDevis(item)" class="ml-3" :disabled="item.disabled" small outlined>
                         <v-icon left>mdi-file-document-outline</v-icon>Générer un devis
                     </v-btn>
                 </td>
@@ -257,9 +380,9 @@
                 <v-icon color="error" v-if="item.disabled">mdi-close-circle-outline</v-icon>
                 <v-icon color="success" v-else>mdi-checkbox-marked-circle-outline</v-icon>
             </template>
-            <div slot="no-results" :value="true" icon="warning" class="error--text">
+            <span slot="no-results" :value="true" icon="warning" class="error--text">
                 La recherche "{{ search }}" est inconnu.
-            </div>
+            </span>
         </v-data-table>
     </base-material-card>
     <v-snackbar v-model="isSnackbarOpened" elevation="24" :color="isSuccess ? 'success' : 'error'">
@@ -366,10 +489,14 @@ export default Vue.extend({
             isDialogDateCreationOpen: false as boolean,
             isDialogDateEditOpen: false as boolean,
             products: [] as any[],
-            composants: [] as any[],
-            isRandomArticles: true as boolean,
+            isRandomArticles: false as boolean,
             prospectsSelected: [] as any[],
-            disabledCount: 0 as number
+            isRemovedAllSelected: true as boolean,
+            isDialogConfigurator: false as boolean,
+            isCheckedProspect: false as boolean,
+            productsConfigurator: [] as any[],
+            isHoverCheckboxChecked: false as boolean,
+            //disabledCount: 0 as number,
         }
     },
     watch: {},
@@ -387,19 +514,18 @@ export default Vue.extend({
             ttPromise.push(axiosApi.get("/user/all/Prospect")) //tous les clients prospects
             ttPromise.push(axiosApi.get("/entreprises")) //tous les entreprises
             ttPromise.push(axiosApi.get("/product/all")) //tous les produits
-            //ttPromise.push(axiosApi.get("/composant/all")) //tous les composants
             Promise.all(ttPromise)
             .then((response: AxiosResponse[]) => {
                 this.prospects = response[0].data.users;
                 this.entreprises = response[1].data.entreprises;
                 this.products = response[2].data.products;
-                //this.composants = response[3].data.composants;
                 for (let i = 0; i < this.prospects.length; i++) {
                     this.prospects[i].isAdmin = this.prospects[i].role.toLowerCase() === "administrateur" ? true : false
                 }
                 setTimeout(() => {
                     this.isLoading = false;
                     this.isFirstLoad = false;
+                    this.isDialogConfigurator = true; //TOREMOVESOON
                 }, 1000);
             }).catch((error: AxiosError) => {
                 this.catchAxios(error)
@@ -413,24 +539,52 @@ export default Vue.extend({
             this.isLoading = true;
             this.isFirstLoad = true;
             const products: any[] = this.shuffle(this.products.filter((product: any) => product.archive === false));
-            let devis: any[] = []
+            let devis: any[] = [];
+            prospectsSelected = prospectsSelected.filter((p: any) => p.disabled === false);
+            prospectsSelected = this.isCheckedProspect ? prospectsSelected.filter((pp: any) => pp.checked === true) : prospectsSelected
+            if (prospectsSelected.length === 0) {
+                this.isLoading = false;
+                this.isFirstLoad = false;
+                return this.errorMessage("Aucun prospect vérifié disponible");
+            }
             if (this.isRandomArticles) {
-                prospectsSelected.filter((pp: any) => pp.disabled === false).forEach((prospect: any) => {
+                prospectsSelected.forEach((prospect: any) => {
                     devis.push({
                         prospectID: prospect._id,
                         articles: this.getRandomProduct(products)
                     })
                 });
+            } else {
+                if (this.productsConfigurator.length === 0) {
+                    this.isLoading = false;
+                    this.isFirstLoad = false;
+                    return this.errorMessage("Veuillez saisir l'option articles aléatoire ou configurer les produits");
+                } else {
+                    prospectsSelected.forEach((prospect: any) => {
+                        devis.push({
+                            prospectID: prospect._id,
+                            articles: this.productsConfigurator
+                        })
+                    });
+                }
             }
             return await this.newDevisRequest(devis);
         },
-        dialogNewDevis: async function (item: any) {
+        generateOneDevis: async function (item: any): Promise < void > {
             this.isLoading = true;
             this.isFirstLoad = true;
             const products: any[] = this.shuffle(this.products.filter((product: any) => product.archive === false));
             let articles: any[] = []
             if (this.isRandomArticles) {
                 articles = this.getRandomProduct(products)
+            } else {
+                if (this.productsConfigurator.length === 0) {
+                    this.isLoading = false;
+                    this.isFirstLoad = false;
+                    return this.errorMessage("Veuillez saisir l'option articles aléatoire ou configurer les produits");
+                } else {
+                    articles = this.productsConfigurator;
+                }
             }
             const devis = [{
                 "prospectID": item._id,
@@ -439,7 +593,6 @@ export default Vue.extend({
             return await this.newDevisRequest(devis);
         },
         newDevisRequest: async function (devis: any[] = []): Promise < void > {
-            console.log(devis);
             axiosApi
             .post("/devis/add", {
                 "devis": devis
@@ -447,8 +600,7 @@ export default Vue.extend({
                 headers: {
                     'Content-Type': 'application/json;charset=utf-8',
                 }
-            }) //generate devis
-            .then((response: AxiosResponse) => {
+            }).then((response: AxiosResponse) => {
                 if (!response.data.error) {
                     Object.assign(this.$data, this.$options.data()); //reset data
                     this.successMessage(devis.length === 1 ? "Le devis a bien été envoyé par mail" : "Les devis ont bien été envoyé par mail");
@@ -501,7 +653,8 @@ export default Vue.extend({
             return a;
         },
         selectAllToggle: function (props: any) {
-            if (this.prospectsSelected.length != this.prospects.length - this.disabledCount) {
+            if (this.isRemovedAllSelected === true /*this.prospectsSelected.length != this.prospects.length - this.disabledCountd*/ ) {
+                this.isRemovedAllSelected = false;
                 this.prospectsSelected = [];
                 const self = this;
                 props.items.forEach((item: any) => {
@@ -509,7 +662,10 @@ export default Vue.extend({
                         self.prospectsSelected.push(item);
                     }
                 });
-            } else this.prospectsSelected = [];
+            } else {
+                this.isRemovedAllSelected = true;
+                this.prospectsSelected = [];
+            }
         },
         getDataCompagny: function (siret: string = '') {
             if (siret === '') return this.errorMessage("Le SIRET ne peut pas être vide !");

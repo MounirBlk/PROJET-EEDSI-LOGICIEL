@@ -2,7 +2,7 @@
 <v-container id="produits" tag="section" fluid>
     <v-dialog v-model="isDialogComposant" fullscreen hide-overlay transition="dialog-bottom-transition">
         <v-card>
-            <v-toolbar dark color="orange">
+            <v-toolbar tile dark color="orange">
                 <v-btn icon dark @click="isDialogComposant = false">
                     <v-icon>mdi-close</v-icon>
                 </v-btn>
@@ -130,10 +130,10 @@
             </v-card-title>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn @click="isDialogDeleteProduit = false" class="mx-2" fab dark>
+                <v-btn @click="isDialogDeleteProduit = false" class="mx-2" icon outlined dark>
                     <v-icon dark>mdi-close</v-icon>
                 </v-btn>
-                <v-btn @click="deleteProduit" class="mx-2" fab color="green darken-1">
+                <v-btn @click="deleteProduit" class="mx-2" icon outlined color="green darken-1">
                     <v-icon dark>mdi-check-bold</v-icon>
                 </v-btn>
             </v-card-actions>
@@ -155,7 +155,7 @@
                 </template>
                 <span>Gestion composants</span>
             </v-tooltip>
-            <v-btn color="brown" icon @click="getProduitsData" class="ml-3">
+            <v-btn color="brown" outlined icon @click="getProduitsData" class="ml-3">
                 <v-icon large>mdi-refresh</v-icon>
             </v-btn>
             <v-text-field v-model="search" prepend-icon="mdi-magnify" class="ml-auto" label="Recherche" color="brown" hide-details single-line style="max-width: 250px" clearable />
@@ -173,7 +173,11 @@
                         <v-row class="fill-height ma-0" align="center" justify="center"> </v-row>
                     </template>
                 </v-img>
-                <v-icon v-else color="red" x-large> mdi-close</v-icon>
+                <v-img v-else height="80" width="120" :src="require('@/assets/ecommerce_logo.png')" aspect-ratio="1" class="grey lighten-2">
+                    <template v-slot:placeholder>
+                        <v-row class="fill-height ma-0" align="center" justify="center"> </v-row>
+                    </template>
+                </v-img>
             </template>
             <template v-slot:[`item.archive`]="{ item }">
                 <v-icon color="error" v-if="item.archive">mdi-close-circle-outline</v-icon>

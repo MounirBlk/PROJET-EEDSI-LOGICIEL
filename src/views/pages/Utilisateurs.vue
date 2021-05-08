@@ -63,10 +63,10 @@
             </v-card-title>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn @click="isDialogDeleteUtilisateur = false" class="mx-2" fab dark>
+                <v-btn @click="isDialogDeleteUtilisateur = false" class="mx-2" icon outlined dark>
                     <v-icon dark>mdi-close</v-icon>
                 </v-btn>
-                <v-btn @click="deleteUtilisateur" class="mx-2" fab color="green darken-1">
+                <v-btn @click="deleteUtilisateur" class="mx-2" icon outlined color="green darken-1">
                     <v-icon dark>mdi-check-bold</v-icon>
                 </v-btn>
             </v-card-actions>
@@ -80,10 +80,10 @@
             </v-card-title>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn @click="isDialogDisableUtilisateur = false" class="mx-2" fab dark>
+                <v-btn @click="isDialogDisableUtilisateur = false" class="mx-2" icon outlined dark>
                     <v-icon dark>mdi-close</v-icon>
                 </v-btn>
-                <v-btn @click="disableUtilisateur" class="mx-2" fab color="green darken-1">
+                <v-btn @click="disableUtilisateur" class="mx-2" icon outlined color="green darken-1">
                     <v-icon dark>mdi-check-bold</v-icon>
                 </v-btn>
             </v-card-actions>
@@ -98,10 +98,10 @@
             <v-btn color="info" @click="isDialogNewUtilisateur = true" class="ml-3" :disabled="!isAdmin">
                 <v-icon left>mdi-account-plus-outline</v-icon>Ajouter Utilisateur
             </v-btn>
-            <v-btn color="info" icon @click="getUtilisateursData" class="ml-3">
+            <v-btn color="info" outlined icon @click="getUtilisateursData" class="ml-3">
                 <v-icon large>mdi-refresh</v-icon>
             </v-btn>
-            <v-text-field v-model="search" prepend-icon="mdi-magnify" class="ml-auto" label="Recherche" color="primary" hide-details single-line style="max-width: 250px" clearable />
+            <v-text-field v-model="search" prepend-icon="mdi-magnify" class="ml-auto" label="Recherche" color="info" hide-details single-line style="max-width: 250px" clearable />
         </v-row>
         <v-divider class="mt-6" />
 
