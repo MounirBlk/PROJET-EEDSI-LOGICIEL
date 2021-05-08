@@ -31,7 +31,7 @@
                     <template v-slot:heading>
                         <div class="text-center">
                             <h1 class="display-1 font-weight-bold">
-                                <v-icon large left>mdi-account-group-outline</v-icon>Utilisateurs actif
+                                <v-icon large left>mdi-account-group-outline</v-icon>Utilisateurs actifs
                             </h1>
                         </div>
                     </template>
@@ -43,7 +43,7 @@
                     <template v-slot:heading>
                         <div class="text-center">
                             <h1 class="display-1 font-weight-bold">
-                                <v-icon large left>mdi-currency-eur</v-icon>Budgétisation
+                                <v-icon large left>mdi-finance</v-icon>Budgétisation (<v-icon large>mdi-currency-eur</v-icon>)
                             </h1>
                         </div>
                     </template>
@@ -134,7 +134,7 @@ export default Vue.extend({
             ]
         },
         chartPieUsers: {
-            title: 'Utilisateurs actif de l\'entreprise',
+            title: 'Utilisateurs actifs de l\'entreprise',
             labels: ["Administrateurs", "Commerciaux", "Clients", "Livreurs", "Prospects"],
             datasets: {
                 data: [0, 0, 0, 0, 0]

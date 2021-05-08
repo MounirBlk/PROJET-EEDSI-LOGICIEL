@@ -1,6 +1,9 @@
 <template>
 <v-container>
-    <v-subheader><v-icon small left color="indigo">mdi-face</v-icon>Online : {{ users.length }}
+    <v-subheader class="mt-2 mb-1">
+        <v-badge color="indigo" bordered overlap :content="users.length === 0 ? '0' : users.length">
+            <v-icon large color="indigo">mdi-face-outline</v-icon>
+        </v-badge>
     </v-subheader>
     <base-chat-box :messages="messages" @sendMessage="this.sendMessage" />
 </v-container>

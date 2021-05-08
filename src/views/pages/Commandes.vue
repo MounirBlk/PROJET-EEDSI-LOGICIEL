@@ -7,10 +7,10 @@
             </v-card-title>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn @click="isDialogDeleteCommande = false" class="mx-2" fab dark>
+                <v-btn @click="isDialogDeleteCommande = false" class="mx-2" icon outlined dark>
                     <v-icon dark>mdi-close</v-icon>
                 </v-btn>
-                <v-btn @click="deleteCommande" class="mx-2" fab color="green darken-1">
+                <v-btn @click="deleteCommande" class="mx-2" icon outlined color="green darken-1">
                     <v-icon dark>mdi-check-bold</v-icon>
                 </v-btn>
             </v-card-actions>
@@ -56,7 +56,7 @@
         <v-row class="mt-8 mr-1">
             <v-tooltip right>
                 <template v-slot:activator="{ on, attrs }">
-                    <v-btn color="success" icon v-bind="attrs" v-on="on" @click="getCommandesData" class="ml-3">
+                    <v-btn color="success" outlined icon v-bind="attrs" v-on="on" @click="getCommandesData" class="ml-3">
                         <v-icon large>mdi-refresh</v-icon>
                     </v-btn>
                 </template>

@@ -11,7 +11,8 @@
                         <div class="display-1 white--text">
                             <span>Articles de la commande</span><br />
                             <span class="text-h6">{{ commande.statut }} - {{ commande.dateLivraison }} - {{ commande.adresseLivraison }}</span><br />
-                            <span class="text-h6">Prix total : {{ commande.prixTotal }} €</span>
+                            <span class="text-h6">Prix total : {{ commande.prixTotal }} €</span><br />
+                            <span class="text-h6">Référence ID : {{ commande.refID }}</span>
                         </div>
                     </div>
                 </template>
@@ -110,6 +111,7 @@ export default Vue.extend({
     data(): any {
         return {
             commande: {
+                refID: '',
                 statut: '',
                 dateLivraison: '',
                 adresseLivraison: '',
@@ -142,12 +144,8 @@ export default Vue.extend({
         }
     },
     watch: {},
-    created() {
-        //console.log('created')
-    },
-    beforeMount() {
-        //console.log('beforeMount')
-    },
+    created() {},
+    beforeMount() {},
     mounted(): any {
         this.isOverlay = true;
         if (this.$route.params.idCommande !== null && this.$route.params.idCommande !== undefined) {

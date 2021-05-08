@@ -49,13 +49,15 @@
                             <v-col cols="12" class="py-2">
                                 <v-text-field :color="$vuetify.theme.dark ? 'indigo' : 'primary'" @keyup.enter="connexion(email, password)" label="Password" v-model="password" prepend-icon="mdi-lock-outline" :type="showPassword ? 'text' : 'password'" @click:append="showPassword = !showPassword" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" clearable />
                             </v-col>
-                            <v-col cols="12" class="py-2">
+                            <v-col cols="12" class="pt-2 mb-2">
                                 <span @click="isDialogForgotPassword = true" style="cursor: pointer">Mot de passe oublié ?</span>
                             </v-col>
-                            <v-btn :color="$vuetify.theme.dark ? 'indigo' : 'primary'" @click="connexion(email, password)">
-                                <v-icon :color="!$vuetify.theme.dark ? 'black' : 'white'" left>mdi-lock-outline</v-icon>
-                                <span :class="!$vuetify.theme.dark ? 'black--text' : 'white--text'">Connexion</span>
-                            </v-btn>
+                            <v-badge bordered color="indigo" icon="mdi-lock-open-outline" overlap>
+                                <v-btn dpressed :color="$vuetify.theme.dark ? 'indigo' : 'primary'" @click="connexion(email, password)">
+                                    <v-icon :color="!$vuetify.theme.dark ? 'black' : 'white'" left>mdi-check</v-icon>
+                                    <span :class="!$vuetify.theme.dark ? 'black--text' : 'white--text'">Connexion</span>
+                                </v-btn>
+                            </v-badge>
                         </v-form>
                     </v-card-text>
                     <!--</v-card>-->
@@ -136,10 +138,10 @@ export default Vue.extend({
                     if (localStorage.getItem("token") == null) return this.errorMessage("Token inconnu !");
                     //this.isOverlay = false;
                     const isAdmin = response.data.user.role.toLowerCase() === "administrateur" ? true : false;
-                    if(response.data.user.role.toLowerCase() !== "administrateur" && response.data.user.role.toLowerCase() !== "commercial"){
+                    if (response.data.user.role.toLowerCase() !== "administrateur" && response.data.user.role.toLowerCase() !== "commercial") {
                         this.isOverlay = false;
                         return this.errorMessage('Vous n\'avez pas l\'autorisation d\'accéder à la plateforme');
-                    }else{
+                    } else {
                         if (isAdmin === undefined || isAdmin === null) {
                             this.isOverlay = false;
                             return this.errorMessage('Erreur');
