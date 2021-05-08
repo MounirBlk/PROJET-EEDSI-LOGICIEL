@@ -525,7 +525,6 @@ export default Vue.extend({
                 setTimeout(() => {
                     this.isLoading = false;
                     this.isFirstLoad = false;
-                    this.isDialogConfigurator = true; //TOREMOVESOON
                 }, 1000);
             }).catch((error: AxiosError) => {
                 this.catchAxios(error)
