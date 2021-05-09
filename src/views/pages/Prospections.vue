@@ -127,9 +127,9 @@
                             <v-col cols="12" md="4">
                                 <v-menu v-model="isDialogDateCreationOpen" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="290px" color="info">
                                     <template v-slot:activator="{ on, attrs }">
-                                        <v-text-field color="pink" v-model="entreprise.dateCreation" :rules="rules.dateEnRules" required label="Date de création*" prepend-inner-icon="mdi-calendar-outline" readonly v-bind="attrs" v-on="on"></v-text-field>
+                                        <v-text-field color="pink" v-model="entreprise.dateCreation" label="Date de création*" prepend-inner-icon="mdi-calendar-outline" readonly v-bind="attrs" v-on="on"></v-text-field>
                                     </template>
-                                    <v-date-picker color="pink" locale="fr" first-day-of-week="1" v-model="entreprise.dateCreation" @input="isDialogDateCreationOpen = false" :rules="rules.dateEnRules" required></v-date-picker>
+                                    <v-date-picker color="pink" locale="fr" first-day-of-week="1" v-model="entreprise.dateCreation" @input="isDialogDateCreationOpen = false"></v-date-picker>
                                 </v-menu>
                             </v-col>
                             <v-col cols="12" md="3">
