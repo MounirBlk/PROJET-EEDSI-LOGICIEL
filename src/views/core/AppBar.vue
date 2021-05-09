@@ -66,10 +66,8 @@ import io from 'socket.io-client';
 
 export default Vue.extend({
     name: "DashboardCoreAppBar",
-
     data: () => ({
         isDisabledSynchro: false as boolean,
-        socket: io("https://api-imie-e-commerce.herokuapp.com"),
     }),
     computed: {
         ...mapState(["drawer"])

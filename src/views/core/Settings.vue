@@ -37,6 +37,9 @@ import {
     mapState
 } from 'vuex'
 import qs from 'qs'
+import {
+    bus
+} from "../../main";
 
 export default Vue.extend({
     name: 'DashboardCoreSettings',
@@ -62,6 +65,7 @@ export default Vue.extend({
     }),
     mounted() {},
     computed: {},
+    created() {},
     watch: {
         color(val) {
             this.$vuetify.theme.themes[!this.$vuetify.theme.dark ? 'light' : 'dark'].primary = val
@@ -70,7 +74,7 @@ export default Vue.extend({
             this.isChatReload = true;
             setTimeout(() => {
                 this.isChatReload = false;
-            }, 1000);
+            }, 250);
         }
     },
 
