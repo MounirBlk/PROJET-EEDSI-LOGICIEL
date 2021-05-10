@@ -92,7 +92,7 @@
                         mdi-pencil-outline
                     </v-icon>
                 </v-btn>
-                <v-btn icon color="error" @click="dialogDeleteProduit(item)">
+                <v-btn icon color="error" @click="dialogDeleteCommande(item)">
                     <v-icon>
                         mdi-delete-outline
                     </v-icon>
@@ -225,7 +225,7 @@ export default Vue.extend({
                 .then((response) => {
                     Object.assign(this.$data, this.$options.data()); //reset data
                     //this.$refs.form.reset();
-                    this.successMessage(`Le produit a été archivé avec succès`);
+                    this.successMessage(`La commande a été supprimée avec succès`);
                     setTimeout(() => {
                         this.getCommandesData();
                     }, 1000);
@@ -234,7 +234,7 @@ export default Vue.extend({
                     this.catchAxios(error)
                 });
         },
-        dialogDeleteProduit: function (infosCommande: Record < string, any > ) {
+        dialogDeleteCommande: function (infosCommande: Record < string, any > ) {
             this.isDialogDeleteCommande = true;
             this.commandeToDelete = infosCommande;
         },
