@@ -7,7 +7,7 @@
             </v-card-title>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn @click="isDialogDeleteCommande = false" class="mx-2" icon outlined dark>
+                <v-btn @click="isDialogDeleteCommande = false" class="mx-2" icon outlined  color="red" dark>
                     <v-icon dark>mdi-close</v-icon>
                 </v-btn>
                 <v-btn @click="deleteCommande" class="mx-2" icon outlined color="green darken-1">

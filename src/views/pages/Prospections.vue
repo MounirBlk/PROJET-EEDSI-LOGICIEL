@@ -1,5 +1,79 @@
 <template>
 <v-container id="prospections" tag="section" fluid>
+    <v-dialog persistent v-model="isDialogDocOptions" width="600" overlay-opacity="0.8">
+        <v-card outlined>
+            <v-toolbar dense color="pink darken-2" dark>
+                <v-icon left>mdi-cog-outline</v-icon>
+                Options formatage de document
+            </v-toolbar>
+            <v-card-text>
+                <v-container>
+                    <v-row no-gutters>
+                        <v-col cols="12" md="12">
+                            <v-badge v-if="isEditOptions" :value="isHoverCheckboxChecked" class="mr-10 mt-0" color="deep-purple accent-4" content="Seuls les prospects vérifié recevront un mail" right overlap transition="slide-x-transition">
+                                <v-hover v-model="isHoverCheckboxChecked">
+                                    <v-checkbox color="pink darken-2" v-model="optionsDoc.isCheckedProspect" :disabled="!isEditOptions || prospectsSelected.length < 1" dense label="Checked prospect"></v-checkbox>
+                                </v-hover>
+                            </v-badge>
+                            <div v-else class="mb-3">
+                                <v-icon left v-if="optionsDoc.isCheckedProspect" color="success">mdi-checkbox-marked-circle-outline</v-icon>
+                                <v-icon left v-if="!optionsDoc.isCheckedProspect" color="error">mdi-close-circle-outline</v-icon>
+                                <span>Checked prospect</span>
+                            </div>
+                        </v-col>
+                        <v-col cols="12" md="12">
+                            <v-checkbox v-if="isEditOptions" color="pink darken-2" v-model="optionsDoc.isCgv" dense label="CGV"></v-checkbox>
+                            <div v-else class="mb-3">
+                                <v-icon left v-if="optionsDoc.isCgv" color="success">mdi-checkbox-marked-circle-outline</v-icon>
+                                <v-icon left v-if="!optionsDoc.isCgv" color="error">mdi-close-circle-outline</v-icon>
+                                <span>CGV</span>
+                            </div>
+                        </v-col>
+                        <v-col cols="12" md="6">
+                            <v-checkbox v-if="isEditOptions" color="pink darken-2" v-model="optionsDoc.isAdminCommercial" dense label="Admins/Commerciaux"></v-checkbox>
+                            <div v-else class="mb-3">
+                                <v-icon left v-if="optionsDoc.isAdminCommercial" color="success">mdi-checkbox-marked-circle-outline</v-icon>
+                                <v-icon left v-if="!optionsDoc.isAdminCommercial" color="error">mdi-close-circle-outline</v-icon>
+                                <span>Admins/Commerciaux</span>
+                            </div>
+                        </v-col>
+                        <v-col cols="12" md="6">
+                            <v-select v-if="isEditOptions && optionsDoc.isAdminCommercial" label="Sélectionner" small-chips chips counter item-text="lastname" item-value="email" deletable-chips disable-lookup multiple :items='administrateurs' color="pink darken-2" v-model="optionsDoc.emailAdminCommercial" prepend-icon="mdi-format-list-checkbox">
+                                <template v-slot:selection="{ item, index }">
+                                    <v-chip small v-if="index === 0">
+                                        <span>{{ item.email }}</span>
+                                    </v-chip>
+                                    <span v-if="index === 1" class="pink--text caption">
+                                        (+{{ optionsDoc.emailAdminCommercial.length - 1 }} autre(s))
+                                    </span>
+                                </template>
+                            </v-select>
+                        </v-col>
+                        <v-col cols="12" md="6">
+                            <v-checkbox v-if="isEditOptions" color="pink darken-2" v-model="optionsDoc.isUser" dense label="Autre destinataire"></v-checkbox>
+                            <div v-else class="mb-3">
+                                <v-icon left v-if="optionsDoc.isUser" color="success">mdi-checkbox-marked-circle-outline</v-icon>
+                                <v-icon left v-if="!optionsDoc.isUser" color="error">mdi-close-circle-outline</v-icon>
+                                <span>Autre destinataire</span>
+                            </div>
+                        </v-col>
+                        <v-col cols="12" md="6">
+                            <v-text-field v-if="isEditOptions && optionsDoc.isUser" color="pink darken-2" label="Email" v-model.trim="optionsDoc.emailUser" prepend-icon="mdi-face" clearable />
+                        </v-col>
+                    </v-row>
+                </v-container>
+            </v-card-text>
+            <v-card-actions class="justify-end">
+                <v-btn @click="isEditOptions = !isEditOptions" class="mx-1" :color="!isEditOptions ? 'orange' : 'success'" icon outlined dark>
+                    <v-icon dark v-if="!isEditOptions">mdi-pencil-outline</v-icon>
+                    <v-icon dark v-else>mdi-pencil-off-outline</v-icon>
+                </v-btn>
+                <v-btn v-if="!isEditOptions" @click="isDialogDocOptions = false" class="mx-1" icon outlined color="green darken-1">
+                    <v-icon dark>mdi-check-bold</v-icon>
+                </v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
     <v-dialog v-model="isDialogConfigurator" fullscreen hide-overlay transition="dialog-bottom-transition">
         <v-card>
             <v-toolbar tile dark color="pink darken-2">
@@ -274,7 +348,7 @@
             </v-card-title>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn @click="isDialogDisableUtilisateur = false" class="mx-2" icon outlined dark>
+                <v-btn @click="isDialogDisableUtilisateur = false" class="mx-2" icon outlined color="red" dark>
                     <v-icon dark>mdi-close</v-icon>
                 </v-btn>
                 <v-btn @click="disableUtilisateur" class="mx-2" icon outlined color="green darken-1">
@@ -311,23 +385,26 @@
             <template v-slot:top>
                 <v-divider></v-divider>
                 <v-row class="py-3">
-                    <v-badge class="my-3 ml-3 mr-5" :color="isCheckedProspect ? 'success darken-1' : 'indigo'" overlap :content="prospectsSelected.length === 0 ? '0' : prospectsSelected.length">
-                        <v-btn color="pink darken-2" :disabled="prospectsSelected.length < 1" @click="generateMultipleDevis(prospectsSelected)" text outlined>
-                            <v-icon left>mdi-file-document-multiple-outline</v-icon>Génération devis multiple
+                    <v-badge class="my-3 ml-3 mr-5" :color="optionsDoc.isCheckedProspect ? 'success darken-1' : 'indigo'" overlap :content="prospectsSelected.length === 0 ? '0' : prospectsSelected.length">
+                        <v-btn color="pink darken-2" :disabled="prospectsSelected.length < 1" @click="generateDevis(prospectsSelected)" text outlined>
+                            <v-icon left>mdi-file-document-multiple-outline</v-icon>Génération de devis
                         </v-btn>
                     </v-badge>
-                    <v-badge :value="isHoverCheckboxChecked" class="mr-10 mt-0" color="deep-purple accent-4" content="Seuls les prospects vérifié recevront un mail" right overlap transition="slide-x-transition">
-                        <v-hover v-model="isHoverCheckboxChecked">
-                            <v-checkbox color="pink darken-2" v-model="isCheckedProspect" :disabled="prospectsSelected.length < 1" dense label="Checked prospect"></v-checkbox>
-                        </v-hover>
-                    </v-badge>
-                    <v-checkbox color="pink darken-2" class="mr-5" v-model="isRandomArticles" dense label="Articles aléatoire"></v-checkbox>
-                    <v-badge  class="my-3 ml-3 mr-5" v-if="!isRandomArticles" color="indigo" overlap :content="productsConfigurator.length === 0 ? '0' : productsConfigurator.length">
+                    <v-tooltip top>
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-btn class="my-3 ml-3 mr-5" color="pink darken-2" v-bind="attrs" v-on="on" icon @click="isDialogDocOptions = true;" :disabled="prospectsSelected.length === 0" outlined text>
+                                <v-icon>mdi-cogs</v-icon>
+                            </v-btn>
+                        </template>
+                        <span>Options document</span>
+                    </v-tooltip>
+                    <v-switch color="pink darken-2" class="mr-5" v-model="isRandomArticles" dense label="Articles aléatoire"></v-switch>
+                    <v-badge class="my-3 ml-3 mr-5" v-if="!isRandomArticles" color="indigo" overlap :content="productsConfigurator.length === 0 ? '0' : productsConfigurator.length">
                         <v-btn disabled color="pink darken-2" @click="isDialogConfigurator = true" text outlined>
                             <v-icon left>mdi-cog-transfer-outline</v-icon>Configurateur
                         </v-btn>
                     </v-badge>
-                    <v-tooltip right>
+                    <v-tooltip top>
                         <template v-slot:activator="{ on, attrs }">
                             <v-badge class="my-3" color="indigo" dot>
                                 <v-btn color="pink darken-2" v-bind="attrs" v-on="on" icon to="/produits" outlined text>
@@ -364,9 +441,6 @@
                     <v-btn :disabled="item.disabled || !isAdmin || item.role.toLowerCase() === 'administrateur'" small outlined @click="dialogUpdateEntreprise(item.idEntreprise)" class="ml-3">
                         <v-icon left>mdi-square-edit-outline</v-icon>
                         Modifier entreprise
-                    </v-btn>
-                    <v-btn color="pink" @click="generateOneDevis(item)" class="ml-3" :disabled="item.disabled" small outlined>
-                        <v-icon left>mdi-file-document-outline</v-icon>Générer un devis
                     </v-btn>
                 </td>
             </template>
@@ -493,9 +567,19 @@ export default Vue.extend({
             prospectsSelected: [] as any[],
             isRemovedAllSelected: true as boolean,
             isDialogConfigurator: false as boolean,
-            isCheckedProspect: false as boolean,
             productsConfigurator: [] as any[],
             isHoverCheckboxChecked: false as boolean,
+            optionsDoc: {
+                isCheckedProspect: false as boolean,
+                isCgv: false as boolean,
+                isAdminCommercial: false as boolean,
+                isUser: false as boolean,
+                emailUser: '',
+                emailAdminCommercial: [],
+            },
+            isDialogDocOptions: false as boolean,
+            isEditOptions: false as boolean,
+            administrateurs: [] as any[],
             //disabledCount: 0 as number,
         }
     },
@@ -514,11 +598,13 @@ export default Vue.extend({
             ttPromise.push(axiosApi.get("/user/all/Prospect")) //tous les clients prospects
             ttPromise.push(axiosApi.get("/entreprises")) //tous les entreprises
             ttPromise.push(axiosApi.get("/product/all")) //tous les produits
+            ttPromise.push(axiosApi.get("/user/all/Commercial")) //tous les commerciaux/admins
             Promise.all(ttPromise)
             .then((response: AxiosResponse[]) => {
                 this.prospects = response[0].data.users;
                 this.entreprises = response[1].data.entreprises;
                 this.products = response[2].data.products;
+                this.administrateurs = response[3].data.users;
                 for (let i = 0; i < this.prospects.length; i++) {
                     this.prospects[i].isAdmin = this.prospects[i].role.toLowerCase() === "administrateur" ? true : false
                 }
@@ -534,13 +620,13 @@ export default Vue.extend({
                 }, 1000);
             });
         },
-        generateMultipleDevis: async function (prospectsSelected: any[] = []) {
+        generateDevis: async function (prospectsSelected: any[] = []) {
             this.isLoading = true;
             this.isFirstLoad = true;
             const products: any[] = this.shuffle(this.products.filter((product: any) => product.archive === false));
             let devis: any[] = [];
             prospectsSelected = prospectsSelected.filter((p: any) => p.disabled === false);
-            prospectsSelected = this.isCheckedProspect ? prospectsSelected.filter((pp: any) => pp.checked === true) : prospectsSelected
+            prospectsSelected = this.optionsDoc.isCheckedProspect ? prospectsSelected.filter((pp: any) => pp.checked === true) : prospectsSelected
             if (prospectsSelected.length === 0) {
                 this.isLoading = false;
                 this.isFirstLoad = false;
@@ -567,54 +653,32 @@ export default Vue.extend({
                     });
                 }
             }
-            return await this.newDevisRequest(devis);
-        },
-        generateOneDevis: async function (item: any): Promise < void > {
-            this.isLoading = true;
-            this.isFirstLoad = true;
-            const products: any[] = this.shuffle(this.products.filter((product: any) => product.archive === false));
-            let articles: any[] = []
-            if (this.isRandomArticles) {
-                articles = this.getRandomProduct(products)
-            } else {
-                if (this.productsConfigurator.length === 0) {
-                    this.isLoading = false;
-                    this.isFirstLoad = false;
-                    return this.errorMessage("Veuillez saisir l'option articles aléatoire ou configurer les produits");
-                } else {
-                    articles = this.productsConfigurator;
-                }
-            }
-            const devis = [{
-                "prospectID": item._id,
-                "articles": articles
-            }]
-            return await this.newDevisRequest(devis);
-        },
-        newDevisRequest: async function (devis: any[] = []): Promise < void > {
             axiosApi
-            .post("/devis/add", {
-                "devis": devis
-            }, {
-                headers: {
-                    'Content-Type': 'application/json;charset=utf-8',
-                }
-            }).then((response: AxiosResponse) => {
-                if (!response.data.error) {
-                    Object.assign(this.$data, this.$options.data()); //reset data
-                    this.successMessage(devis.length === 1 ? "Le devis a bien été envoyé par mail" : "Les devis ont bien été envoyé par mail");
+                .post("/devis/add", {
+                    "devis": devis,
+                    "optionsDoc": this.optionsDoc
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json;charset=utf-8',
+                    }
+                }).then((response: AxiosResponse) => {
+                    if (!response.data.error) {
+                        Object.assign(this.$data, this.$options.data()); //reset data
+                        this.successMessage(devis.length === 1 ? "Le devis a bien été envoyé par mail" : "Les devis ont bien été envoyé par mail");
+                        setTimeout(() => {
+                            this.getProspectionsData();
+                        }, 1000);
+                    }
+                })
+                .catch((error: AxiosError) => {
+                    this.catchAxios(error)
                     setTimeout(() => {
-                        this.getProspectionsData();
+                        this.isLoading = false;
+                        this.isFirstLoad = false;                    
                     }, 1000);
-                }
-            })
-            .catch((error: AxiosError) => {
-                this.catchAxios(error)
-                setTimeout(() => {
-                    this.isOverlay = false;
-                }, 1000);
-            });
+                });
         },
+
         getRandomProduct: function (products: any[]): any[] {
             let articles: any[] = []
             for (let i = 0; i < this.randNumber(1, products.length); i++) {
