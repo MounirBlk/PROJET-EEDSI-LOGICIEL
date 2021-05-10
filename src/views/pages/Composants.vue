@@ -90,7 +90,7 @@
             </v-card-title>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn @click="isDialogDeleteComposant = false" class="mx-2" icon outlined dark>
+                <v-btn @click="isDialogDeleteComposant = false" class="mx-2" icon outlined  color="red" dark>
                     <v-icon dark>mdi-close</v-icon>
                 </v-btn>
                 <v-btn @click="deleteUtilisateur" class="mx-2" icon outlined color="green darken-1">
