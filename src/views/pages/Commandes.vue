@@ -221,7 +221,7 @@ export default Vue.extend({
         deleteCommande: function (): void {
             this.isDialogDeleteCommande = false;
             axiosApi
-                .delete("/product/delete/" + this.commandeToDelete._id)
+                .delete("/commande/delete/" + this.commandeToDelete._id)
                 .then((response) => {
                     Object.assign(this.$data, this.$options.data()); //reset data
                     //this.$refs.form.reset();
