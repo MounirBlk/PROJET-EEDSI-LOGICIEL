@@ -77,22 +77,17 @@
                             </v-row>
                             <v-divider class="my-4" />
                             <v-row>
-                                <v-col cols="12" md="7">
+                                <v-col cols="12" md="12" class="d-flex justify-end">
                                     <v-btn @click="isChangePasswordDialog = true" class="mx-2" color="purple" text outlined :disabled="!isUpdateUser" small>
                                         <v-icon left>mdi-cog-outline</v-icon>Changer le password
                                     </v-btn>
-                                </v-col>
-                                <v-col cols="12" md="5" class="ml-auto" v-if="!isUpdateUser">
-                                    <v-btn dark small color="purple" @click="isUpdateUser = true" class="mx-2">
-                                        <v-icon left>mdi-account-edit-outline</v-icon>Modifier le
-                                        Profil
+                                    <v-btn dark small v-if="!isUpdateUser" color="purple" @click="isUpdateUser = true" class="mx-2">
+                                        <v-icon left>mdi-account-edit-outline</v-icon>Modifier le Profil
                                     </v-btn>
-                                </v-col>
-                                <v-col cols="12" md="5" class="ml-auto" v-else>
-                                    <v-btn small color="error" class="mx-2" @click="isUpdateUser = false">
+                                    <v-btn small color="error" class="mx-2" v-if="isUpdateUser" @click="isUpdateUser = false">
                                         <v-icon left>mdi-close-circle-outline</v-icon>Annuler
                                     </v-btn>
-                                    <v-btn small color="success" class="mx-2" @click="saveUpdate">
+                                    <v-btn small color="success" class="mx-2" v-if="isUpdateUser" @click="saveUpdate">
                                         <v-icon left>mdi-content-save-outline</v-icon>Sauvegarder
                                     </v-btn>
                                 </v-col>
@@ -111,7 +106,7 @@
                         </h1>
                     </div>
                 </template>
-                <v-card-text >
+                <v-card-text>
                     <span class="display-1 mb-3">
                         {{ user.firstname }} {{ user.lastname }}
                     </span>
@@ -126,7 +121,6 @@
                     <span class="subtitle-1 mb-3 grey--text">
                         Mise à jour : {{ user.updateAt | moment("YYYY-MM-DD HH:mm")  }}
                     </span><br />
-
                 </v-card-text>
             </base-material-card>
         </v-col>

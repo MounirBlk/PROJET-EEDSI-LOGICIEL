@@ -97,20 +97,6 @@ const routes: Array<RouteConfig> = [{
         requiresAuth: true
       }
     },{
-      name: 'Factures',
-      path: '/factures',
-      component: () => import ('@/views/pages/Factures.vue'),
-      meta: {
-        requiresAuth: true
-      }
-    },{
-      name: 'Informations-Facture',
-      path: '/factures/facture',
-      component: () => import ('@/views/pages/InfosFacture.vue'),
-      meta: {
-        requiresAuth: true
-      }
-    },{
       name: 'Prospections',
       path: '/prospections',
       component: () => import ('@/views/pages/Prospections.vue'),
