@@ -1,5 +1,105 @@
 <template>
 <v-container id="prospections" tag="section" fluid>
+    <v-dialog v-model="isDialogEntreprise" fullscreen hide-overlay transition="dialog-bottom-transition">
+        <v-card>
+            <v-toolbar tile dark color="pink darken-2">
+                <v-btn icon dark @click="isDialogEntreprise = false">
+                    <v-icon>mdi-close</v-icon>
+                </v-btn>
+                <v-toolbar-title>Gestion des entreprises</v-toolbar-title>
+                <v-spacer></v-spacer>
+                <v-toolbar-items>
+                    <v-btn dark text @click="isDialogEntreprise = false">
+                        Fermer
+                    </v-btn>
+                </v-toolbar-items>
+            </v-toolbar>
+            <v-container>
+                <v-row no-gutters class="mb-10">
+                    <v-tooltip bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-btn color="pink darken-2" text v-bind="attrs" v-on="on" @click="getProspectionsData" class="mt-4 ml-3">
+                                <v-icon large>mdi-refresh</v-icon>
+                            </v-btn>
+                        </template>
+                        <span>Refresh</span>
+                    </v-tooltip>
+                    <v-tooltip bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-badge :color="!isEditEntreprise ? 'red' : 'green'" class="mt-4 ml-3" overlap :content="!isEditEntreprise ? 'Désactivé' : 'Activé'">
+                                <v-btn v-bind="attrs" v-on="on" text color="orange" @click="isEditEntreprise = !isEditEntreprise">
+                                    <v-icon :color="!isEditEntreprise ? 'orange' : 'orange darken-2'" large>mdi-square-edit-outline</v-icon>
+                                </v-btn>
+                            </v-badge>
+                        </template>
+                        <span>Mode modification</span>
+                    </v-tooltip>
+                    <v-text-field v-model="searchEnt" class="ml-auto" prepend-icon="mdi-magnify" label="Recherche" color="pink" hide-details single-line style="max-width: 250px" clearable />
+                </v-row>
+                <v-skeleton-loader v-if="isFirstLoad" :loading="isLoading" type="table"></v-skeleton-loader>
+                <v-data-table v-else :headers="headersEntreprises" :items="entreprises" :search.sync="searchEnt" :sort-by="['nom']" :sort-desc="[false]" show-expand single-expand item-key="siret" :expanded.sync="expandedEnt">
+                    <template v-slot:expanded-item="{ headers, item }">
+                        <td :colspan="headers.length">
+                            <v-row class="my-2">
+                                <v-col cols="12" md="4">
+                                    <v-text-field color="pink darken-2" disabled label="Siren" v-model="item.siren" prepend-inner-icon="mdi-numeric" clearable />
+                                </v-col>
+                                <v-col cols="12" md="4">
+                                    <v-text-field color="pink darken-2" :disabled="!isEditEntreprise" label="Nom" v-model="item.nom" prepend-inner-icon="mdi-face" clearable />
+                                </v-col>
+                                <v-col cols="12" md="4">
+                                    <v-text-field color="pink darken-2" :disabled="!isEditEntreprise" label="Adresse" v-model="item.adresse" prepend-inner-icon="mdi-face" clearable />
+                                </v-col>
+                                <v-col cols="12" md="4">
+                                    <v-menu v-model="isDialogDateCreationOpen" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="290px" color="info">
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <v-text-field color="pink darken-2" :disabled="!isEditEntreprise" v-model="item.dateCreation" label="Date de création" prepend-inner-icon="mdi-calendar-outline" readonly v-bind="attrs" v-on="on"></v-text-field>
+                                        </template>
+                                        <v-date-picker color="pink darken-2" locale="fr" first-day-of-week="1" v-model="item.dateCreation" @input="isDialogDateCreationOpen = false"></v-date-picker>
+                                    </v-menu>
+                                </v-col>
+                                <v-col cols="12" md="3">
+                                    <v-text-field color="pink darken-2" :disabled="!isEditEntreprise" label="Téléphone" v-model="item.telephone" prepend-inner-icon="mdi-numeric" clearable />
+                                </v-col>
+                                <v-col cols="12" md="5">
+                                    <v-select color="pink darken-2" :disabled="!isEditEntreprise" label="Etat administratif" prepend-inner-icon="mdi-format-list-bulleted-type" v-model="item.etatAdministratif" :items="['Actif', 'Ferme']"></v-select>
+                                </v-col>
+                                <v-col cols="12" md="4">
+                                    <v-select color="pink darken-2" :disabled="!isEditEntreprise" label="Catégorie entreprise" :items='["GE", "ETI", "PME", "MIC", "AUTRES"]' v-model="item.categorieEntreprise" prepend-inner-icon="mdi-numeric" clearable />
+                                </v-col>
+                                <v-col cols="12" md="4">
+                                    <v-text-field color="pink darken-2" :disabled="!isEditEntreprise" label="Catégorie juridique" v-model="item.categorieJuridique" prepend-inner-icon="mdi-numeric" clearable />
+                                </v-col>
+                                <v-col cols="12" md="4">
+                                    <v-text-field color="pink darken-2" :disabled="!isEditEntreprise" label="Numéro TVA" v-model="item.numeroTvaIntra" prepend-inner-icon="mdi-numeric" clearable />
+                                </v-col>
+                                <v-col cols="12" class="d-flex justify-end" v-if="isEditEntreprise">
+                                    <v-btn color="success" @click="saveEditEntreprise(item)" outlined>
+                                        <v-icon color="success" left>mdi-content-save-outline</v-icon> Sauvegarder
+                                    </v-btn>
+                                </v-col>
+                            </v-row>
+                        </td>
+                    </template>
+                    <template v-slot:[`item.categorieEntreprise`]="{ item }">
+                        <v-chip color="red" v-if="item.categorieEntreprise.toLowerCase() === 'autres' || item.categorieEntreprise === 'null' || item.categorieEntreprise === null || item.categorieEntreprise === undefined">
+                            <v-icon>mdi-close-circle-outline</v-icon>
+                        </v-chip>
+                        <v-chip color="indigo" v-else>{{ item.categorieEntreprise }}</v-chip>
+                    </template>
+                    <template v-slot:[`item.createdAt`]="{ item }"> {{ item.createdAt | moment("YYYY-MM-DD HH:mm") }} </template>
+                    <template v-slot:[`item.updateAt`]="{ item }"> {{ item.updateAt | moment("YYYY-MM-DD HH:mm") }} </template>
+                    <template v-slot:[`item.etatAdministratif`]="{ item }">
+                        <v-icon color="error" v-if="item.etatAdministratif !== 'Actif'">mdi-close-circle-outline</v-icon>
+                        <v-icon color="success" v-else>mdi-checkbox-marked-circle-outline</v-icon>
+                    </template>
+                    <span slot="no-results" :value="true" icon="warning" class="error--text">
+                        La recherche "{{ searchEnt }}" est inconnu.
+                    </span>
+                </v-data-table>
+            </v-container>
+        </v-card>
+    </v-dialog>
     <v-dialog persistent v-model="isDialogDocOptions" width="600" overlay-opacity="0.8">
         <v-card outlined>
             <v-toolbar dense color="pink darken-2" dark>
@@ -213,7 +313,7 @@
                                 <v-select color="pink" prepend-inner-icon="mdi-format-list-bulleted-type" v-model="entreprise.etatAdministratif" :items="['Actif', 'Ferme']" label="Etat administratif*" :rules="rules.champRules" required></v-select>
                             </v-col>
                             <v-col cols="12" md="4">
-                                <v-text-field color="pink" label="Catégorie entreprise*" v-model="entreprise.categorieEntreprise" prepend-inner-icon="mdi-numeric" clearable :rules="rules.champRules" required />
+                                <v-select color="pink" label="Catégorie entreprise*" :items='["GE", "ETI", "PME", "MIC", "AUTRES"]' v-model="entreprise.categorieEntreprise" prepend-inner-icon="mdi-numeric" clearable :rules="rules.champRules" required />
                             </v-col>
                             <v-col cols="12" md="4">
                                 <v-text-field color="pink" label="Catégorie juridique" v-model="entreprise.categorieJuridique" prepend-inner-icon="mdi-numeric" clearable />
@@ -266,7 +366,7 @@
                                 <v-select color="pink" prepend-inner-icon="mdi-format-list-bulleted-type" v-model="entrepriseToUpdate.etatAdministratif" :items="['Actif', 'Ferme']" label="Etat administratif*"></v-select>
                             </v-col>
                             <v-col cols="12" md="4">
-                                <v-text-field color="pink" label="Catégorie entreprise*" v-model="entrepriseToUpdate.categorieEntreprise" prepend-inner-icon="mdi-numeric" clearable />
+                                <v-select color="pink" label="Catégorie entreprise*" :items='["GE", "ETI", "PME", "MIC", "AUTRES"]' v-model="entrepriseToUpdate.categorieEntreprise" prepend-inner-icon="mdi-numeric" clearable />
                             </v-col>
                             <v-col cols="12" md="4">
                                 <v-text-field color="pink" label="Catégorie juridique" v-model="entrepriseToUpdate.categorieJuridique" prepend-inner-icon="mdi-numeric" clearable />
@@ -366,22 +466,52 @@
             <v-btn color="pink" @click="isDialogNewUtilisateur = true" class="ml-3" :disabled="!isAdmin" outlined>
                 <v-icon left>mdi-account-plus-outline</v-icon>Ajouter client prospect
             </v-btn>
-            <v-btn color="pink" @click="isDialogNewEntreprise = true" class="ml-3" :disabled="!isAdmin" outlined>
-                <v-icon left>mdi-domain-plus</v-icon>Ajouter une entreprise
-            </v-btn>
             <v-tooltip right>
                 <template v-slot:activator="{ on, attrs }">
-                    <v-btn color="pink" outlined icon v-bind="attrs" v-on="on" @click="getProspectionsData" class="ml-3">
+                    <v-btn color="pink" icon v-bind="attrs" v-on="on" @click="getProspectionsData" class="ml-3">
                         <v-icon large>mdi-refresh</v-icon>
                     </v-btn>
                 </template>
                 <span>Refresh</span>
             </v-tooltip>
+            <v-speed-dial v-model="isEntrepriseSpeedDial" class="ml-3 mb-3" direction="right" open-on-hover transition="scale">
+                <template v-slot:activator>
+                    <v-tooltip top>
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-btn v-if="isAdmin" v-model="isEntrepriseSpeedDial" v-bind="attrs" v-on="on" outlined color="pink" dark icon>
+                                <v-icon v-if="isEntrepriseSpeedDial">
+                                    mdi-close
+                                </v-icon>
+                                <v-icon v-else>
+                                    mdi-domain
+                                </v-icon>
+                            </v-btn>
+                        </template>
+                        <span>Entreprise</span>
+                    </v-tooltip>
+                </template>
+                <v-tooltip top>
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-btn icon outlined dark @click="isDialogNewEntreprise = true" color="indigo" v-bind="attrs" v-on="on">
+                            <v-icon>mdi-plus</v-icon>
+                        </v-btn>
+                    </template>
+                    <span>Ajouter une entreprise</span>
+                </v-tooltip>
+                <v-tooltip top>
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-btn icon outlined dark color="green" @click.prevent="isDialogEntreprise = true" v-bind="attrs" v-on="on">
+                            <v-icon>mdi-cog-outline</v-icon>
+                        </v-btn>
+                    </template>
+                    <span>Gestion des entreprises</span>
+                </v-tooltip>
+            </v-speed-dial>
             <v-text-field v-model="search" prepend-icon="mdi-magnify" class="ml-auto" label="Recherche" color="pink" hide-details single-line style="max-width: 250px" clearable />
         </v-row>
         <v-divider class="mt-6" />
         <v-skeleton-loader v-if="isFirstLoad" :loading="isLoading" type="table"></v-skeleton-loader>
-        <v-data-table v-else v-model="prospectsSelected" @toggle-select-all="selectAllToggle" show-select :headers="headers" :items="prospects" :search.sync="search" :sort-by="['lastname']" :sort-desc="[false]" show-expand single-expand item-key="email" :expanded.sync="expanded">
+        <v-data-table v-else v-model="prospectsSelected" @toggle-select-all="selectAllToggle" show-select :headers="headersProspects" :items="prospects" :search.sync="search" :sort-by="['lastname']" :sort-desc="[false]" show-expand single-expand item-key="email" :expanded.sync="expanded">
             <template v-slot:top>
                 <v-divider></v-divider>
                 <v-row class="py-3">
@@ -509,27 +639,47 @@ export default Vue.extend({
             },
             search: undefined as string | null | undefined,
             expanded: [] as Array < any > ,
-            headers: [{
-                    text: "Nom",
-                    value: "lastname",
-                },
-                {
-                    text: "Prénom",
-                    value: "firstname",
-                },
-                {
-                    text: "Email",
-                    value: "email",
-                }, {
-                    sortable: false,
-                    text: "Checked",
-                    value: "checked",
-                }, {
-                    sortable: false,
-                    text: "Actif",
-                    value: "disabled",
-                },
-            ] as Array < any > ,
+            expandedEnt: [] as Array < any > ,
+            headersProspects: [{
+                text: "Nom",
+                value: "lastname"
+            }, {
+                text: "Prénom",
+                value: "firstname",
+            }, {
+                text: "Email",
+                value: "email",
+            }, {
+                sortable: false,
+                text: "Checked",
+                value: "checked",
+            }, {
+                sortable: false,
+                text: "Actif",
+                value: "disabled",
+            }, ] as Array < any > ,
+            headersEntreprises: [{
+                text: "Siret",
+                value: "siret",
+            }, {
+                text: "Nom",
+                value: "nom",
+            }, {
+                text: "Catégorie entreprise",
+                value: "categorieEntreprise",
+            }, {
+                sortable: false,
+                text: "Création",
+                value: "createdAt",
+            }, {
+                sortable: false,
+                text: "Mise à jour",
+                value: "updateAt",
+            }, {
+                sortable: false,
+                text: "Etat administratif actif",
+                value: "etatAdministratif",
+            }, ] as Array < any > ,
             prospects: [] as Array < any > ,
             isDialogNewEntreprise: false as boolean,
             isDialogEditEntreprise: false as boolean,
@@ -547,11 +697,9 @@ export default Vue.extend({
                 numeroTvaIntra: '',
             },
             entrepriseToUpdate: {
-                //siret: '',
                 nom: '',
                 adresse: '',
                 telephone: '',
-                //siren: '',
                 categorieEntreprise: '',
                 categorieJuridique: '',
                 dateCreation: '',
@@ -580,7 +728,10 @@ export default Vue.extend({
             isDialogDocOptions: false as boolean,
             isEditOptions: false as boolean,
             administrateurs: [] as any[],
-            //disabledCount: 0 as number,
+            isEntrepriseSpeedDial: false as boolean,
+            isDialogEntreprise: false as boolean,
+            searchEnt: '',
+            isEditEntreprise: false as boolean,
         }
     },
     watch: {},
@@ -674,7 +825,7 @@ export default Vue.extend({
                     this.catchAxios(error)
                     setTimeout(() => {
                         this.isLoading = false;
-                        this.isFirstLoad = false;                    
+                        this.isFirstLoad = false;
                     }, 1000);
                 });
         },
@@ -705,8 +856,7 @@ export default Vue.extend({
             return Math.floor(Math.random() * (max - min + 1) + min);
         },
         /**
-         * Shuffles array in place. ES6 version
-         * @param {Array} a items An array containing the items.
+         * @param {Array} a Shuffles array in place. ES6 version
          */
         shuffle: function (a: any[]): any[] {
             for (let i = a.length - 1; i > 0; i--) {
@@ -761,7 +911,7 @@ export default Vue.extend({
         saveNewEntreprise: async function (): Promise < void > {
             if (!this.$refs.form.validate()) return this.errorMessage("Veuillez vérifier les champs !");
             axiosApi.post("/entreprise", qs.stringify(this.entreprise))
-            .then((response) => {
+            .then((response: AxiosResponse) => {
                 Object.assign(this.$data, this.$options.data()); //reset data
                 this.$refs.form.reset();
                 this.successMessage("L'entreprise a bien été ajouté !");
@@ -777,7 +927,7 @@ export default Vue.extend({
             if (!this.$refs.form.validate()) return this.errorMessage("Veuillez vérifier les champs !");
             this.prospect.role = this.prospect.isAdmin === true ? 'Administrateur' : 'Prospect'
             axiosApi.post("/register", qs.stringify(this.prospect))
-                .then((response) => {
+                .then((response: AxiosResponse) => {
                     Object.assign(this.$data, this.$options.data()); //reset data
                     this.$refs.form.reset();
                     this.successMessage("Le client prospect a bien été ajouté !");
@@ -794,7 +944,7 @@ export default Vue.extend({
             this.entrepriseToUpdate = item;
         },
         saveEditEntreprise: function (entrepriseToUpdate: any): void {
-            let payload = {
+            const payload = {
                 nom: entrepriseToUpdate.nom,
                 adresse: entrepriseToUpdate.adresse,
                 telephone: entrepriseToUpdate.telephone,
@@ -824,7 +974,7 @@ export default Vue.extend({
             this.isDialogDisableUtilisateur = false;
             axiosApi
                 .put("/user/disable/" + this.utilisateurToDisable._id)
-                .then((response) => {
+                .then((response: AxiosResponse) => {
                     console.log(response.data.message)
                     const utilisateurFirstname = this.utilisateurToDisable.firstname;
                     const utilisateurLastname = this.utilisateurToDisable.lastname;
@@ -869,5 +1019,3 @@ export default Vue.extend({
     }
 });
 </script>
-
-<style></style>

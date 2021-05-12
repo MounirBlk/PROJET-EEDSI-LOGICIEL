@@ -72,7 +72,9 @@ export default Vue.extend({
     computed: {
         ...mapState(["drawer"])
     },
-
+    components: {
+        Prospections: () => import("../pages/Prospections.vue")
+    },
     methods: {
         ...mapMutations({
             setDrawer: "SET_DRAWER"
