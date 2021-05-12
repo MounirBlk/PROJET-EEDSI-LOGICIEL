@@ -41,13 +41,13 @@
                     <template v-slot:expanded-item="{ headers, item }">
                         <td :colspan="headers.length">
                             <v-row class="my-2">
-                                <v-col cols="12" md="4">
+                                <v-col cols="12" md="3">
                                     <v-text-field color="pink darken-2" disabled label="Siren" v-model="item.siren" prepend-inner-icon="mdi-numeric" clearable />
                                 </v-col>
                                 <v-col cols="12" md="4">
                                     <v-text-field color="pink darken-2" :disabled="!isEditEntreprise" label="Nom" v-model="item.nom" prepend-inner-icon="mdi-face" clearable />
                                 </v-col>
-                                <v-col cols="12" md="4">
+                                <v-col cols="12" md="5">
                                     <v-text-field color="pink darken-2" :disabled="!isEditEntreprise" label="Adresse" v-model="item.adresse" prepend-inner-icon="mdi-face" clearable />
                                 </v-col>
                                 <v-col cols="12" md="4">
@@ -58,10 +58,10 @@
                                         <v-date-picker color="pink darken-2" locale="fr" first-day-of-week="1" v-model="item.dateCreation" @input="isDialogDateCreationOpen = false"></v-date-picker>
                                     </v-menu>
                                 </v-col>
-                                <v-col cols="12" md="3">
+                                <v-col cols="12" md="4">
                                     <v-text-field color="pink darken-2" :disabled="!isEditEntreprise" label="Téléphone" v-model="item.telephone" prepend-inner-icon="mdi-numeric" clearable />
                                 </v-col>
-                                <v-col cols="12" md="5">
+                                <v-col cols="12" md="4">
                                     <v-select color="pink darken-2" :disabled="!isEditEntreprise" label="Etat administratif" prepend-inner-icon="mdi-format-list-bulleted-type" v-model="item.etatAdministratif" :items="['Actif', 'Ferme']"></v-select>
                                 </v-col>
                                 <v-col cols="12" md="4">
@@ -359,10 +359,10 @@
                                     <v-date-picker color="pink" locale="fr" first-day-of-week="1" v-model="entrepriseToUpdate.dateCreation" @input="isDialogDateEditOpen = false"></v-date-picker>
                                 </v-menu>
                             </v-col>
-                            <v-col cols="12" md="3">
+                            <v-col cols="12" md="4">
                                 <v-text-field color="pink" label="Téléphone" v-model="entrepriseToUpdate.telephone" prepend-inner-icon="mdi-numeric" clearable />
                             </v-col>
-                            <v-col cols="12" md="5">
+                            <v-col cols="12" md="4">
                                 <v-select color="pink" prepend-inner-icon="mdi-format-list-bulleted-type" v-model="entrepriseToUpdate.etatAdministratif" :items="['Actif', 'Ferme']" label="Etat administratif*"></v-select>
                             </v-col>
                             <v-col cols="12" md="4">
@@ -630,7 +630,7 @@ export default Vue.extend({
                 password: "",
                 lastname: "",
                 firstname: "",
-                dateNaissance: "", //new Date().toISOString().substr(0, 10)
+                dateNaissance: "",
                 civilite: "",
                 portable: "",
                 isAdmin: false,
