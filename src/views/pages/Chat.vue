@@ -41,13 +41,17 @@ export default Vue.extend({
     components: {},
     data(): any {
         return {
-            socket: io("https://api-imie-e-commerce.herokuapp.com"),
+            //socket: io("https://api-imie-e-commerce.herokuapp.com"),
             messages: [],
             users: [],
             isLoading: false as boolean
         }
     },
-    computed: {},
+    computed: {
+        socket(){
+            return io(this.$store.state.baseUrl);
+        }
+    },
     created() {},
     beforeMount() {},
     mounted() {
