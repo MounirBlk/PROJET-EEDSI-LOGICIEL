@@ -469,19 +469,20 @@
         <template v-slot:after-heading>
             <div class="display-1 font-weight-light">Prospections</div>
         </template>
-
-        <v-row class="mt-8 mr-1">
-            <v-btn color="pink" @click="isDialogNewUtilisateur = true" class="ml-3" :disabled="!isAdmin" outlined>
-                <v-icon left>mdi-account-plus-outline</v-icon>Ajouter client prospect
-            </v-btn>
-            <v-tooltip top>
-                <template v-slot:activator="{ on, attrs }">
-                    <v-btn color="pink" icon v-bind="attrs" v-on="on" @click="getProspectionsData" class="ml-3">
-                        <v-icon large>mdi-refresh</v-icon>
-                    </v-btn>
-                </template>
-                <span>Refresh</span>
-            </v-tooltip>
+        <v-row class="mt-8 mr-1" no-gutters>
+            <v-col cols="12" md="12" class="mb-3">
+                <v-btn color="pink" @click="isDialogNewUtilisateur = true" class="ml-3" :disabled="!isAdmin" outlined>
+                    <v-icon left>mdi-account-plus-outline</v-icon>Ajouter client prospect
+                </v-btn>
+                <v-tooltip top>
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-btn color="pink" icon v-bind="attrs" v-on="on" @click="getProspectionsData" class="ml-3">
+                            <v-icon large>mdi-refresh</v-icon>
+                        </v-btn>
+                    </template>
+                    <span>Refresh</span>
+                </v-tooltip>
+            </v-col>
             <v-speed-dial v-model="isEntrepriseSpeedDial" class="ml-3 mb-3" direction="right" open-on-hover transition="scale">
                 <template v-slot:activator>
                     <v-tooltip top>
@@ -515,9 +516,8 @@
                     <span>Gestion des entreprises</span>
                 </v-tooltip>
             </v-speed-dial>
-            <v-text-field v-model="search" prepend-icon="mdi-magnify" class="ml-auto" label="Recherche" color="pink" hide-details single-line style="max-width: 250px" clearable />
         </v-row>
-        <v-divider class="mt-6" />
+        <v-divider  />
         <v-skeleton-loader v-if="isFirstLoad" :loading="isLoading" type="table"></v-skeleton-loader>
         <v-data-table v-else v-model="prospectsSelected" @toggle-select-all="selectAllToggle" show-select :headers="headersProspects" :items="prospects" :search.sync="search" :sort-by="['lastname']" :sort-desc="[false]" show-expand single-expand item-key="email" :expanded.sync="expanded">
             <template v-slot:top>
@@ -552,6 +552,7 @@
                         </template>
                         <span>Page produits</span>
                     </v-tooltip>
+                    <v-text-field v-model="search" prepend-icon="mdi-magnify" class="ml-auto mr-5" label="Recherche" color="pink" hide-details single-line style="max-width: 250px" clearable />
                 </v-row>
                 <v-divider></v-divider>
             </template>
@@ -821,11 +822,17 @@ export default Vue.extend({
             axiosApi
                 .post("/devis/add", payload, {
                     headers: {
-                        'Content-Type': 'application/json;charset=utf-8'
-                    }
+                        'Content-Type': 'application/json;charset=utf-8',
+                    },                        
+                    responseType: 'stream'
                 })
                 .then(async (response: AxiosResponse) => {
+                    console.log(response)
                     if (this.optionsDoc.isDownload) {
+                        /*let a = document.createElement("a"); 
+                        a.href = "data:" + response.data.fileType + ";base64," + response.data.fileBase;
+                        a.download = response.data.destPath; 
+                        a.click(); */
                         window.open(`${this.baseUrl}/download/${response.data.destPath}`, '_self') // _self _blank 
                     }
                     Object.assign(this.$data, this.$options.data()); //reset data
