@@ -53,6 +53,7 @@ export default Vue.extend({
             return rules;
         },
         ...mapState(["isAdmin"]),
+        ...mapState(["baseUrl"]),
         /*isAdmin(): boolean {
             return this.$store.state.isAdmin;
         },*/
@@ -80,7 +81,7 @@ export default Vue.extend({
                 this.errorMessage(errorObj.data.message);
             }else{
                 console.log(JSON.stringify(errorObj))
-                this.errorMessage('Erreur serveur !')
+                this.errorMessage('Serveur ne répond plus !')
             }
         },
         changeToFormatDateFr (input: string): string{

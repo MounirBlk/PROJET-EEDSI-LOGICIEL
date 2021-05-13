@@ -1,8 +1,9 @@
 import router from '@/router';
 import axios from 'axios';
+import store from '@/store/index'
 
 const axiosApi = axios.create({
-    baseURL: 'https://api-imie-e-commerce.herokuapp.com',//http://localhost:3000 https://api-imie-e-commerce.herokuapp.com
+    baseURL: store.state.baseUrl,
     headers: {
         "Accept": 'application/json',
         "Content-Type": "application/x-www-form-urlencoded;charset=utf-8"

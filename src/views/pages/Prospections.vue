@@ -112,7 +112,7 @@
                         <v-col cols="12" md="12">
                             <v-badge v-if="isEditOptions" :value="isHoverCheckboxChecked" class="mr-10 mt-0" color="deep-purple accent-4" content="Seuls les prospects vérifié recevront un mail" right overlap transition="slide-x-transition">
                                 <v-hover v-model="isHoverCheckboxChecked">
-                                    <v-checkbox color="pink darken-2" v-model="optionsDoc.isCheckedProspect" :disabled="!isEditOptions || prospectsSelected.length < 1" dense label="Checked prospect"></v-checkbox>
+                                    <v-checkbox color="pink darken-2" v-model="optionsDoc.isCheckedProspect" :disabled="!isEditOptions" dense label="Checked prospect"></v-checkbox>
                                 </v-hover>
                             </v-badge>
                             <div v-else class="mb-3">
@@ -159,6 +159,14 @@
                         </v-col>
                         <v-col cols="12" md="6">
                             <v-text-field v-if="isEditOptions && optionsDoc.isUser" color="pink darken-2" label="Email" v-model.trim="optionsDoc.emailUser" prepend-icon="mdi-face" clearable />
+                        </v-col>
+                        <v-col cols="12" md="12">
+                            <v-checkbox v-if="isEditOptions" color="pink darken-2" v-model="optionsDoc.isDownload" dense label="Téléchargement"></v-checkbox>
+                            <div v-else class="mb-3">
+                                <v-icon left v-if="optionsDoc.isDownload" color="success">mdi-checkbox-marked-circle-outline</v-icon>
+                                <v-icon left v-if="!optionsDoc.isDownload" color="error">mdi-close-circle-outline</v-icon>
+                                <span>Téléchargement</span>
+                            </div>
                         </v-col>
                     </v-row>
                 </v-container>
@@ -466,7 +474,7 @@
             <v-btn color="pink" @click="isDialogNewUtilisateur = true" class="ml-3" :disabled="!isAdmin" outlined>
                 <v-icon left>mdi-account-plus-outline</v-icon>Ajouter client prospect
             </v-btn>
-            <v-tooltip right>
+            <v-tooltip top>
                 <template v-slot:activator="{ on, attrs }">
                     <v-btn color="pink" icon v-bind="attrs" v-on="on" @click="getProspectionsData" class="ml-3">
                         <v-icon large>mdi-refresh</v-icon>
@@ -522,7 +530,7 @@
                     </v-badge>
                     <v-tooltip top>
                         <template v-slot:activator="{ on, attrs }">
-                            <v-btn class="my-3 ml-3 mr-5" color="pink darken-2" v-bind="attrs" v-on="on" icon @click="isDialogDocOptions = true;" :disabled="prospectsSelected.length === 0" outlined text>
+                            <v-btn class="my-3 ml-3 mr-5" color="pink darken-2" v-bind="attrs" v-on="on" icon @click="isDialogDocOptions = true;" outlined text>
                                 <v-icon>mdi-cogs</v-icon>
                             </v-btn>
                         </template>
@@ -711,7 +719,7 @@ export default Vue.extend({
             isDialogDateCreationOpen: false as boolean,
             isDialogDateEditOpen: false as boolean,
             products: [] as any[],
-            isRandomArticles: false as boolean,
+            isRandomArticles: true as boolean,
             prospectsSelected: [] as any[],
             isRemovedAllSelected: true as boolean,
             isDialogConfigurator: false as boolean,
@@ -719,11 +727,12 @@ export default Vue.extend({
             isHoverCheckboxChecked: false as boolean,
             optionsDoc: {
                 isCheckedProspect: false as boolean,
-                isCgv: false as boolean,
+                isCgv: true as boolean,
                 isAdminCommercial: false as boolean,
                 isUser: false as boolean,
                 emailUser: '',
                 emailAdminCommercial: [],
+                isDownload: true,
             },
             isDialogDocOptions: false as boolean,
             isEditOptions: false as boolean,
@@ -735,6 +744,7 @@ export default Vue.extend({
         }
     },
     watch: {},
+    computed: {},
     created() {},
     beforeMount() {},
     async mounted() {
@@ -804,24 +814,26 @@ export default Vue.extend({
                     });
                 }
             }
+            const payload = {
+                "devis": devis,
+                "optionsDoc": this.optionsDoc
+            }
             axiosApi
-                .post("/devis/add", {
-                    "devis": devis,
-                    "optionsDoc": this.optionsDoc
-                }, {
+                .post("/devis/add", payload, {
                     headers: {
-                        'Content-Type': 'application/json;charset=utf-8',
-                    }
-                }).then((response: AxiosResponse) => {
-                    if (!response.data.error) {
-                        Object.assign(this.$data, this.$options.data()); //reset data
-                        this.successMessage(devis.length === 1 ? "Le devis a bien été envoyé par mail" : "Les devis ont bien été envoyé par mail");
-                        setTimeout(() => {
-                            this.getProspectionsData();
-                        }, 1000);
+                        'Content-Type': 'application/json;charset=utf-8'
                     }
                 })
-                .catch((error: AxiosError) => {
+                .then(async (response: AxiosResponse) => {
+                    if (this.optionsDoc.isDownload) {
+                        window.open(`${this.baseUrl}/download/${response.data.destPath}`, '_self') // _self _blank 
+                    }
+                    Object.assign(this.$data, this.$options.data()); //reset data
+                    this.successMessage(devis.length === 1 ? "Le devis a bien été envoyé par mail" : "Les devis ont bien été envoyé par mail");
+                    setTimeout(() => {
+                        this.getProspectionsData();
+                    }, 1000);
+                }).catch((error: AxiosError) => {
                     this.catchAxios(error)
                     setTimeout(() => {
                         this.isLoading = false;
@@ -829,7 +841,6 @@ export default Vue.extend({
                     }, 1000);
                 });
         },
-
         getRandomProduct: function (products: any[]): any[] {
             let articles: any[] = []
             for (let i = 0; i < this.randNumber(1, products.length); i++) {
@@ -855,9 +866,7 @@ export default Vue.extend({
         randNumber: function (min: number, max: number): number {
             return Math.floor(Math.random() * (max - min + 1) + min);
         },
-        /**
-         * @param {Array} a Shuffles array in place. ES6 version
-         */
+        /**@param {Array} a Shuffles array in place. ES6 version*/
         shuffle: function (a: any[]): any[] {
             for (let i = a.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -957,14 +966,12 @@ export default Vue.extend({
             axiosApi
                 .put("/entreprise/" + entrepriseToUpdate._id, qs.stringify(payload)) //update entreprise
                 .then((response: AxiosResponse) => {
-                    if (response.data.error == false) {
-                        Object.assign(this.$data, this.$options.data()); //reset data
-                        this.$refs.form.reset();
-                        this.successMessage("Sauvegarde des modifications effectuée !");
-                        setTimeout(() => {
-                            this.getProspectionsData();
-                        }, 1000);
-                    }
+                    Object.assign(this.$data, this.$options.data()); //reset data
+                    this.$refs.form.reset();
+                    this.successMessage("Sauvegarde des modifications effectuée !");
+                    setTimeout(() => {
+                        this.getProspectionsData();
+                    }, 1000);
                 })
                 .catch((error: AxiosError) => {
                     this.catchAxios(error)
