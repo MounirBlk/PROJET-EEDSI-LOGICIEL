@@ -182,22 +182,22 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
-    <v-dialog v-model="isDialogConfigurator" fullscreen hide-overlay transition="dialog-bottom-transition">
+    <v-dialog v-model="isDialogConfigurator" width="auto" overlay-opacity="0.8">
         <v-card>
             <v-toolbar tile dark color="pink darken-2">
-                <v-btn icon dark @click="isDialogConfigurator = false">
-                    <v-icon>mdi-close</v-icon>
-                </v-btn>
                 <v-toolbar-title>Configurateur d'articles</v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-toolbar-items>
-                    <v-btn dark color="success lighten-2" text @click="isDialogConfigurator = false">
-                        Sauvegarder
+                    <v-btn dark color="success lighten-1" text @click="saveConfiguratorArticles">
+                        Sauvegarder les articles
                     </v-btn>
                 </v-toolbar-items>
+                <v-btn icon dark @click="isDialogConfigurator = false">
+                    <v-icon>mdi-close</v-icon>
+                </v-btn>
             </v-toolbar>
             <div class="mx-15 mt-5">
-                <v-row v-for="(product, index) in products" :key="index" class="mt-0">
+                <v-row v-for="(product, i) in products" :key="i" class="mt-0">
                     <v-col cols="12" md="12">
                         <v-row class="mt-0">
                             <v-col cols="12" md="2">
@@ -213,34 +213,33 @@
                                 </v-img>
                             </v-col>
                             <v-col cols="12" md="2" align-self="center">
-                                <span>{{ product.nom }}</span>
+                                <span v-if="productsConfigurator[i].saved" class="success--text">{{ product.nom }}</span>
+                                <span v-else>{{ product.nom }}</span>
                             </v-col>
                             <v-col cols="12" md="2" align-self="center">
-                                <v-select label="Couleur" small-chips chips deletable-chips disable-lookup :items="product.couleurs" color="pink darken-2" prepend-inner-icon="mdi-format-list-checkbox"></v-select>
+                                <v-select label="Couleur" :disabled="productsConfigurator[i].saved" v-model="productsConfigurator[i].couleur" small-chips chips deletable-chips disable-lookup :items="product.couleurs" color="success darken-2" prepend-inner-icon="mdi-format-list-checkbox"></v-select>
                             </v-col>
                             <v-col cols="12" md="2" align-self="center">
-                                <v-select label="Matière" small-chips chips deletable-chips disable-lookup :items="product.matieres" color="pink darken-2" prepend-inner-icon="mdi-format-list-checkbox"></v-select>
+                                <v-select label="Matière" :disabled="productsConfigurator[i].saved" v-model="productsConfigurator[i].matiere" small-chips chips deletable-chips disable-lookup :items="product.matieres" color="success darken-2" prepend-inner-icon="mdi-format-list-checkbox"></v-select>
                             </v-col>
                             <v-col cols="12" md="2" align-self="center">
-                                <v-text-field label="Quantité" color="pink darken-2" prepend-inner-icon="mdi-numeric" clearable></v-text-field>
+                                <v-text-field type="number" label="Quantité" :disabled="productsConfigurator[i].saved" v-model="productsConfigurator[i].quantite" color="success darken-2" prepend-inner-icon="mdi-numeric" clearable></v-text-field>
                             </v-col>
                             <v-col cols="12" md="2" align-self="center">
                                 <v-tooltip top>
                                     <template v-slot:activator="{ on, attrs }">
-                                        <v-btn color="success darken-2" v-bind="attrs" v-on="on" text outlined>
-                                            <v-icon left>mdi-content-save</v-icon>Sauvegarder
-                                        </v-btn>
+                                        <v-switch @change="saveProduct(productsConfigurator[i], i)" color="success darken-2" v-model="productsConfigurator[i].saved" dense label="Sauvegarder produit"></v-switch>
                                     </template>
                                     <span>Sauvegarder pour la liste d'articles</span>
                                 </v-tooltip>
                             </v-col>
                         </v-row>
                         <v-expansion-panels focusable class="mt-2">
-                            <v-expansion-panel v-for="(composant, i) in product.composants" :key="i">
-                                <v-expansion-panel-header class="orange--text">Composants</v-expansion-panel-header>
+                            <v-expansion-panel v-for="(composant, j) in product.composants" :key="j">
+                                <v-expansion-panel-header class="indigo--text">Composants</v-expansion-panel-header>
                                 <v-expansion-panel-content>
                                     <v-row class="mt-0">
-                                        <v-col cols="12" md="2" class="ml-7">
+                                        <v-col cols="12" md="2">
                                             <v-img v-if="composant.imgLink !== null" :src="composant.imgLink" height="80" width="120" aspect-ratio="1" class="grey lighten-2">
                                                 <template v-slot:placeholder>
                                                     <v-row class="fill-height ma-0" align="center" justify="center"> </v-row>
@@ -253,16 +252,25 @@
                                             </v-img>
                                         </v-col>
                                         <v-col cols="12" md="2" align-self="center">
-                                            <span>{{ composant.nom }}</span>
+                                            <span v-if="productsConfigurator[i].listeComposantsSelected[j].saved" class="indigo--text">{{ composant.nom }}</span>
+                                            <span v-else>{{ composant.nom }}</span>
                                         </v-col>
                                         <v-col cols="12" md="2" align-self="center">
-                                            <v-select label="Couleur" small-chips chips deletable-chips disable-lookup :items="composant.couleurs" color="pink darken-2" prepend-inner-icon="mdi-format-list-checkbox"></v-select>
+                                            <v-select label="Couleur" :disabled="productsConfigurator[i].listeComposantsSelected[j].saved" v-model="productsConfigurator[i].listeComposantsSelected[j].couleur" small-chips chips deletable-chips disable-lookup :items="composant.couleurs" color="indigo darken-2" prepend-inner-icon="mdi-format-list-checkbox"></v-select>
                                         </v-col>
                                         <v-col cols="12" md="2" align-self="center">
-                                            <v-select label="Matière" small-chips chips deletable-chips disable-lookup :items="composant.matieres" color="pink darken-2" prepend-inner-icon="mdi-format-list-checkbox"></v-select>
+                                            <v-select label="Matière" :disabled="productsConfigurator[i].listeComposantsSelected[j].saved" v-model="productsConfigurator[i].listeComposantsSelected[j].matiere" small-chips chips deletable-chips disable-lookup :items="composant.matieres" color="indigo darken-2" prepend-inner-icon="mdi-format-list-checkbox"></v-select>
                                         </v-col>
                                         <v-col cols="12" md="2" align-self="center">
-                                            <v-text-field label="Quantité" color="pink darken-2" prepend-inner-icon="mdi-numeric" clearable></v-text-field>
+                                            <v-text-field type="number" label="Quantité" :disabled="productsConfigurator[i].listeComposantsSelected[j].saved" v-model="productsConfigurator[i].listeComposantsSelected[j].quantite" color="indigo darken-2" prepend-inner-icon="mdi-numeric" clearable></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" md="2" align-self="center">
+                                            <v-tooltip top>
+                                                <template v-slot:activator="{ on, attrs }">
+                                                    <v-switch @change="saveComposant(productsConfigurator[i].listeComposantsSelected[j], i, j)" color="indigo darken-2" v-model="productsConfigurator[i].listeComposantsSelected[j].saved" dense label="Sauvegarder composant"></v-switch>
+                                                </template>
+                                                <span>Sauvegarder du composant pour le produit</span>
+                                            </v-tooltip>
                                         </v-col>
                                     </v-row>
                                 </v-expansion-panel-content>
@@ -517,7 +525,7 @@
                 </v-tooltip>
             </v-speed-dial>
         </v-row>
-        <v-divider  />
+        <v-divider />
         <v-skeleton-loader v-if="isFirstLoad" :loading="isLoading" type="table"></v-skeleton-loader>
         <v-data-table v-else v-model="prospectsSelected" @toggle-select-all="selectAllToggle" show-select :headers="headersProspects" :items="prospects" :search.sync="search" :sort-by="['lastname']" :sort-desc="[false]" show-expand single-expand item-key="email" :expanded.sync="expanded">
             <template v-slot:top>
@@ -537,8 +545,8 @@
                         <span>Options document</span>
                     </v-tooltip>
                     <v-switch color="pink darken-2" class="mr-5" v-model="isRandomArticles" dense label="Articles aléatoire"></v-switch>
-                    <v-badge class="my-3 ml-3 mr-5" v-if="!isRandomArticles" color="indigo" overlap :content="productsConfigurator.length === 0 ? '0' : productsConfigurator.length">
-                        <v-btn disabled color="pink darken-2" @click="isDialogConfigurator = true" text outlined>
+                    <v-badge class="my-3 ml-3 mr-5" v-if="!isRandomArticles" color="indigo" overlap :content="articles.length === 0 ? '0' : articles.length">
+                        <v-btn color="pink darken-2" @click="isDialogConfigurator = true" text outlined>
                             <v-icon left>mdi-cog-transfer-outline</v-icon>Configurateur
                         </v-btn>
                     </v-badge>
@@ -720,11 +728,11 @@ export default Vue.extend({
             isDialogDateCreationOpen: false as boolean,
             isDialogDateEditOpen: false as boolean,
             products: [] as any[],
-            isRandomArticles: true as boolean,
+            isRandomArticles: false as boolean,
             prospectsSelected: [] as any[],
             isRemovedAllSelected: true as boolean,
             isDialogConfigurator: false as boolean,
-            productsConfigurator: [] as any[],
+            productsConfigurator: [{}] as any[],
             isHoverCheckboxChecked: false as boolean,
             optionsDoc: {
                 isCheckedProspect: false as boolean,
@@ -742,6 +750,7 @@ export default Vue.extend({
             isDialogEntreprise: false as boolean,
             searchEnt: '',
             isEditEntreprise: false as boolean,
+            articles: [] as any[],
         }
     },
     watch: {},
@@ -754,6 +763,7 @@ export default Vue.extend({
     methods: {
         getProspectionsData: async function (): Promise < void > {
             //https://jsonplaceholder.typicode.com/users
+            Object.assign(this.$data, this.$options.data()); //reset data
             this.isLoading = true;
             this.isFirstLoad = true;
             let ttPromise: any[] = []
@@ -766,6 +776,27 @@ export default Vue.extend({
                 this.prospects = response[0].data.users;
                 this.entreprises = response[1].data.entreprises;
                 this.products = response[2].data.products;
+                this.productsConfigurator = []
+                this.products.forEach((el: any) => {
+                    let composants: any[] = []
+                    el.composants.forEach((cp: any) => {
+                        composants.push({
+                            "idComposant": cp._id,
+                            "matiere": null,
+                            "couleur": null,
+                            "quantite": 1,
+                            "saved": false
+                        })
+                    });
+                    this.productsConfigurator.push({
+                        "idProduct": el._id,
+                        "matiere": null,
+                        "couleur": null,
+                        "quantite": 1,
+                        "listeComposantsSelected": composants,
+                        "saved": false
+                    })
+                });
                 this.administrateurs = response[3].data.users;
                 for (let i = 0; i < this.prospects.length; i++) {
                     this.prospects[i].isAdmin = this.prospects[i].role.toLowerCase() === "administrateur" ? true : false
@@ -802,15 +833,15 @@ export default Vue.extend({
                     })
                 });
             } else {
-                if (this.productsConfigurator.length === 0) {
+                if (this.articles.length === 0) {
                     this.isLoading = false;
                     this.isFirstLoad = false;
-                    return this.errorMessage("Veuillez saisir l'option articles aléatoire ou configurer les produits");
+                    return this.errorMessage("Veuillez saisir l'option articles aléatoire ou sauvegarder la configuration des produits");
                 } else {
                     prospectsSelected.forEach((prospect: any) => {
                         devis.push({
                             prospectID: prospect._id,
-                            articles: this.productsConfigurator
+                            articles: this.articles
                         })
                     });
                 }
@@ -823,7 +854,7 @@ export default Vue.extend({
                 .post("/devis/add", payload, {
                     headers: {
                         'Content-Type': 'application/json;charset=utf-8',
-                    },                        
+                    },
                     responseType: 'stream'
                 })
                 .then(async (response: AxiosResponse) => {
@@ -1029,7 +1060,58 @@ export default Vue.extend({
                 etatAdministratif: '',
                 numeroTvaIntra: '',
             }
-        }
+        },
+        saveConfiguratorArticles: function () {
+            this.articles = []
+            this.productsConfigurator.forEach((pr: any) => {
+                let composants: any[] = []
+                pr.listeComposantsSelected.forEach((cp: any) => {
+                    if (cp.saved) {
+                        if (cp.idComposant === null || cp.matiere === null || cp.couleur === null || cp.quantite === 0) {
+                            return this.errorMessage('Les informations du composant ne sont pas valide')
+                        } else {
+                            composants.push({
+                                "idComposant": cp.idComposant,
+                                "matiere": cp.matiere,
+                                "couleur": cp.couleur,
+                                "quantite": cp.quantite,
+                            })
+                        }
+                    }
+                });
+                if (pr.saved) {
+                    if (pr.idProduct === null || pr.matiere === null || pr.couleur === null || pr.quantite === 0) {
+                        return this.errorMessage('Les informations du produit ne sont pas valide')
+                    } else {
+                        this.articles.push({
+                            "idProduct": pr.idProduct,
+                            "matiere": pr.matiere,
+                            "couleur": pr.couleur,
+                            "quantite": pr.quantite,
+                            "listeComposantsSelected": composants as any[],
+                        })
+                    }
+                }
+            });
+            this.isRandomArticles = false;
+            this.isDialogConfigurator = false
+        },
+        saveProduct: function (pr: any, i: number) {
+            if (pr.idProduct === null || pr.matiere === null || pr.couleur === null || parseInt(pr.quantite) < 1) {
+                this.errorMessage('Les informations du produit ne sont pas valide')
+                setTimeout(() => {
+                    this.productsConfigurator[i].saved = false;
+                }, 250);
+            }
+        },
+        saveComposant: function (cp: any, i: number, j: number) {
+            if (cp.idProduct === null || cp.matiere === null || cp.couleur === null || parseInt(cp.quantite) < 1) {
+                this.errorMessage('Les informations du composant ne sont pas valide')
+                setTimeout(() => {
+                    this.productsConfigurator[i].listeComposantsSelected[j].saved = false;
+                }, 250);
+            }
+        },
     }
 });
 </script>
