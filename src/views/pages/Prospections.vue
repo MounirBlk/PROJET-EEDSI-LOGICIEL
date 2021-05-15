@@ -479,12 +479,12 @@
         </template>
         <v-row class="mt-8 mr-1" no-gutters>
             <v-col cols="12" md="12" class="mb-3">
-                <v-btn color="pink" @click="isDialogNewUtilisateur = true" class="ml-3" :disabled="!isAdmin" outlined>
+                <v-btn color="pink" @click="isDialogNewUtilisateur = true" class="ml-3" :disabled="!isAdmin || isFirstLoad || isLoading" outlined>
                     <v-icon left>mdi-account-plus-outline</v-icon>Ajouter client prospect
                 </v-btn>
                 <v-tooltip top>
                     <template v-slot:activator="{ on, attrs }">
-                        <v-btn color="pink" icon v-bind="attrs" v-on="on" @click="getProspectionsData" class="ml-3">
+                        <v-btn :disabled="isFirstLoad || isLoading" color="pink" icon v-bind="attrs" v-on="on" @click="getProspectionsData" class="ml-3">
                             <v-icon large>mdi-refresh</v-icon>
                         </v-btn>
                     </template>
@@ -495,7 +495,7 @@
                 <template v-slot:activator>
                     <v-tooltip top>
                         <template v-slot:activator="{ on, attrs }">
-                            <v-btn v-if="isAdmin" v-model="isEntrepriseSpeedDial" v-bind="attrs" v-on="on" outlined color="pink" dark icon>
+                            <v-btn v-if="isAdmin" v-model="isEntrepriseSpeedDial" :disabled="isFirstLoad || isLoading" v-bind="attrs" v-on="on" outlined color="pink" dark icon>
                                 <v-icon v-if="isEntrepriseSpeedDial">
                                     mdi-close
                                 </v-icon>
@@ -509,7 +509,7 @@
                 </template>
                 <v-tooltip top>
                     <template v-slot:activator="{ on, attrs }">
-                        <v-btn icon outlined dark @click="isDialogNewEntreprise = true" color="indigo" v-bind="attrs" v-on="on">
+                        <v-btn :disabled="isFirstLoad || isLoading" icon outlined dark @click="isDialogNewEntreprise = true" color="indigo" v-bind="attrs" v-on="on">
                             <v-icon>mdi-plus</v-icon>
                         </v-btn>
                     </template>
@@ -517,7 +517,7 @@
                 </v-tooltip>
                 <v-tooltip top>
                     <template v-slot:activator="{ on, attrs }">
-                        <v-btn icon outlined dark color="green" @click.prevent="isDialogEntreprise = true" v-bind="attrs" v-on="on">
+                        <v-btn :disabled="isFirstLoad || isLoading" icon outlined dark color="green" @click.prevent="isDialogEntreprise = true" v-bind="attrs" v-on="on">
                             <v-icon>mdi-cog-outline</v-icon>
                         </v-btn>
                     </template>
@@ -626,9 +626,11 @@ import axiosApi from '../../plugins/axiosApi';
 import qs from "qs";
 import {
     AxiosResponse,
-    AxiosError
+    AxiosError,
+    AxiosRequestConfig
 } from 'axios';
 import moment from 'moment';
+import fileSaver from 'file-saver';
 
 export default Vue.extend({
     name: 'Prospections',
@@ -846,31 +848,35 @@ export default Vue.extend({
                     });
                 }
             }
-            const payload = {
+            const payload: any = {
                 "devis": devis,
                 "optionsDoc": this.optionsDoc
             }
+            const configAxios: AxiosRequestConfig = {
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8',
+                },
+                responseType: this.optionsDoc.isDownload ? 'blob' : 'json' // blob arraybuffer
+            }
             axiosApi
-                .post("/devis/add", payload, {
-                    headers: {
-                        'Content-Type': 'application/json;charset=utf-8',
-                    },
-                    responseType: 'stream'
-                })
+                .post("/devis/add", payload, configAxios)
                 .then(async (response: AxiosResponse) => {
                     console.log(response)
                     if (this.optionsDoc.isDownload) {
-                        /*let a = document.createElement("a"); 
-                        a.href = "data:" + response.data.fileType + ";base64," + response.data.fileBase;
-                        a.download = response.data.destPath; 
-                        a.click(); */
-                        window.open(`${this.baseUrl}/download/${response.data.destPath}`, '_self') // _self _blank 
+                        //window.open(`${this.baseUrl}/download/${response.data.destPath}`, '_self') // _self _blank 
+                        //console.log(window.URL.createObjectURL(response.data))
+                        if (devis.length === 1) {
+                            /*const blob = new Blob([response.data], { type: response.headers["Content-type"] + ';charset=utf-8' })*/
+                            fileSaver.saveAs(response.data, "download.pdf");//application/pdf;charset=utf-8
+                        } else {
+                            /*const blob = new Blob([response.data], { type: response.headers["Content-type"] })*/
+                            fileSaver.saveAs(response.data, "download.zip");//application/zip ou application/octet-stream
+                        }
                     }
-                    Object.assign(this.$data, this.$options.data()); //reset data
                     this.successMessage(devis.length === 1 ? "Le devis a bien été envoyé par mail" : "Les devis ont bien été envoyé par mail");
                     setTimeout(() => {
                         this.getProspectionsData();
-                    }, 1000);
+                    }, 8000);
                 }).catch((error: AxiosError) => {
                     this.catchAxios(error)
                     setTimeout(() => {
@@ -878,6 +884,13 @@ export default Vue.extend({
                         this.isFirstLoad = false;
                     }, 1000);
                 });
+        },
+        strTobytes: function (str: any): Uint8Array {
+            let bytes: Uint8Array = new Uint8Array(str.length);
+            for (let i = 0; i < str.length; i++) {
+                bytes[i] = str.charCodeAt(i);
+            }
+            return bytes;
         },
         getRandomProduct: function (products: any[]): any[] {
             let articles: any[] = []
@@ -913,13 +926,13 @@ export default Vue.extend({
             return a;
         },
         selectAllToggle: function (props: any) {
-            if (this.isRemovedAllSelected === true /*this.prospectsSelected.length != this.prospects.length - this.disabledCountd*/ ) {
+            if (this.isRemovedAllSelected === true) {
                 this.isRemovedAllSelected = false;
                 this.prospectsSelected = [];
-                const self = this;
+                //const self = this;
                 props.items.forEach((item: any) => {
                     if (!item.disabled) {
-                        self.prospectsSelected.push(item);
+                        this.prospectsSelected.push(item);
                     }
                 });
             } else {
@@ -1093,6 +1106,11 @@ export default Vue.extend({
                     }
                 }
             });
+            let isEmpty: boolean = true;
+            this.productsConfigurator.forEach((el: any) => {
+                if (el.saved === true) isEmpty = false;
+            });
+            if (isEmpty) this.errorMessage('Attention aucun article a été sauvegarder')
             this.isRandomArticles = false;
             this.isDialogConfigurator = false
         },
