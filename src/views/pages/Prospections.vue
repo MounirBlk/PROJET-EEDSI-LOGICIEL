@@ -100,7 +100,7 @@
             </v-container>
         </v-card>
     </v-dialog>
-    <v-dialog persistent v-model="isDialogDocOptions" width="600" overlay-opacity="0.8">
+    <v-dialog persistent v-model="isDialogDocOptions" width="700" overlay-opacity="0.8">
         <v-card outlined>
             <v-toolbar dense color="pink darken-2" dark>
                 <v-icon left>mdi-cog-outline</v-icon>
@@ -112,7 +112,7 @@
                         <v-col cols="12" md="12">
                             <v-badge v-if="isEditOptions" :value="isHoverCheckboxChecked" class="mr-10 mt-0" color="deep-purple accent-4" content="Seuls les prospects vérifié recevront un mail" right overlap transition="slide-x-transition">
                                 <v-hover v-model="isHoverCheckboxChecked">
-                                    <v-checkbox color="pink darken-2" v-model="optionsDoc.isCheckedProspect" :disabled="!isEditOptions" dense label="Checked prospect"></v-checkbox>
+                                    <v-checkbox @change="activeProspectsSelected(optionsDoc.isCheckedProspect)" color="pink darken-2" v-model="optionsDoc.isCheckedProspect" :disabled="!isEditOptions" dense label="Checked prospect"></v-checkbox>
                                 </v-hover>
                             </v-badge>
                             <div v-else class="mb-3">
@@ -129,7 +129,7 @@
                                 <span>CGV</span>
                             </div>
                         </v-col>
-                        <v-col cols="12" md="6">
+                        <v-col cols="12" md="5">
                             <v-checkbox v-if="isEditOptions" color="pink darken-2" v-model="optionsDoc.isAdminCommercial" dense label="Admins/Commerciaux"></v-checkbox>
                             <div v-else class="mb-3">
                                 <v-icon left v-if="optionsDoc.isAdminCommercial" color="success">mdi-checkbox-marked-circle-outline</v-icon>
@@ -137,8 +137,8 @@
                                 <span>Admins/Commerciaux</span>
                             </div>
                         </v-col>
-                        <v-col cols="12" md="6">
-                            <v-select v-if="isEditOptions && optionsDoc.isAdminCommercial" label="Sélectionner" small-chips chips counter item-text="lastname" item-value="email" deletable-chips disable-lookup multiple :items='administrateurs' color="pink darken-2" v-model="optionsDoc.emailAdminCommercial" prepend-icon="mdi-format-list-checkbox">
+                        <v-col cols="12" md="7">
+                            <v-select v-if="isEditOptions && optionsDoc.isAdminCommercial" label="Sélectionner" small-chips chips counter item-text="email" item-value="email" deletable-chips disable-lookup multiple :items='administrateurs' color="pink darken-2" v-model="optionsDoc.emailAdminCommercial" prepend-icon="mdi-format-list-checkbox">
                                 <template v-slot:selection="{ item, index }">
                                     <v-chip small v-if="index === 0">
                                         <span>{{ item.email }}</span>
@@ -149,7 +149,7 @@
                                 </template>
                             </v-select>
                         </v-col>
-                        <v-col cols="12" md="6">
+                        <v-col cols="12" md="5">
                             <v-checkbox v-if="isEditOptions" color="pink darken-2" v-model="optionsDoc.isUser" dense label="Autre destinataire"></v-checkbox>
                             <div v-else class="mb-3">
                                 <v-icon left v-if="optionsDoc.isUser" color="success">mdi-checkbox-marked-circle-outline</v-icon>
@@ -157,7 +157,7 @@
                                 <span>Autre destinataire</span>
                             </div>
                         </v-col>
-                        <v-col cols="12" md="6">
+                        <v-col cols="12" md="7">
                             <v-text-field v-if="isEditOptions && optionsDoc.isUser" color="pink darken-2" label="Email" v-model.trim="optionsDoc.emailUser" prepend-icon="mdi-face" clearable />
                         </v-col>
                         <v-col cols="12" md="12">
@@ -525,13 +525,20 @@
                 </v-tooltip>
             </v-speed-dial>
         </v-row>
+        <v-row no-gutters v-if="isProgress">
+            <v-col cols="12" md="12">
+                <v-progress-linear dark striped color="indigo" v-model="valueTraitement" height="20">
+                    <strong>{{ Math.ceil(valueTraitement) > 100 ? 100 : Math.ceil(valueTraitement) }}%</strong>
+                </v-progress-linear>
+            </v-col>
+        </v-row>
         <v-divider />
         <v-skeleton-loader v-if="isFirstLoad" :loading="isLoading" type="table"></v-skeleton-loader>
         <v-data-table v-else v-model="prospectsSelected" @toggle-select-all="selectAllToggle" show-select :headers="headersProspects" :items="prospects" :search.sync="search" :sort-by="['lastname']" :sort-desc="[false]" show-expand single-expand item-key="email" :expanded.sync="expanded">
             <template v-slot:top>
                 <v-divider></v-divider>
                 <v-row class="py-3">
-                    <v-badge class="my-3 ml-3 mr-5" :color="optionsDoc.isCheckedProspect ? 'success darken-1' : 'indigo'" overlap :content="prospectsSelected.length === 0 ? '0' : prospectsSelected.length">
+                    <v-badge class="my-3 ml-3 mr-5" :color="optionsDoc.isCheckedProspect ? 'success darken-1' : 'indigo'" overlap :content="!optionsDoc.isCheckedProspect ? prospectsSelected.length === 0 ? '0' : prospectsSelected.length : availableCheckedProspectsNum === 0 ? '0' : availableCheckedProspectsNum">
                         <v-btn color="pink darken-2" :disabled="prospectsSelected.length < 1" @click="generateDevis(prospectsSelected)" text outlined>
                             <v-icon left>mdi-file-document-multiple-outline</v-icon>Génération de devis
                         </v-btn>
@@ -631,6 +638,10 @@ import {
 } from 'axios';
 import moment from 'moment';
 import fileSaver from 'file-saver';
+import io from 'socket.io-client';
+import {
+    bus
+} from "../../main";
 
 export default Vue.extend({
     name: 'Prospections',
@@ -753,16 +764,31 @@ export default Vue.extend({
             searchEnt: '',
             isEditEntreprise: false as boolean,
             articles: [] as any[],
+            valueTraitement: 0 as number,
+            isProgress: false as boolean,
+            availableCheckedProspectsNum: 0 as number,
         }
     },
     watch: {},
-    computed: {},
+    computed: {
+        socket() {
+            return io(this.$store.state.baseUrl);
+        },
+    },
     created() {},
-    beforeMount() {},
+    beforeMount() {
+        this.socketServer()
+    },
     async mounted() {
         await this.getProspectionsData();
     },
+    sockets: {},
     methods: {
+        socketServer: function () {
+            this.socket.on('traitement', (valueMax: number, value: number) => {
+                this.valueTraitement = (100 * value) / valueMax
+            });
+        },
         getProspectionsData: async function (): Promise < void > {
             //https://jsonplaceholder.typicode.com/users
             Object.assign(this.$data, this.$options.data()); //reset data
@@ -778,6 +804,7 @@ export default Vue.extend({
                 this.prospects = response[0].data.users;
                 this.entreprises = response[1].data.entreprises;
                 this.products = response[2].data.products;
+                this.administrateurs = response[3].data.users;
                 this.productsConfigurator = []
                 this.products.forEach((el: any) => {
                     let composants: any[] = []
@@ -799,7 +826,6 @@ export default Vue.extend({
                         "saved": false
                     })
                 });
-                this.administrateurs = response[3].data.users;
                 for (let i = 0; i < this.prospects.length; i++) {
                     this.prospects[i].isAdmin = this.prospects[i].role.toLowerCase() === "administrateur" ? true : false
                 }
@@ -822,7 +848,7 @@ export default Vue.extend({
             let devis: any[] = [];
             prospectsSelected = prospectsSelected.filter((p: any) => p.disabled === false);
             prospectsSelected = this.optionsDoc.isCheckedProspect ? prospectsSelected.filter((pp: any) => pp.checked === true) : prospectsSelected
-            if (prospectsSelected.length === 0) {
+            if (prospectsSelected.length === 0 && this.optionsDoc.isCheckedProspect) {
                 this.isLoading = false;
                 this.isFirstLoad = false;
                 return this.errorMessage("Aucun prospect vérifié disponible");
@@ -848,6 +874,23 @@ export default Vue.extend({
                     });
                 }
             }
+            const regexEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            if (this.optionsDoc.isUser) {
+                if (this.optionsDoc.emailUser.match(regexEmail) == null) {
+                    this.isLoading = false;
+                    this.isFirstLoad = false;
+                    return this.errorMessage('L\'email du destinataire suplémentaire n\'est pas au bon format')
+                }
+            }
+            if (this.optionsDoc.isAdminCommercial) {
+                for (let i = 0; i < this.optionsDoc.emailAdminCommercial.length; i++) {
+                    if (this.optionsDoc.emailAdminCommercial[i].match(regexEmail) == null) {
+                        this.isLoading = false;
+                        this.isFirstLoad = false;
+                        return this.errorMessage('La sélection d\'email n\'est pas au bon format')
+                    }
+                }
+            }
             const payload: any = {
                 "devis": devis,
                 "optionsDoc": this.optionsDoc
@@ -858,39 +901,36 @@ export default Vue.extend({
                 },
                 responseType: this.optionsDoc.isDownload ? 'blob' : 'json' // blob arraybuffer
             }
+            this.isProgress = true;
+            this.socket.emit('startTraitement')
             axiosApi
                 .post("/devis/add", payload, configAxios)
                 .then(async (response: AxiosResponse) => {
-                    console.log(response)
                     if (this.optionsDoc.isDownload) {
                         //window.open(`${this.baseUrl}/download/${response.data.destPath}`, '_self') // _self _blank 
                         //console.log(window.URL.createObjectURL(response.data))
                         if (devis.length === 1) {
                             /*const blob = new Blob([response.data], { type: response.headers["Content-type"] + ';charset=utf-8' })*/
-                            fileSaver.saveAs(response.data, "download.pdf");//application/pdf;charset=utf-8
+                            fileSaver.saveAs(response.data, "download.pdf"); //application/pdf;charset=utf-8
                         } else {
                             /*const blob = new Blob([response.data], { type: response.headers["Content-type"] })*/
-                            fileSaver.saveAs(response.data, "download.zip");//application/zip ou application/octet-stream
+                            fileSaver.saveAs(response.data, "download.zip"); //application/zip ou application/octet-stream
                         }
                     }
                     this.successMessage(devis.length === 1 ? "Le devis a bien été envoyé par mail" : "Les devis ont bien été envoyé par mail");
                     setTimeout(() => {
+                        this.valueTraitement = 0;
+                        this.isProgress = false;
                         this.getProspectionsData();
                     }, 8000);
                 }).catch((error: AxiosError) => {
-                    this.catchAxios(error)
+                    this.optionsDoc.isDownload ? this.errorMessage('Erreur sur les traitements !') : this.catchAxios(error)
                     setTimeout(() => {
                         this.isLoading = false;
                         this.isFirstLoad = false;
+                        this.isProgress = false;
                     }, 1000);
                 });
-        },
-        strTobytes: function (str: any): Uint8Array {
-            let bytes: Uint8Array = new Uint8Array(str.length);
-            for (let i = 0; i < str.length; i++) {
-                bytes[i] = str.charCodeAt(i);
-            }
-            return bytes;
         },
         getRandomProduct: function (products: any[]): any[] {
             let articles: any[] = []
@@ -1130,6 +1170,11 @@ export default Vue.extend({
                 }, 250);
             }
         },
+        activeProspectsSelected: function (isChecked: boolean) {
+            if (isChecked) {
+                this.availableCheckedProspectsNum = this.optionsDoc.isCheckedProspect ? this.prospectsSelected.filter((pp: any) => pp.checked === true).length : this.availableCheckedProspectsNum
+            }
+        }
     }
 });
 </script>

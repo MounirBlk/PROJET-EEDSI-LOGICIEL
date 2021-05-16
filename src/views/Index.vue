@@ -26,6 +26,7 @@ export default Vue.extend({
     expandOnHover: false,
     connected:true,
   }),
+  computed:{},
   created() {
     this.$vuetify.theme.dark = true;
     bus.$on("connected",(data: any) => {

@@ -104,12 +104,8 @@ export default Vue.extend({
         password: null as string | null,
         email_reset: '',
     }),
-    created() {
-        //console.log('created')
-    },
-    beforeMount() {
-        //console.log('beforeMount')
-    },
+    created() {},
+    beforeMount() {},
     mounted() {
         bus.$emit("connected", false);
         this.isOverlay = false;
@@ -156,7 +152,6 @@ export default Vue.extend({
                     }
                 })
                 .catch((error) => {
-                    console.log(error)
                     this.catchAxios(error);
                     this.isOverlay = false;
                 })

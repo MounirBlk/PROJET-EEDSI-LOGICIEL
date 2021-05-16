@@ -7,7 +7,7 @@
             </v-card-title>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn @click="isDialogDeleteCommande = false" class="mx-2" icon outlined  color="red" dark>
+                <v-btn @click="isDialogDeleteCommande = false" class="mx-2" icon outlined color="red" dark>
                     <v-icon dark>mdi-close</v-icon>
                 </v-btn>
                 <v-btn @click="deleteCommande" class="mx-2" icon outlined color="green darken-1">
@@ -56,7 +56,7 @@
         <v-row class="mt-8 mr-1">
             <v-tooltip right>
                 <template v-slot:activator="{ on, attrs }">
-                    <v-btn color="success" outlined icon v-bind="attrs" v-on="on" @click="getCommandesData" class="ml-3">
+                    <v-btn :disabled="isFirstLoad || isLoading" color="success" outlined icon v-bind="attrs" v-on="on" @click="getCommandesData" class="ml-3">
                         <v-icon large>mdi-refresh</v-icon>
                     </v-btn>
                 </template>
@@ -82,17 +82,22 @@
                 <v-chip :color="item.statut === 'Attente' ? 'indigo' : item.statut === 'Livraison' ? 'orange' : item.statut === 'Signalement' ? 'red' : item.statut === 'Termine' ? 'green' : 'grey darken-1'">{{ item.statut }}</v-chip>
             </template>
             <template v-slot:[`item.actions`]="{ item }">
-                <v-btn icon color="info" @click="PageInfosCommande(item, false)">
+                <v-btn :disabled="isFirstLoad || isLoading" icon color="success" @click="downloadCommande(item)">
+                    <v-icon>
+                        mdi-download
+                    </v-icon>
+                </v-btn>
+                <v-btn :disabled="isFirstLoad || isLoading" icon color="info" @click="PageInfosCommande(item, false)">
                     <v-icon>
                         mdi-information-outline
                     </v-icon>
                 </v-btn>
-                <v-btn icon color="orange" :disabled="item.statut === 'Termine'" @click="PageInfosCommande(item, true)">
+                <v-btn :disabled="isFirstLoad || isLoading || item.statut === 'Termine'" icon color="orange" @click="PageInfosCommande(item, true)">
                     <v-icon>
                         mdi-pencil-outline
                     </v-icon>
                 </v-btn>
-                <v-btn icon color="error" @click="dialogDeleteCommande(item)">
+                <v-btn :disabled="isFirstLoad || isLoading" icon color="error" @click="dialogDeleteCommande(item)">
                     <v-icon>
                         mdi-delete-outline
                     </v-icon>
@@ -122,9 +127,11 @@ import Gestion from "../../mixins/Gestion"
 import axiosApi from '../../plugins/axiosApi';
 import qs from "qs";
 import {
-    AxiosResponse
+    AxiosResponse,
+    AxiosRequestConfig
 } from 'axios';
 import moment from 'moment';
+import fileSaver from 'file-saver';
 
 export default Vue.extend({
     name: 'Commandes',
@@ -164,7 +171,7 @@ export default Vue.extend({
             commandes: [] as Array < any > ,
             livreurs: [] as Array < any > ,
             commandeToUpdate: {},
-            updatedLivreurID: '' as string,
+            updatedLivreurID: '',
             isEditLivreur: false as boolean,
         }
     },
@@ -196,8 +203,40 @@ export default Vue.extend({
                     }, 1000);
                 });
         },
+        downloadCommande: function (infosCommande: Record < string, any > ) {
+            if (infosCommande.clientID === null || infosCommande.clientID === undefined) {
+                return this.errorMessage('Le client n\'existe pas')
+            } else {
+                this.isLoading = true;
+                this.isFirstLoad = true;
+                const payload = {
+                    commande: infosCommande
+                };
+                const configAxios: AxiosRequestConfig = {
+                    headers: {
+                        'Content-Type': 'application/json;charset=utf-8',
+                    },
+                    responseType: 'blob'
+                };
+                axiosApi.post("/commande/download", payload, configAxios)
+                    .then((response) => {
+                        fileSaver.saveAs(response.data, `${infosCommande.refID}.pdf`); //application/pdf;charset=utf-8
+                        this.successMessage("Téléchargement effectué avec succès");
+                        setTimeout(() => {
+                            this.isLoading = false;
+                            this.isFirstLoad = false;
+                        }, 1000);
+                    })
+                    .catch((error) => {
+                        this.catchAxios(error)
+                        setTimeout(() => {
+                            this.isLoading = false;
+                            this.isFirstLoad = false;
+                        }, 1000);
+                    });
+            }
+        },
         saveModification: function (commandeToUpdate: any, updatedLivreurID: string): void {
-            //this.isDialogEditCommande = false;
             let payload = {
                 statut: commandeToUpdate.statut,
                 dateLivraison: commandeToUpdate.dateLivraison,

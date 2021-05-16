@@ -10,13 +10,28 @@ import './plugins/axiosApi';
 //import '@mdi/font/css/materialdesignicons.css'
 import qs from 'qs';
 import moment from 'vue-moment'
-//import RayPlugin from 'vue-ray/vue2';
-//import VuePageTransition from 'vue-page-transition';
-//Vue.use(VuePageTransition)
+import io from 'socket.io-client'
+import VueSocketIO from 'vue-socket.io'
+import VueSocketIOExt from 'vue-socket.io-extended'
+import VuePageTransition from 'vue-page-transition';
+
 Vue.config.productionTip = false;
+
+//const SocketInstance = io(store.state.baseUrl);
+/*Vue.use(new VueSocketIO({
+  debug: true,
+    connection: SocketInstance, //options object is Optional
+    vuex: {
+      store,
+      actionPrefix: "SOCKET_",
+      mutationPrefix: "SOCKET_"
+    }
+}))*/
+//Vue.use(VueSocketIOExt, SocketInstance, { store })
 
 Vue.use(qs.stringify); // querystringify
 Vue.use(moment);
+Vue.use(VuePageTransition)
 
 export const bus = new Vue();
 
