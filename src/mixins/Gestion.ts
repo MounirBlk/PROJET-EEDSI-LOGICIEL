@@ -5,6 +5,7 @@ import { bus } from "@/main";
 import { rules } from "@/plugins/observable"
 import { mapState, mapMutations } from "vuex";
 import moment from 'moment';
+import io from 'socket.io-client';
 
 export default Vue.extend({
     name: 'Mixins',
@@ -54,10 +55,11 @@ export default Vue.extend({
         },
         ...mapState(["isAdmin"]),
         ...mapState(["baseUrl"]),
+        ...mapState(["socket"]),
         /*isAdmin(): boolean {
             return this.$store.state.isAdmin;
         },*/
-    },
+    },        
     created() {},
     beforeMount() {},
     mounted(){},

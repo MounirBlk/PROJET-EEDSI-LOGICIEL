@@ -1,9 +1,5 @@
 <template>
-<v-navigation-drawer :src="
-      !$vuetify.theme.dark
-        ? require('@/assets/sidebar-3-beige.jpg')
-        : barImageNuit
-    " v-model="drawer" app id="core-navigation-drawer">
+<v-navigation-drawer :src="!$vuetify.theme.dark ? require('@/assets/sidebar-3-beige.jpg') : barImageNuit" v-model="drawer" app id="core-navigation-drawer">
     <center class="mt-5">
         <v-avatar color="teal" size="50">
             <img alt="Avatar" :src="!$vuetify.theme.dark ? 'https://png.pngtree.com/element_our/20200610/ourlarge/pngtree-shopping-mall-logo-image_2235997.jpg' : require('@/assets/logo.jpg')">

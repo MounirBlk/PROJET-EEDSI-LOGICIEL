@@ -13,7 +13,7 @@
                     <template v-slot:default>
                         <tbody>
                             <tr>
-                                <td>Référence ID:</td>
+                                <td>Référence ID</td>
                                 <td>{{ infoEvenement.refID }}</td>
                             </tr>
                             <tr>
