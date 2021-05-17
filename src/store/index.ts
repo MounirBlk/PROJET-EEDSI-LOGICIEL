@@ -13,7 +13,7 @@ export default new Vuex.Store({
   state: {
     drawer: null,
     isAdmin: null,
-    baseUrl: "http://localhost:3000", // http://localhost:3000 / https://api-imie-e-commerce.herokuapp.com
+    baseUrl: "https://api-imie-e-commerce.herokuapp.com", // http://localhost:3000 / https://api-imie-e-commerce.herokuapp.com
   },
   plugins: [dataGlobal], //plugin permettant d'utiliser le localstorage pour une state en particulier
   mutations: {
