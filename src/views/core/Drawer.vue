@@ -1,5 +1,5 @@
 <template>
-<v-navigation-drawer :src="!$vuetify.theme.dark ? require('@/assets/sidebar-3-beige.jpg') : barImageNuit" v-model="drawer" app id="core-navigation-drawer">
+<v-navigation-drawer :src="!$vuetify.theme.dark ? barImageJour : barImageNuit" v-model="drawer" app id="core-navigation-drawer">
     <center class="mt-5">
         <v-avatar color="teal" size="50">
             <img alt="Avatar" :src="!$vuetify.theme.dark ? 'https://png.pngtree.com/element_our/20200610/ourlarge/pngtree-shopping-mall-logo-image_2235997.jpg' : require('@/assets/logo.jpg')">
@@ -31,6 +31,7 @@ import Vue from "vue";
 export default Vue.extend({
     name: "DashboardCoreDrawer",
     data: (): any => ({
+        barImageJour: "https://i.pinimg.com/236x/f1/90/04/f19004dd1da67e6077ecac88c86dd665.jpg",//https://img.fruugo.com/product/5/47/85504475_max.jpg
         barImageNuit: "https://www.euractiv.fr/wp-content/uploads/sites/3/2019/07/shutterstock_233084350-800x450.jpg",
         name: 'Dashboard',
         items: [{

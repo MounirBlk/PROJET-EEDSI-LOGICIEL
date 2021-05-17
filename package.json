@@ -1,6 +1,6 @@
 {
     "name": "dashboard-ecommerce",
-    "version": "2.5.0",
+    "version": "2.5.1",
     "author": "Mounir Ballouk",
     "description": "Dashboard e-commerce administrateurs/commerciaux",
     "private": true,
@@ -21,7 +21,6 @@
         "@types/file-saver": "^2.0.2",
         "@types/socket.io-client": "^1.4.36",
         "@types/vue-moment": "^4.0.2",
-        "@woodydark/vuetify-audio-player": "^1.0.2",
         "axios": "^0.21.1",
         "chart.js": "^2.9.4",
         "core-js": "^3.6.5",
@@ -37,8 +36,8 @@
         "vue-page-transition": "^0.2.2",
         "vue-router": "^3.2.0",
         "vue-socket.io": "^3.0.10",
-        "vue-socket.io-extended": "^4.2.0",
         "vuetify": "^2.4.0",
+        "vuetify-audio": "^0.3.3",
         "vuex": "^3.4.0",
         "vuex-persistedstate": "^4.0.0-beta.3"
     },

@@ -82,10 +82,10 @@
                         </td>
                     </template>
                     <template v-slot:[`item.categorieEntreprise`]="{ item }">
-                        <v-chip color="red" v-if="item.categorieEntreprise.toLowerCase() === 'autres' || item.categorieEntreprise === 'null' || item.categorieEntreprise === null || item.categorieEntreprise === undefined">
+                        <v-chip ripple dark color="red" v-if="item.categorieEntreprise.toLowerCase() === 'autres' || item.categorieEntreprise === 'null' || item.categorieEntreprise === null || item.categorieEntreprise === undefined">
                             <v-icon>mdi-close-circle-outline</v-icon>
                         </v-chip>
-                        <v-chip color="indigo" v-else>{{ item.categorieEntreprise }}</v-chip>
+                        <v-chip ripple dark color="indigo" v-else>{{ item.categorieEntreprise }}</v-chip>
                     </template>
                     <template v-slot:[`item.createdAt`]="{ item }"> {{ item.createdAt | moment("YYYY-MM-DD HH:mm") }} </template>
                     <template v-slot:[`item.updateAt`]="{ item }"> {{ item.updateAt | moment("YYYY-MM-DD HH:mm") }} </template>
@@ -140,7 +140,7 @@
                         <v-col cols="12" md="7">
                             <v-select v-if="isEditOptions && optionsDoc.isAdminCommercial" label="Sélectionner" small-chips chips counter item-text="email" item-value="email" deletable-chips disable-lookup multiple :items='administrateurs' color="pink darken-2" v-model="optionsDoc.emailAdminCommercial" prepend-icon="mdi-format-list-checkbox">
                                 <template v-slot:selection="{ item, index }">
-                                    <v-chip small v-if="index === 0">
+                                    <v-chip dark small v-if="index === 0">
                                         <span>{{ item.email }}</span>
                                     </v-chip>
                                     <span v-if="index === 1" class="pink--text caption">
@@ -598,6 +598,9 @@
                     </v-btn>
                 </td>
             </template>
+            <template v-slot:[`item.idEntreprise`]="{ item }">
+                <v-chip ripple outlined dark color="pink"> {{ item.idEntreprise.nom }}</v-chip>
+            </template>
             <template v-slot:[`item.createdAt`]="{ item }"> {{ item.createdAt | moment("YYYY-MM-DD HH:mm") }} </template>
             <template v-slot:[`item.lastLogin`]="{ item }"> {{ item.lastLogin | moment("YYYY-MM-DD HH:mm") }} </template>
             <template v-slot:[`item.checked`]="{ item }">
@@ -680,6 +683,10 @@ export default Vue.extend({
                 text: "Email",
                 value: "email",
             }, {
+                //sortable: false,
+                text: "Entreprise",
+                value: "idEntreprise",
+            }, {
                 sortable: false,
                 text: "Checked",
                 value: "checked",
@@ -754,7 +761,7 @@ export default Vue.extend({
                 isUser: false as boolean,
                 emailUser: '',
                 emailAdminCommercial: [],
-                isDownload: true,
+                isDownload: true as boolean,
             },
             isDialogDocOptions: false as boolean,
             isEditOptions: false as boolean,
@@ -771,9 +778,9 @@ export default Vue.extend({
     },
     watch: {},
     computed: {
-        socket() {
+        /*socket() {
             return io(this.$store.state.baseUrl);
-        },
+        },*/
     },
     created() {},
     beforeMount() {
@@ -785,9 +792,9 @@ export default Vue.extend({
     sockets: {},
     methods: {
         socketServer: function () {
-            this.socket.on('traitement', (valueMax: number, value: number) => {
+            /*this.socket.on('traitement', (valueMax: number, value: number) => {
                 this.valueTraitement = (100 * value) / valueMax
-            });
+            });*/
         },
         getProspectionsData: async function (): Promise < void > {
             //https://jsonplaceholder.typicode.com/users
@@ -902,7 +909,7 @@ export default Vue.extend({
                 responseType: this.optionsDoc.isDownload ? 'blob' : 'json' // blob arraybuffer
             }
             this.isProgress = true;
-            this.socket.emit('startTraitement')
+            //this.socket.emit('startTraitement')
             axiosApi
                 .post("/devis/add", payload, configAxios)
                 .then(async (response: AxiosResponse) => {
@@ -1017,7 +1024,7 @@ export default Vue.extend({
                 this.successMessage("L'entreprise a bien été ajouté !");
                 setTimeout(() => {
                     this.getProspectionsData();
-                }, 1000);
+                }, 5000);
             })
             .catch((error: AxiosError) => {
                 this.catchAxios(error)
@@ -1033,7 +1040,7 @@ export default Vue.extend({
                     this.successMessage("Le client prospect a bien été ajouté !");
                     setTimeout(() => {
                         this.getProspectionsData();
-                    }, 1000);
+                    }, 5000);
                 })
                 .catch((error: AxiosError) => {
                     this.catchAxios(error)
@@ -1058,11 +1065,10 @@ export default Vue.extend({
                 .put("/entreprise/" + entrepriseToUpdate._id, qs.stringify(payload)) //update entreprise
                 .then((response: AxiosResponse) => {
                     Object.assign(this.$data, this.$options.data()); //reset data
-                    this.$refs.form.reset();
                     this.successMessage("Sauvegarde des modifications effectuée !");
                     setTimeout(() => {
                         this.getProspectionsData();
-                    }, 1000);
+                    }, 5000);
                 })
                 .catch((error: AxiosError) => {
                     this.catchAxios(error)
@@ -1081,7 +1087,7 @@ export default Vue.extend({
                     this.successMessage(`Le client prospect ${utilisateurFirstname} ${utilisateurLastname} a été désactivé avec succès`);
                     setTimeout(() => {
                         this.getProspectionsData();
-                    }, 1000);
+                    }, 5000);
                 })
                 .catch((error: AxiosError) => {
                     this.catchAxios(error)

@@ -90,7 +90,7 @@
             </v-card-title>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn @click="isDialogDeleteComposant = false" class="mx-2" icon outlined  color="red" dark>
+                <v-btn @click="isDialogDeleteComposant = false" class="mx-2" icon outlined color="red" dark>
                     <v-icon dark>mdi-close</v-icon>
                 </v-btn>
                 <v-btn @click="deleteUtilisateur" class="mx-2" icon outlined color="green darken-1">
@@ -289,7 +289,7 @@
             <v-btn color="orange" dark @click="isDialogNewComposant = true" class="ml-3">
                 <v-icon left>mdi-plus-circle-outline</v-icon>Ajouter Composant
             </v-btn>
-            <v-btn color="orange" outlined icon @click="getComposantsData" class="ml-3">
+            <v-btn color="orange" icon @click="getComposantsData" class="ml-3">
                 <v-icon large>mdi-refresh</v-icon>
             </v-btn>
             <v-text-field v-model="search" prepend-icon="mdi-magnify" class="ml-auto" label="Recherche" color="orange" hide-details single-line style="max-width: 250px" clearable />
@@ -308,6 +308,9 @@
                         <v-row class="fill-height ma-0" align="center" justify="center"> </v-row>
                     </template>
                 </v-img>
+            </template>
+            <template v-slot:[`item.type`]="{ item }">
+                <v-chip dark color="orange">{{ item.type }}</v-chip>
             </template>
             <template v-slot:[`item.nom`]="{ item }">
                 <span class="red--text" v-if="item.archive">{{ item.nom }}</span>

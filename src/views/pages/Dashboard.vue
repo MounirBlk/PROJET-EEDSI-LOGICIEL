@@ -3,55 +3,64 @@
     <v-container>
         <v-row>
             <v-col cols="12" md="12" sm="12">
-                <base-material-card color="red" max-width="100%" width="auto" class="px-5 py-3 mx-auto">
-                    <template v-slot:heading>
-                        <div class="text-center">
-                            <h1 class="display-1 font-weight-bold">
-                                <v-icon large left>mdi-package-variant</v-icon>Commandes
-                            </h1>
-                        </div>
-                    </template>
-                    <base-area-chart :key="resetComponentKey" :labels="chartCommandes.labels" :datasets="chartCommandes.datasets" />
-                </base-material-card>
+                <v-hover v-slot="{ hover }">
+                    <base-material-card :color="hover ? 'red lighten-1' :'red'" max-width="100%" width="auto" class="px-5 py-3 mx-auto">
+                        <template v-slot:heading>
+                            <div class="text-center">
+                                <h1 class="display-1 font-weight-bold">
+                                    <v-icon large left>mdi-package-variant</v-icon>Commandes
+                                </h1>
+                            </div>
+                        </template>
+                        <base-area-chart :key="resetComponentKey" :labels="chartCommandes.labels" :datasets="chartCommandes.datasets" />
+                    </base-material-card>
+                </v-hover>
             </v-col>
             <v-col cols="12" md="6" sm="12">
-                <base-material-card color="indigo" max-width="100%" width="auto" class="px-5 py-3 mx-auto">
-                    <template v-slot:heading>
-                        <div class="text-center">
-                            <h1 class="display-1 font-weight-bold">
-                                <v-icon large left>mdi-chair-school</v-icon>Produits/Composants
-                            </h1>
-                        </div>
-                    </template>
-                    <base-bar-chart :key="resetComponentKey" :labels="chartProductComp.labels" :datasets="chartProductComp.datasets" :title="chartProductComp.title" />
-                </base-material-card>
+                <v-hover v-slot="{ hover }">
+                    <base-material-card :color="hover ? 'indigo lighten-1' : 'indigo'" max-width="100%" width="auto" class="px-5 py-3 mx-auto">
+                        <template v-slot:heading>
+                            <div class="text-center">
+                                <h1 class="display-1 font-weight-bold">
+                                    <v-icon large left>mdi-chair-school</v-icon>Produits/Composants
+                                </h1>
+                            </div>
+                        </template>
+                        <base-bar-chart :key="resetComponentKey" :labels="chartProductComp.labels" :datasets="chartProductComp.datasets" :title="chartProductComp.title" />
+                    </base-material-card>
+                </v-hover>
             </v-col>
             <v-col cols="12" md="6" sm="12">
-                <base-material-card color="pink" max-width="100%" width="auto" class="px-5 py-3 mx-auto">
-                    <template v-slot:heading>
-                        <div class="text-center">
-                            <h1 class="display-1 font-weight-bold">
-                                <v-icon large left>mdi-account-group-outline</v-icon>Utilisateurs actifs
-                            </h1>
-                        </div>
-                    </template>
-                    <base-pie-chart :key="resetComponentKey" :labels="chartPieUsers.labels" :datasets="chartPieUsers.datasets" :title="chartPieUsers.title" />
-                </base-material-card>
+                <v-hover v-slot="{ hover }">
+                    <base-material-card :color="hover ? 'pink lighten-1' : 'pink'" max-width="100%" width="auto" class="px-5 py-3 mx-auto">
+                        <template v-slot:heading>
+                            <div class="text-center">
+                                <h1 class="display-1 font-weight-bold">
+                                    <v-icon large left>mdi-account-group-outline</v-icon>Utilisateurs actifs
+                                </h1>
+                            </div>
+                        </template>
+                        <base-pie-chart :key="resetComponentKey" :labels="chartPieUsers.labels" :datasets="chartPieUsers.datasets" :title="chartPieUsers.title" />
+                    </base-material-card>
+                </v-hover>
             </v-col>
             <v-col cols="12" md="12" sm="12">
-                <base-material-card color="orange" max-width="100%" width="auto" class="px-5 py-3 mx-auto">
-                    <template v-slot:heading>
-                        <div class="text-center">
-                            <h1 class="display-1 font-weight-bold">
-                                <v-icon large left>mdi-finance</v-icon>Budgétisation (<v-icon large>mdi-currency-eur</v-icon>)
-                            </h1>
-                        </div>
-                    </template>
-                    <base-line-chart :key="resetComponentKey" :chartData="chartBudget" :options="optionsChartBudget" />
-                </base-material-card>
+                <v-hover v-slot="{ hover }">
+                    <base-material-card :color="hover ? 'orange lighten-1' :'orange'" max-width="100%" width="auto" class="px-5 py-3 mx-auto">
+                        <template v-slot:heading>
+                            <div class="text-center">
+                                <h1 class="display-1 font-weight-bold">
+                                    <v-icon large left>mdi-finance</v-icon>Budgétisation (<v-icon large>mdi-currency-eur</v-icon>)
+                                </h1>
+                            </div>
+                        </template>
+                        <base-line-chart :key="resetComponentKey" :chartData="chartBudget" :options="optionsChartBudget" />
+                    </base-material-card>
+                </v-hover>
             </v-col>
-            <!--<v-col cols="12" md="12" sm="12">
-                <v-audio-player src="../../test.mp3" track-title="Your Music" track-subtitle="Best of Electro Swing" allow-previous allow-next :compact="$vuetify.breakpoint.smAndDown" :autoplay="false" album-art="https://zdnet1.cbsistatic.com/hub/i/r/2020/05/11/703e8b53-6149-47dd-9969-f7de6b044b3e/resize/1200xauto/311e6c882043a19e7b68cef0de73456f/apple-music.png" @next-audio="nextSrc()" @previous-audio="prevSrc()" prev-track-icon="mdi-skip-previous" next-track-icon="mdi-skip-next" back-forward-icon="mdi-rewind-5" fast-forward-icon="fast-forward-5" play-icon="mdi-play" pause-icon="mdi-pause" mute-volume-icon="mdi-volume-off" low-volume-icon="mdi-volume-low" medium-volume-icon="mdi-volume-medium" high-volume-icon="mdi-volume-high"></v-audio-player>
+            <!--<v-col cols="12" md="12">
+                <v-parallax src="https://zdnet1.cbsistatic.com/hub/i/r/2020/05/11/703e8b53-6149-47dd-9969-f7de6b044b3e/resize/1200xauto/311e6c882043a19e7b68cef0de73456f/apple-music.png" aspect-ratio="1" ></v-parallax>
+                <vuetify-audio file="../../test.mp3" color="success" :ended="audioFinish" downloadable></vuetify-audio>
             </v-col>-->
             <v-col cols="12" md="12">
                 <v-expansion-panels style="z-index: 0" focusable v-model="panelCommandes">
@@ -102,7 +111,7 @@ export default Vue.extend({
     components: {
         Commandes,
         Calendar,
-        VAudioPlayer: () => import("@woodydark/vuetify-audio-player"),
+        VuetifyAudio: () => import('vuetify-audio'),
     },
     data: (): any => ({
         panelCalendrier: 1,
@@ -111,27 +120,23 @@ export default Vue.extend({
             title: 'Commandes',
             labels: ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"],
             datasets: [{
-                    label: "Commandes client",
-                    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                },
-                {
-                    label: "Commandes prospect (devis)",
-                    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                }
-            ]
+                label: "Commandes client",
+                data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            }, {
+                label: "Commandes prospect (devis)",
+                data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            }]
         },
         chartProductComp: {
             title: 'Produits et composants en fonction du type',
             labels: ["Chaise", "Table", "Armoire", "Lit", "Autres"],
             datasets: [{
-                    label: "Produits",
-                    data: [0, 0, 0, 0, 0]
-                },
-                {
-                    label: "Composants",
-                    data: [0, 0, 0, 0, 0]
-                }
-            ]
+                label: "Produits",
+                data: [0, 0, 0, 0, 0]
+            }, {
+                label: "Composants",
+                data: [0, 0, 0, 0, 0]
+            }]
         },
         chartPieUsers: {
             title: 'Utilisateurs actifs de l\'entreprise',

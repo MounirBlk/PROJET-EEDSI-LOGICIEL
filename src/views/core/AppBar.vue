@@ -1,5 +1,5 @@
 <template>
-<v-app-bar color="primary" id="app-bar" app flat absolute>
+<v-app-bar :color="$vuetify.theme.dark ? '#424242' : 'primary'" id="app-bar" app flat absolute>
     <v-app-bar-nav-icon @click.stop="setDrawer(!drawer)"></v-app-bar-nav-icon>
     <v-toolbar-title class="hidden-sm-and-down font-weight-light" v-text="$route.name"></v-toolbar-title>
     <v-spacer class="mx-3"></v-spacer>

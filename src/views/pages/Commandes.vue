@@ -56,7 +56,7 @@
         <v-row class="mt-8 mr-1">
             <v-tooltip right>
                 <template v-slot:activator="{ on, attrs }">
-                    <v-btn :disabled="isFirstLoad || isLoading" color="success" outlined icon v-bind="attrs" v-on="on" @click="getCommandesData" class="ml-3">
+                    <v-btn :disabled="isFirstLoad || isLoading" color="success" icon v-bind="attrs" v-on="on" @click="getCommandesData" class="ml-3">
                         <v-icon large>mdi-refresh</v-icon>
                     </v-btn>
                 </template>
@@ -79,7 +79,7 @@
                 <span v-else>Inconnu</span>
             </template>
             <template v-slot:[`item.statut`]="{ item }">
-                <v-chip :color="item.statut === 'Attente' ? 'indigo' : item.statut === 'Livraison' ? 'orange' : item.statut === 'Signalement' ? 'red' : item.statut === 'Termine' ? 'green' : 'grey darken-1'">{{ item.statut }}</v-chip>
+                <v-chip dark :color="item.statut === 'Attente' ? 'indigo' : item.statut === 'Livraison' ? 'orange' : item.statut === 'Signalement' ? 'red' : item.statut === 'Termine' ? 'green' : 'grey darken-1'">{{ item.statut }}</v-chip>
             </template>
             <template v-slot:[`item.actions`]="{ item }">
                 <v-btn :disabled="isFirstLoad || isLoading" icon color="success" @click="downloadCommande(item)">

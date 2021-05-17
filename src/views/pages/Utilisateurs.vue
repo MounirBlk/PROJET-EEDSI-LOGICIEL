@@ -98,7 +98,7 @@
             <v-btn color="info" @click="isDialogNewUtilisateur = true" class="ml-3" :disabled="!isAdmin">
                 <v-icon left>mdi-account-plus-outline</v-icon>Ajouter Utilisateur
             </v-btn>
-            <v-btn color="info" outlined icon @click="getUtilisateursData" class="ml-3">
+            <v-btn color="info" icon @click="getUtilisateursData" class="ml-3">
                 <v-icon large>mdi-refresh</v-icon>
             </v-btn>
             <v-text-field v-model="search" prepend-icon="mdi-magnify" class="ml-auto" label="Recherche" color="info" hide-details single-line style="max-width: 250px" clearable />
@@ -108,7 +108,7 @@
         <v-skeleton-loader v-if="isFirstLoad" :loading="isLoading" type="table"></v-skeleton-loader>
         <v-data-table v-else :headers="headers" :items="items" :search.sync="search" :sort-by="['lastname']" :sort-desc="[false]" show-expand single-expand item-key="email" :expanded.sync="expanded">
             <template v-slot:[`item.role`]="{ item }">
-                <v-chip :color="item.role.toLowerCase() !== 'administrateur' ? 'indigo' : 'orange'">{{ item.role }}</v-chip>
+                <v-chip dark :color="item.role.toLowerCase() !== 'administrateur' ? 'indigo' : 'orange'">{{ item.role }}</v-chip>
             </template>
             <template v-slot:[`item.createdAt`]="{ item }"> {{ item.createdAt | moment("YYYY-MM-DD HH:mm") }} </template>
             <template v-slot:[`item.lastLogin`]="{ item }"> {{ item.lastLogin | moment("YYYY-MM-DD HH:mm") }} </template>
