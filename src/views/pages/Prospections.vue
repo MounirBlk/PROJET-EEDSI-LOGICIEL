@@ -792,9 +792,9 @@ export default Vue.extend({
     sockets: {},
     methods: {
         socketServer: function () {
-            /*this.socket.on('traitement', (valueMax: number, value: number) => {
+            this.socket.on('traitement', (valueMax: number, value: number) => {
                 this.valueTraitement = (100 * value) / valueMax
-            });*/
+            });
         },
         getProspectionsData: async function (): Promise < void > {
             //https://jsonplaceholder.typicode.com/users
@@ -909,7 +909,7 @@ export default Vue.extend({
                 responseType: this.optionsDoc.isDownload ? 'blob' : 'json' // blob arraybuffer
             }
             this.isProgress = true;
-            //this.socket.emit('startTraitement')
+            this.socket.emit('startTraitement')
             axiosApi
                 .post("/devis/add", payload, configAxios)
                 .then(async (response: AxiosResponse) => {
