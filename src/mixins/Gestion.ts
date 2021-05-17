@@ -55,10 +55,12 @@ export default Vue.extend({
         },
         ...mapState(["isAdmin"]),
         ...mapState(["baseUrl"]),
-        ...mapState(["socket"]),
         /*isAdmin(): boolean {
             return this.$store.state.isAdmin;
         },*/
+        socket() {
+            return io(this.$store.state.baseUrl);
+        },
     },        
     created() {},
     beforeMount() {},

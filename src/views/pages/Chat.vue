@@ -15,8 +15,7 @@
             </v-tooltip>
         </v-badge>
     </v-subheader>
-    <v-skeleton-loader v-if="isLoading" class="mx-3" type="list-item-three-line"></v-skeleton-loader>
-    <base-chat-box v-else :messages="messages" @sendMessage="this.sendMessage" />
+    <base-chat-box :messages="messages" @sendMessage="this.sendMessage" />
 </v-container>
 </template>
 
@@ -41,32 +40,29 @@ export default Vue.extend({
     components: {},
     data(): any {
         return {
-            //socket: io("https://api-imie-e-commerce.herokuapp.com"),
             messages: [],
             users: [],
-            isLoading: false as boolean
         }
     },
     computed: {
-        socket(){
+        /*socket() {
             return io(this.$store.state.baseUrl);
-        }
+        }*/
     },
     created() {},
     beforeMount() {},
     mounted() {
         this.joinServer();
     },
+    sockets: {},
     methods: {
         joinServer: function () {
-            this.isLoading = true;
             this.socket.on('loggedIn', (data: any) => {
                 this.users = data.users;
                 this.socket.emit('getMessagesDB')
                 this.socket.emit('newUser', localStorage.getItem("token"));
             });
             this.listen();
-            this.isLoading = false;
         },
         listen: function () {
             this.socket.on('getMessagesEmpty', (messages: any) => {

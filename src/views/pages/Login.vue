@@ -1,5 +1,5 @@
 <template>
-<v-img src="https://ressources.regionsjob.com/seo/ObsJob/ingenieur-commercial.jpg">
+<v-img :src="$vuetify.theme.dark ? 'https://ressources.regionsjob.com/seo/ObsJob/ingenieur-commercial.jpg' : 'https://image.freepik.com/vecteurs-libre/fond-canape-cuir-luxe_141130-219.jpg'">
     <v-overlay :absolute="isAbsolute" :opacity="opacity" :value="isOverlay">
         <v-progress-circular color="warning" indeterminate size="80"></v-progress-circular>
     </v-overlay>

@@ -23,7 +23,7 @@
         </template>
 
         <v-row class="mt-8 mr-1">
-            <v-btn color="indigo" outlined icon @click="getUtilisateursData" class="ml-3">
+            <v-btn color="indigo" icon @click="getUtilisateursData" class="ml-3">
                 <v-icon large>mdi-refresh</v-icon>
             </v-btn>
             <v-text-field v-model="search" prepend-icon="mdi-magnify" class="ml-auto" label="Recherche" color="indigo" hide-details single-line style="max-width: 250px" clearable />

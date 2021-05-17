@@ -155,7 +155,7 @@
                 </template>
                 <span>Gestion composants</span>
             </v-tooltip>
-            <v-btn color="brown" outlined icon @click="getProduitsData" class="ml-3">
+            <v-btn color="brown" icon @click="getProduitsData" class="ml-3">
                 <v-icon large>mdi-refresh</v-icon>
             </v-btn>
             <v-text-field v-model="search" prepend-icon="mdi-magnify" class="ml-auto" label="Recherche" color="brown" hide-details single-line style="max-width: 250px" clearable />
@@ -166,6 +166,9 @@
             <template v-slot:[`item.nom`]="{ item }">
                 <span class="red--text" v-if="item.archive">{{ item.nom }}</span>
                 <span v-else>{{ item.nom }}</span>
+            </template>
+            <template v-slot:[`item.type`]="{ item }">
+                <v-chip dark color="brown">{{ item.type }}</v-chip>
             </template>
             <template v-slot:[`item.imgLink`]="{ item }">
                 <v-img v-if="item.imgLink !== null" :src="item.imgLink" height="80" width="120" aspect-ratio="1" class="grey lighten-2">
