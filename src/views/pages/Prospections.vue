@@ -906,6 +906,7 @@ export default Vue.extend({
                 headers: {
                     'Content-Type': 'application/json;charset=utf-8',
                 },
+                timeout: 0,
                 responseType: this.optionsDoc.isDownload ? 'blob' : 'json' // blob arraybuffer
             }
             this.isProgress = true;
