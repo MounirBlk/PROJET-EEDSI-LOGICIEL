@@ -10,6 +10,8 @@ const axiosApi = axios.create({
     }
 })
 
+//axiosApi.defaults.timeout = 0;
+
 // Add a request interceptor
 axiosApi.interceptors.request.use((config: any) => {
     const token = localStorage.getItem("token");
