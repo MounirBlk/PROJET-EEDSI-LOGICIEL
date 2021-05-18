@@ -16,7 +16,7 @@ module.exports = {
             .init()
             .waitForElementVisible('#app')
             .connexion() //connexion a la plateforme
-            .prospections() // prospections
+            //.prospections() // prospections
             .deconnexion() //deconnexion a la plateforme
             .end()
 

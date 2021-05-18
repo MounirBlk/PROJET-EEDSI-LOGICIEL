@@ -12,6 +12,28 @@ exports.randomFileName = () => {
     return today;
 }
 
+/**
+ *  Random number between min and max
+ *  @param {number} min  
+ *  @param {number} max  
+ */
+exports.randNumber = (min, max) => {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+/**
+ *  Random char (default taille 10)
+ *  @param {number} length ? 
+ */
+exports.randomChars = (length) => {
+    let result = '';
+    let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return result.trim().charAt(0).toUpperCase() + result.trim().substring(1).toLowerCase(); // 1 lettre maj mini
+}
+
 exports.randomName = (length) => {
     let result = '';
     let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
