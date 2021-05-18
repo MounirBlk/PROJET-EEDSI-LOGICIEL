@@ -20,8 +20,6 @@
       "webpack-env",
       //"...", 
       //"vuetify",
-      "@wdio/mocha-framework",
-      "@wdio/sync",
       "jest"
     ],
     "paths": {
