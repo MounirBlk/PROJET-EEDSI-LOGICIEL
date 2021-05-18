@@ -909,7 +909,7 @@ export default Vue.extend({
                 responseType: this.optionsDoc.isDownload ? 'blob' : 'json' // blob arraybuffer
             }
             this.isProgress = true;
-            this.socket.emit('startTraitement')
+            //this.socket.emit('startTraitement')
             axiosApi
                 .post("/devis/add", payload, configAxios)
                 .then(async (response: AxiosResponse) => {
