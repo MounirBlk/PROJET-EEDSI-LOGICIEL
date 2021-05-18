@@ -1,22 +1,35 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuites errors="0"
+<testsuites errors="1"
             failures="0"
             tests="1">
 
   <testsuite name="test"
-    errors="0" failures="0" hostname="" id="" package="test" skipped="0"
-    tests="1" time="17.13" timestamp="">
+    errors="1" failures="0" hostname="" id="" package="test" skipped="0"
+    tests="1" time="27.64" timestamp="">
   
-    <testcase name="Dashboard TEST" classname="test" time="17.13" assertions="3">
+    <testcase name="Dashboard TEST" classname="test" time="27.64" assertions="3">
 
     
 
     
 
+    
+    <error message="An error occurred while running .click() command on &lt;//header/div[1]/button[4]&gt;: " type="error"><![CDATA[
+    Error
+    at Object.command (D:\Users\Mounir\Desktop\IMIE_ECOLE2\Mike\ProjetFinal\LOGICIEL\tests\e2e\custom-commands\deconnexion.js:6:14)
+    at processTicksAndRejections (internal/process/task_queues.js:93:5)
+    ]]></error>
     
     </testcase>
   
 
+  
+    <system-err>
+        NoSuchElementError: An error occurred while running .click() command on &lt;//header/div[1]/button[4]&gt;: 
+   {&#34;sessionId&#34;:&#34;98f910c2d9431e8cb2c6b7bf9914c345&#34;,&#34;status&#34;:0,&#34;value&#34;:[]}
+       at Object.command (D:\Users\Mounir\Desktop\IMIE_ECOLE2\Mike\ProjetFinal\LOGICIEL\tests\e2e\custom-commands\deconnexion.js:6:14)
+       at processTicksAndRejections (internal/process/task_queues.js:93:5)
+    </system-err>
   
 
     
