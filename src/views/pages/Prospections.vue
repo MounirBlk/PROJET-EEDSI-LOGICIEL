@@ -634,7 +634,7 @@ import Vue from 'vue';
 import Gestion from "../../mixins/Gestion"
 import axiosApi from '../../plugins/axiosApi';
 import qs from "qs";
-import {
+import axios, {
     AxiosResponse,
     AxiosError,
     AxiosRequestConfig
@@ -902,11 +902,18 @@ export default Vue.extend({
                 "devis": devis,
                 "optionsDoc": this.optionsDoc
             }
+
+            const source = axios.CancelToken.source();
+            const timeout = setTimeout(() => {
+                source.cancel();
+                // Timeout Logic
+            }, 1000 * 60 * 60);
             const configAxios: AxiosRequestConfig = {
                 headers: {
                     'Content-Type': 'application/json;charset=utf-8',
                 },
                 timeout: 1000 * 60 * 60,
+                cancelToken: source.token,
                 responseType: this.optionsDoc.isDownload ? 'blob' : 'json' // blob arraybuffer
             }
             this.isProgress = true;
@@ -914,6 +921,7 @@ export default Vue.extend({
             axiosApi
                 .post("/devis/add", payload, configAxios)
                 .then(async (response: AxiosResponse) => {
+                    clearTimeout(timeout);
                     if (this.optionsDoc.isDownload) {
                         //window.open(`${this.baseUrl}/download/${response.data.destPath}`, '_self') // _self _blank 
                         //console.log(window.URL.createObjectURL(response.data))
@@ -932,6 +940,7 @@ export default Vue.extend({
                         this.getProspectionsData();
                     }, 8000);
                 }).catch((error: AxiosError) => {
+                    clearTimeout(timeout);
                     this.optionsDoc.isDownload ? this.errorMessage('Erreur sur les traitements !') : this.catchAxios(error)
                     setTimeout(() => {
                         this.isLoading = false;
