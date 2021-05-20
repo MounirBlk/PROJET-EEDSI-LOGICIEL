@@ -18,7 +18,7 @@
                 <v-row no-gutters class="mb-10">
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on, attrs }">
-                            <v-btn color="pink darken-2" text v-bind="attrs" v-on="on" @click="getProspectionsData" class="mt-4 ml-3">
+                            <v-btn :disabled="isProgress" color="pink darken-2" text v-bind="attrs" v-on="on" @click="getProspectionsData" class="mt-4 ml-3">
                                 <v-icon large>mdi-refresh</v-icon>
                             </v-btn>
                         </template>
@@ -27,7 +27,7 @@
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on, attrs }">
                             <v-badge :color="!isEditEntreprise ? 'red' : 'green'" class="mt-4 ml-3" overlap :content="!isEditEntreprise ? 'Désactivé' : 'Activé'">
-                                <v-btn v-bind="attrs" v-on="on" text color="orange" @click="isEditEntreprise = !isEditEntreprise">
+                                <v-btn :disabled="isProgress" v-bind="attrs" v-on="on" text color="orange" @click="isEditEntreprise = !isEditEntreprise">
                                     <v-icon :color="!isEditEntreprise ? 'orange' : 'orange darken-2'" large>mdi-square-edit-outline</v-icon>
                                 </v-btn>
                             </v-badge>
@@ -479,12 +479,12 @@
         </template>
         <v-row class="mt-8 mr-1" no-gutters>
             <v-col cols="12" md="12" class="mb-3">
-                <v-btn color="pink" @click="isDialogNewUtilisateur = true" class="ml-3" :disabled="!isAdmin || isFirstLoad || isLoading" outlined>
+                <v-btn color="pink" @click="isDialogNewUtilisateur = true" class="ml-3" :disabled="isProgress || !isAdmin || isFirstLoad || isLoading" outlined>
                     <v-icon left>mdi-account-plus-outline</v-icon>Ajouter client prospect
                 </v-btn>
                 <v-tooltip top>
                     <template v-slot:activator="{ on, attrs }">
-                        <v-btn :disabled="isFirstLoad || isLoading" color="pink" icon v-bind="attrs" v-on="on" @click="getProspectionsData" class="ml-3">
+                        <v-btn :disabled="isProgress || isFirstLoad || isLoading" color="pink" icon v-bind="attrs" v-on="on" @click="getProspectionsData" class="ml-3">
                             <v-icon large>mdi-refresh</v-icon>
                         </v-btn>
                     </template>
@@ -495,7 +495,7 @@
                 <template v-slot:activator>
                     <v-tooltip top>
                         <template v-slot:activator="{ on, attrs }">
-                            <v-btn v-if="isAdmin" v-model="isEntrepriseSpeedDial" :disabled="isFirstLoad || isLoading" v-bind="attrs" v-on="on" outlined color="pink" dark icon>
+                            <v-btn v-if="isAdmin" v-model="isEntrepriseSpeedDial" :disabled="isProgress || isFirstLoad || isLoading" v-bind="attrs" v-on="on" outlined color="pink" dark icon>
                                 <v-icon v-if="isEntrepriseSpeedDial">
                                     mdi-close
                                 </v-icon>
@@ -509,7 +509,7 @@
                 </template>
                 <v-tooltip top>
                     <template v-slot:activator="{ on, attrs }">
-                        <v-btn :disabled="isFirstLoad || isLoading" icon outlined dark @click="isDialogNewEntreprise = true" color="indigo" v-bind="attrs" v-on="on">
+                        <v-btn :disabled="isProgress || isFirstLoad || isLoading" icon outlined dark @click="isDialogNewEntreprise = true" color="indigo" v-bind="attrs" v-on="on">
                             <v-icon>mdi-plus</v-icon>
                         </v-btn>
                     </template>
@@ -517,7 +517,7 @@
                 </v-tooltip>
                 <v-tooltip top>
                     <template v-slot:activator="{ on, attrs }">
-                        <v-btn :disabled="isFirstLoad || isLoading" icon outlined dark color="green" @click.prevent="isDialogEntreprise = true" v-bind="attrs" v-on="on">
+                        <v-btn :disabled="isProgress || isFirstLoad || isLoading" icon outlined dark color="green" @click.prevent="isDialogEntreprise = true" v-bind="attrs" v-on="on">
                             <v-icon>mdi-cog-outline</v-icon>
                         </v-btn>
                     </template>
@@ -539,21 +539,21 @@
                 <v-divider></v-divider>
                 <v-row class="py-3">
                     <v-badge class="my-3 ml-3 mr-5" :color="optionsDoc.isCheckedProspect ? 'success darken-1' : 'indigo'" overlap :content="!optionsDoc.isCheckedProspect ? prospectsSelected.length === 0 ? '0' : prospectsSelected.length : availableCheckedProspectsNum === 0 ? '0' : availableCheckedProspectsNum">
-                        <v-btn color="pink darken-2" :disabled="prospectsSelected.length < 1" @click="generateDevis(prospectsSelected)" text outlined>
+                        <v-btn color="pink darken-2" :disabled="isProgress || prospectsSelected.length < 1" @click="generateDevis(prospectsSelected)" text outlined>
                             <v-icon left>mdi-file-document-multiple-outline</v-icon>Génération de devis
                         </v-btn>
                     </v-badge>
                     <v-tooltip top>
                         <template v-slot:activator="{ on, attrs }">
-                            <v-btn class="my-3 ml-3 mr-5" color="pink darken-2" v-bind="attrs" v-on="on" icon @click="isDialogDocOptions = true;" outlined text>
+                            <v-btn :disabled="isProgress" class="my-3 ml-3 mr-5" color="pink darken-2" v-bind="attrs" v-on="on" icon @click="isDialogDocOptions = true;" outlined text>
                                 <v-icon>mdi-cogs</v-icon>
                             </v-btn>
                         </template>
                         <span>Options document</span>
                     </v-tooltip>
-                    <v-switch color="pink darken-2" class="mr-5" v-model="isRandomArticles" dense label="Articles aléatoire"></v-switch>
+                    <v-switch color="pink darken-2" :disabled="isProgress" class="mr-5" v-model="isRandomArticles" dense label="Articles aléatoire"></v-switch>
                     <v-badge class="my-3 ml-3 mr-5" v-if="!isRandomArticles" color="indigo" overlap :content="articles.length === 0 ? '0' : articles.length">
-                        <v-btn color="pink darken-2" @click="isDialogConfigurator = true" text outlined>
+                        <v-btn :disabled="isProgress" color="pink darken-2" @click="isDialogConfigurator = true" text outlined>
                             <v-icon left>mdi-cog-transfer-outline</v-icon>Configurateur
                         </v-btn>
                     </v-badge>
@@ -584,15 +584,15 @@
                         <v-icon left>mdi-card-account-details-outline</v-icon>
                         Informations {{ item.civilite.toLowerCase() === "homme" ? 'M. '+ item.lastname : 'Mme '+ item.lastname }}
                     </v-btn>
-                    <v-btn :disabled="item.disabled || !isAdmin || item.role.toLowerCase() === 'administrateur'" small outlined color="orange" @click="PageInfosUtilisateur(item, true)" class="ml-3">
+                    <v-btn :disabled="isProgress || item.disabled || !isAdmin || item.role.toLowerCase() === 'administrateur'" small outlined color="orange" @click="PageInfosUtilisateur(item, true)" class="ml-3">
                         <v-icon left>mdi-account-edit-outline</v-icon>
                         Modifier {{ item.civilite.toLowerCase() === "homme" ? 'M. '+ item.lastname : 'Mme '+ item.lastname }}
                     </v-btn>
-                    <v-btn :disabled="item.disabled || !isAdmin || item.role.toLowerCase() === 'administrateur'" small outlined color="red" @click="dialogDeleteUtilisateur(item)" class="ml-3">
+                    <v-btn :disabled="isProgress || item.disabled || !isAdmin || item.role.toLowerCase() === 'administrateur'" small outlined color="red" @click="dialogDeleteUtilisateur(item)" class="ml-3">
                         <v-icon left>mdi-account-remove-outline</v-icon>
                         Désactiver {{ item.civilite.toLowerCase() === "homme" ? 'M. '+ item.lastname : 'Mme '+ item.lastname }}
                     </v-btn>
-                    <v-btn :disabled="item.disabled || !isAdmin || item.role.toLowerCase() === 'administrateur'" small outlined @click="dialogUpdateEntreprise(item.idEntreprise)" class="ml-3">
+                    <v-btn :disabled="isProgress || item.disabled || !isAdmin || item.role.toLowerCase() === 'administrateur'" small outlined @click="dialogUpdateEntreprise(item.idEntreprise)" class="ml-3">
                         <v-icon left>mdi-square-edit-outline</v-icon>
                         Modifier entreprise
                     </v-btn>
@@ -785,6 +785,7 @@ export default Vue.extend({
     created() {},
     beforeMount() {
         this.socketServer()
+        if(this.valueTraitement !== 0) this.isProgress = true;
     },
     async mounted() {
         await this.getProspectionsData();
@@ -793,7 +794,11 @@ export default Vue.extend({
     methods: {
         socketServer: function () {
             this.socket.on('traitement', (valueMax: number, value: number) => {
-                this.valueTraitement = (100 * value) / valueMax
+                this.valueTraitement = (100 * value) / valueMax;
+            });
+            this.socket.on('traitementStatut', (isTraitement: boolean) => {
+                this.isProgress = isTraitement;
+                if(this.valueTraitement === 0 && this.isProgress) this.successMessage('Un traitement a été lancé !')
             });
         },
         getProspectionsData: async function (): Promise < void > {
@@ -849,15 +854,15 @@ export default Vue.extend({
             });
         },
         generateDevis: async function (prospectsSelected: any[] = []) {
-            this.isLoading = true;
-            this.isFirstLoad = true;
+            //this.isLoading = true;
+            //this.isFirstLoad = true;
             const products: any[] = this.shuffle(this.products.filter((product: any) => product.archive === false));
             let devis: any[] = [];
             prospectsSelected = prospectsSelected.filter((p: any) => p.disabled === false);
             prospectsSelected = this.optionsDoc.isCheckedProspect ? prospectsSelected.filter((pp: any) => pp.checked === true) : prospectsSelected
             if (prospectsSelected.length === 0 && this.optionsDoc.isCheckedProspect) {
-                this.isLoading = false;
-                this.isFirstLoad = false;
+                //this.isLoading = false;
+                //this.isFirstLoad = false;
                 return this.errorMessage("Aucun prospect vérifié disponible");
             }
             if (this.isRandomArticles) {
@@ -869,8 +874,8 @@ export default Vue.extend({
                 });
             } else {
                 if (this.articles.length === 0) {
-                    this.isLoading = false;
-                    this.isFirstLoad = false;
+                    //this.isLoading = false;
+                    //this.isFirstLoad = false;
                     return this.errorMessage("Veuillez saisir l'option articles aléatoire ou sauvegarder la configuration des produits");
                 } else {
                     prospectsSelected.forEach((prospect: any) => {
@@ -884,16 +889,16 @@ export default Vue.extend({
             const regexEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
             if (this.optionsDoc.isUser) {
                 if (this.optionsDoc.emailUser.match(regexEmail) == null) {
-                    this.isLoading = false;
-                    this.isFirstLoad = false;
+                    //this.isLoading = false;
+                    //this.isFirstLoad = false;
                     return this.errorMessage('L\'email du destinataire suplémentaire n\'est pas au bon format')
                 }
             }
             if (this.optionsDoc.isAdminCommercial) {
                 for (let i = 0; i < this.optionsDoc.emailAdminCommercial.length; i++) {
                     if (this.optionsDoc.emailAdminCommercial[i].match(regexEmail) == null) {
-                        this.isLoading = false;
-                        this.isFirstLoad = false;
+                        //this.isLoading = false;
+                        //this.isFirstLoad = false;
                         return this.errorMessage('La sélection d\'email n\'est pas au bon format')
                     }
                 }
@@ -943,8 +948,8 @@ export default Vue.extend({
                     clearTimeout(timeout);
                     this.optionsDoc.isDownload ? this.errorMessage('Erreur sur les traitements !') : this.catchAxios(error)
                     setTimeout(() => {
-                        this.isLoading = false;
-                        this.isFirstLoad = false;
+                        //this.isLoading = false;
+                        //this.isFirstLoad = false;
                         this.isProgress = false;
                     }, 1000);
                 });

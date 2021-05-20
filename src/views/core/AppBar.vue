@@ -4,6 +4,10 @@
     <v-toolbar-title class="hidden-sm-and-down font-weight-light" v-text="$route.name"></v-toolbar-title>
     <v-spacer class="mx-3"></v-spacer>
 
+    <v-progress-linear v-if="isProgress && $router.history.current.name !== 'Prospections'" dark striped color="indigo" v-model="valueTraitement" height="20">
+        <strong>{{ Math.ceil(valueTraitement) > 100 ? 100 : Math.ceil(valueTraitement) }}%</strong>
+    </v-progress-linear>
+
     <v-tooltip bottom v-if="$router.history.current.name === 'Accueil'">
         <template v-slot:activator="{ on }">
             <v-btn color="indigo" :disabled="isDisabledSynchro" class="ml-2" min-width="0" v-on="on" @click="synchronisation" text>
@@ -63,19 +67,36 @@ import {
     bus
 } from "../../main";
 import io from 'socket.io-client';
+import Gestion from "../../mixins/Gestion"
 
 export default Vue.extend({
     name: "DashboardCoreAppBar",
     data: () => ({
         isDisabledSynchro: false as boolean,
+        valueTraitement: 0 as number,
+        isProgress: false as boolean
     }),
+    mixins: [Gestion],
     computed: {
         ...mapState(["drawer"])
     },
     components: {
         Prospections: () => import("../pages/Prospections.vue")
     },
+    beforeMount() {
+        this.socketServer()
+        if (this.valueTraitement !== 0) this.isProgress = true;
+    },
     methods: {
+        socketServer: function () {
+            this.socket.on('traitement', (valueMax: number, value: number) => {
+                this.valueTraitement = (100 * value) / valueMax;
+            });
+            this.socket.on('traitementStatut', (isTraitement: boolean) => {
+                this.isProgress = isTraitement;
+                if (this.valueTraitement === 0 && this.isProgress) this.successMessage('Un traitement a été lancé !')
+            });
+        },
         ...mapMutations({
             setDrawer: "SET_DRAWER"
         }),
