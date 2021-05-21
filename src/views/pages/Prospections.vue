@@ -197,88 +197,90 @@
                 </v-btn>
             </v-toolbar>
             <div class="mx-15 mt-5">
-                <v-row v-for="(product, i) in products" :key="i" class="mt-0">
-                    <v-col cols="12" md="12">
-                        <v-row class="mt-0">
-                            <v-col cols="12" md="2">
-                                <v-img v-if="product.imgLink !== null" :src="product.imgLink" height="80" width="120" aspect-ratio="1" class="grey lighten-2">
-                                    <template v-slot:placeholder>
-                                        <v-row class="fill-height ma-0" align="center" justify="center"> </v-row>
-                                    </template>
-                                </v-img>
-                                <v-img v-else height="80" width="120" :src="require('@/assets/ecommerce_logo.png')" aspect-ratio="1" class="grey lighten-2">
-                                    <template v-slot:placeholder>
-                                        <v-row class="fill-height ma-0" align="center" justify="center"> </v-row>
-                                    </template>
-                                </v-img>
-                            </v-col>
-                            <v-col cols="12" md="2" align-self="center">
-                                <span v-if="productsConfigurator[i].saved" class="success--text">{{ product.nom }}</span>
-                                <span v-else>{{ product.nom }}</span>
-                            </v-col>
-                            <v-col cols="12" md="2" align-self="center">
-                                <v-select label="Couleur" :disabled="productsConfigurator[i].saved" v-model="productsConfigurator[i].couleur" small-chips chips deletable-chips disable-lookup :items="product.couleurs" color="success darken-2" prepend-inner-icon="mdi-format-list-checkbox"></v-select>
-                            </v-col>
-                            <v-col cols="12" md="2" align-self="center">
-                                <v-select label="Matière" :disabled="productsConfigurator[i].saved" v-model="productsConfigurator[i].matiere" small-chips chips deletable-chips disable-lookup :items="product.matieres" color="success darken-2" prepend-inner-icon="mdi-format-list-checkbox"></v-select>
-                            </v-col>
-                            <v-col cols="12" md="2" align-self="center">
-                                <v-text-field type="number" label="Quantité" :disabled="productsConfigurator[i].saved" v-model="productsConfigurator[i].quantite" color="success darken-2" prepend-inner-icon="mdi-numeric" clearable></v-text-field>
-                            </v-col>
-                            <v-col cols="12" md="2" align-self="center">
-                                <v-tooltip top>
-                                    <template v-slot:activator="{ on, attrs }">
-                                        <v-switch @change="saveProduct(productsConfigurator[i], i)" color="success darken-2" v-model="productsConfigurator[i].saved" dense label="Sauvegarder produit"></v-switch>
-                                    </template>
-                                    <span>Sauvegarder pour la liste d'articles</span>
-                                </v-tooltip>
-                            </v-col>
-                        </v-row>
-                        <v-expansion-panels focusable class="mt-2">
-                            <v-expansion-panel v-for="(composant, j) in product.composants" :key="j">
-                                <v-expansion-panel-header class="indigo--text">Composants</v-expansion-panel-header>
-                                <v-expansion-panel-content>
-                                    <v-row class="mt-0">
-                                        <v-col cols="12" md="2">
-                                            <v-img v-if="composant.imgLink !== null" :src="composant.imgLink" height="80" width="120" aspect-ratio="1" class="grey lighten-2">
-                                                <template v-slot:placeholder>
-                                                    <v-row class="fill-height ma-0" align="center" justify="center"> </v-row>
-                                                </template>
-                                            </v-img>
-                                            <v-img v-else height="80" width="120" :src="require('@/assets/ecommerce_logo.png')" aspect-ratio="1" class="grey lighten-2">
-                                                <template v-slot:placeholder>
-                                                    <v-row class="fill-height ma-0" align="center" justify="center"> </v-row>
-                                                </template>
-                                            </v-img>
-                                        </v-col>
-                                        <v-col cols="12" md="2" align-self="center">
-                                            <span v-if="productsConfigurator[i].listeComposantsSelected[j].saved" class="indigo--text">{{ composant.nom }}</span>
-                                            <span v-else>{{ composant.nom }}</span>
-                                        </v-col>
-                                        <v-col cols="12" md="2" align-self="center">
-                                            <v-select label="Couleur" :disabled="productsConfigurator[i].listeComposantsSelected[j].saved" v-model="productsConfigurator[i].listeComposantsSelected[j].couleur" small-chips chips deletable-chips disable-lookup :items="composant.couleurs" color="indigo darken-2" prepend-inner-icon="mdi-format-list-checkbox"></v-select>
-                                        </v-col>
-                                        <v-col cols="12" md="2" align-self="center">
-                                            <v-select label="Matière" :disabled="productsConfigurator[i].listeComposantsSelected[j].saved" v-model="productsConfigurator[i].listeComposantsSelected[j].matiere" small-chips chips deletable-chips disable-lookup :items="composant.matieres" color="indigo darken-2" prepend-inner-icon="mdi-format-list-checkbox"></v-select>
-                                        </v-col>
-                                        <v-col cols="12" md="2" align-self="center">
-                                            <v-text-field type="number" label="Quantité" :disabled="productsConfigurator[i].listeComposantsSelected[j].saved" v-model="productsConfigurator[i].listeComposantsSelected[j].quantite" color="indigo darken-2" prepend-inner-icon="mdi-numeric" clearable></v-text-field>
-                                        </v-col>
-                                        <v-col cols="12" md="2" align-self="center">
-                                            <v-tooltip top>
-                                                <template v-slot:activator="{ on, attrs }">
-                                                    <v-switch @change="saveComposant(productsConfigurator[i].listeComposantsSelected[j], i, j)" color="indigo darken-2" v-model="productsConfigurator[i].listeComposantsSelected[j].saved" dense label="Sauvegarder composant"></v-switch>
-                                                </template>
-                                                <span>Sauvegarder du composant pour le produit</span>
-                                            </v-tooltip>
-                                        </v-col>
-                                    </v-row>
-                                </v-expansion-panel-content>
-                            </v-expansion-panel>
-                        </v-expansion-panels>
-                        <v-divider class="my-5"></v-divider>
-                    </v-col>
-                </v-row>
+                <sequential-entrance delay="250" fromRight>
+                    <v-row v-for="(product, i) in products" :key="i" class="mt-0">
+                        <v-col cols="12" md="12">
+                            <v-row class="mt-0">
+                                <v-col cols="12" md="2">
+                                    <v-img v-if="product.imgLink !== null" :src="product.imgLink" height="80" width="120" aspect-ratio="1" class="grey lighten-2">
+                                        <template v-slot:placeholder>
+                                            <v-row class="fill-height ma-0" align="center" justify="center"> </v-row>
+                                        </template>
+                                    </v-img>
+                                    <v-img v-else height="80" width="120" :src="require('@/assets/ecommerce_logo.png')" aspect-ratio="1" class="grey lighten-2">
+                                        <template v-slot:placeholder>
+                                            <v-row class="fill-height ma-0" align="center" justify="center"> </v-row>
+                                        </template>
+                                    </v-img>
+                                </v-col>
+                                <v-col cols="12" md="2" align-self="center">
+                                    <span v-if="productsConfigurator[i].saved" class="success--text">{{ product.nom }}</span>
+                                    <span v-else>{{ product.nom }}</span>
+                                </v-col>
+                                <v-col cols="12" md="2" align-self="center">
+                                    <v-select label="Couleur" :disabled="productsConfigurator[i].saved" v-model="productsConfigurator[i].couleur" small-chips chips deletable-chips disable-lookup :items="product.couleurs" color="success darken-2" prepend-inner-icon="mdi-format-list-checkbox"></v-select>
+                                </v-col>
+                                <v-col cols="12" md="2" align-self="center">
+                                    <v-select label="Matière" :disabled="productsConfigurator[i].saved" v-model="productsConfigurator[i].matiere" small-chips chips deletable-chips disable-lookup :items="product.matieres" color="success darken-2" prepend-inner-icon="mdi-format-list-checkbox"></v-select>
+                                </v-col>
+                                <v-col cols="12" md="2" align-self="center">
+                                    <v-text-field type="number" label="Quantité" :disabled="productsConfigurator[i].saved" v-model="productsConfigurator[i].quantite" color="success darken-2" prepend-inner-icon="mdi-numeric" clearable></v-text-field>
+                                </v-col>
+                                <v-col cols="12" md="2" align-self="center">
+                                    <v-tooltip top>
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <v-switch @change="saveProduct(productsConfigurator[i], i)" color="success darken-2" v-model="productsConfigurator[i].saved" dense label="Sauvegarder produit"></v-switch>
+                                        </template>
+                                        <span>Sauvegarder pour la liste d'articles</span>
+                                    </v-tooltip>
+                                </v-col>
+                            </v-row>
+                            <v-expansion-panels focusable class="mt-2">
+                                <v-expansion-panel v-for="(composant, j) in product.composants" :key="j">
+                                    <v-expansion-panel-header class="indigo--text">Composants</v-expansion-panel-header>
+                                    <v-expansion-panel-content>
+                                        <v-row class="mt-0">
+                                            <v-col cols="12" md="2">
+                                                <v-img v-if="composant.imgLink !== null" :src="composant.imgLink" height="80" width="120" aspect-ratio="1" class="grey lighten-2">
+                                                    <template v-slot:placeholder>
+                                                        <v-row class="fill-height ma-0" align="center" justify="center"> </v-row>
+                                                    </template>
+                                                </v-img>
+                                                <v-img v-else height="80" width="120" :src="require('@/assets/ecommerce_logo.png')" aspect-ratio="1" class="grey lighten-2">
+                                                    <template v-slot:placeholder>
+                                                        <v-row class="fill-height ma-0" align="center" justify="center"> </v-row>
+                                                    </template>
+                                                </v-img>
+                                            </v-col>
+                                            <v-col cols="12" md="2" align-self="center">
+                                                <span v-if="productsConfigurator[i].listeComposantsSelected[j].saved" class="indigo--text">{{ composant.nom }}</span>
+                                                <span v-else>{{ composant.nom }}</span>
+                                            </v-col>
+                                            <v-col cols="12" md="2" align-self="center">
+                                                <v-select label="Couleur" :disabled="productsConfigurator[i].listeComposantsSelected[j].saved" v-model="productsConfigurator[i].listeComposantsSelected[j].couleur" small-chips chips deletable-chips disable-lookup :items="composant.couleurs" color="indigo darken-2" prepend-inner-icon="mdi-format-list-checkbox"></v-select>
+                                            </v-col>
+                                            <v-col cols="12" md="2" align-self="center">
+                                                <v-select label="Matière" :disabled="productsConfigurator[i].listeComposantsSelected[j].saved" v-model="productsConfigurator[i].listeComposantsSelected[j].matiere" small-chips chips deletable-chips disable-lookup :items="composant.matieres" color="indigo darken-2" prepend-inner-icon="mdi-format-list-checkbox"></v-select>
+                                            </v-col>
+                                            <v-col cols="12" md="2" align-self="center">
+                                                <v-text-field type="number" label="Quantité" :disabled="productsConfigurator[i].listeComposantsSelected[j].saved" v-model="productsConfigurator[i].listeComposantsSelected[j].quantite" color="indigo darken-2" prepend-inner-icon="mdi-numeric" clearable></v-text-field>
+                                            </v-col>
+                                            <v-col cols="12" md="2" align-self="center">
+                                                <v-tooltip top>
+                                                    <template v-slot:activator="{ on, attrs }">
+                                                        <v-switch @change="saveComposant(productsConfigurator[i].listeComposantsSelected[j], i, j)" color="indigo darken-2" v-model="productsConfigurator[i].listeComposantsSelected[j].saved" dense label="Sauvegarder composant"></v-switch>
+                                                    </template>
+                                                    <span>Sauvegarder du composant pour le produit</span>
+                                                </v-tooltip>
+                                            </v-col>
+                                        </v-row>
+                                    </v-expansion-panel-content>
+                                </v-expansion-panel>
+                            </v-expansion-panels>
+                            <v-divider class="my-5"></v-divider>
+                        </v-col>
+                    </v-row>
+                </sequential-entrance>
             </div>
         </v-card>
     </v-dialog>

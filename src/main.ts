@@ -13,6 +13,8 @@ import moment from 'vue-moment'
 import io from 'socket.io-client'
 import VueSocketIO from 'vue-socket.io'
 import VuePageTransition from 'vue-page-transition';
+import SequentialEntrance from 'vue-sequential-entrance'
+import 'vue-sequential-entrance/vue-sequential-entrance.css'
 
 Vue.config.productionTip = false;
 
@@ -27,6 +29,7 @@ Vue.config.productionTip = false;
 }));*/
 //Vue.prototype.$socket = io(store.state.baseUrl);
 
+Vue.use(SequentialEntrance);
 Vue.use(qs.stringify); // querystringify
 Vue.use(moment);
 Vue.use(VuePageTransition);
