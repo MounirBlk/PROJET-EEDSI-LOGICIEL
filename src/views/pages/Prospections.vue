@@ -785,7 +785,7 @@ export default Vue.extend({
     created() {},
     beforeMount() {
         this.socketServer()
-        if(this.valueTraitement !== 0) this.isProgress = true;
+        if (this.valueTraitement !== 0) this.isProgress = true;
     },
     async mounted() {
         await this.getProspectionsData();
@@ -798,7 +798,7 @@ export default Vue.extend({
             });
             this.socket.on('traitementStatut', (isTraitement: boolean) => {
                 this.isProgress = isTraitement;
-                if(this.valueTraitement === 0 && this.isProgress) this.successMessage('Un traitement a été lancé !')
+                if (this.valueTraitement === 0 && this.isProgress) this.successMessage('Un traitement a été lancé !')
             });
         },
         getProspectionsData: async function (): Promise < void > {
@@ -907,11 +907,9 @@ export default Vue.extend({
                 "devis": devis,
                 "optionsDoc": this.optionsDoc
             }
-
             const source = axios.CancelToken.source();
             const timeout = setTimeout(() => {
-                source.cancel();
-                // Timeout Logic
+                source.cancel(); // Timeout Logic
             }, 1000 * 60 * 60);
             const configAxios: AxiosRequestConfig = {
                 headers: {
@@ -923,6 +921,7 @@ export default Vue.extend({
             }
             this.isProgress = true;
             //this.socket.emit('startTraitement')
+            this.socket.emit('newMessage', 'Un traitement a été lancé !'); // envoie msg vers socket node
             axiosApi
                 .post("/devis/add", payload, configAxios)
                 .then(async (response: AxiosResponse) => {

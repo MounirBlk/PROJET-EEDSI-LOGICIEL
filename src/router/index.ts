@@ -41,21 +41,21 @@ const routes: Array<RouteConfig> = [{
         requiresAuth: true
       }
     },{
-      name: 'Utilisateurs',
+      name: 'Commerciaux',
       path: '/utilisateurs',
       component: () => import ('@/views/pages/Utilisateurs.vue'),
       meta: {
         requiresAuth: true
       }
     },{
-      name: 'Informations-Utilisateur',
+      name: 'Informations-Commercial',
       path: '/utilisateurs/utilisateur',
       component: () => import ('@/views/pages/InfosUtilisateur.vue'),
       meta: {
         requiresAuth: true
       }
     },{
-      name: 'Calendar',
+      name: 'Calendrier',
       path: '/calendar',
       component: () => import ('@/views/pages/Calendar.vue'),
       meta: {
