@@ -248,7 +248,7 @@ export default Vue.extend({
             }, 1000);
         } else {
             return this.$router.push({
-                name: "Utilisateurs"
+                name: "Commerciaux"
             });
         }
     },
@@ -269,7 +269,7 @@ export default Vue.extend({
                     }
                     setTimeout(() => {
                         this.$router.push({
-                            name: "Utilisateurs"
+                            name: "Commerciaux"
                         });
                     }, 1000);
                 })

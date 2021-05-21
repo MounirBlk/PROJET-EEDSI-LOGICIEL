@@ -4,7 +4,7 @@
         <v-card class="px-6" outlined>
             <v-form ref="form" v-model="rules.valid" lazy-validation>
                 <v-card-title class="info--text">
-                    Ajout Utilisateur
+                    Ajout Commercial
                     <v-icon aria-label="Close" class="ml-auto" @click="isDialogNewUtilisateur = false">mdi-close</v-icon>
                 </v-card-title>
                 <v-col cols="12">
@@ -44,7 +44,7 @@
                         </v-row>
                     </div>
                     <v-col cols="12">
-                        <v-switch class="ml-n3 my-n2" v-model="user.isAdmin" label="Administrateur ?" :color="user.isAdmin ? 'info' : 'error'"></v-switch>
+                        <v-switch class="ml-n3 my-n2" v-model="user.isAdmin" label="Administrateur" :color="user.isAdmin ? 'info' : 'error'"></v-switch>
                     </v-col>
                     <small>*Veuillez remplir les champs</small>
                     <v-col cols="12" class="text-right">
@@ -89,14 +89,14 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
-    <base-material-card color="info" icon="mdi-account-group-outline" max-width="100%" width="auto" inline class="px-5 py-3 mx-auto">
+    <base-material-card color="info" icon="mdi-account-tie" max-width="100%" width="auto" inline class="px-5 py-3 mx-auto">
         <template v-slot:after-heading>
-            <div class="display-1 font-weight-light">Utilisateurs</div>
+            <div class="display-1 font-weight-light">Commerciaux/Administrateurs</div>
         </template>
 
         <v-row class="mt-8 mr-1">
             <v-btn color="info" @click="isDialogNewUtilisateur = true" class="ml-3" :disabled="!isAdmin">
-                <v-icon left>mdi-account-plus-outline</v-icon>Ajouter Utilisateur
+                <v-icon left>mdi-account-plus-outline</v-icon>Ajouter Commercial
             </v-btn>
             <v-btn color="info" icon @click="getUtilisateursData" class="ml-3">
                 <v-icon large>mdi-refresh</v-icon>
@@ -324,7 +324,7 @@ export default Vue.extend({
         },
         PageInfosUtilisateur: function (infosUtilisateur: Record < string, any > , isEdit: boolean) {
             this.$router.push({
-                name: "Informations-Utilisateur",
+                name: "Informations-Commercial",
                 params: {
                     isEdit: isEdit,
                     infosUtilisateur: infosUtilisateur
