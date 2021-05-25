@@ -30,7 +30,7 @@
         </v-card>
     </v-dialog>
     <v-row justify="center">
-        <v-col cols="10">
+        <v-col cols="12">
             <v-slide-y-transition appear>
                 <base-material-card :color="$vuetify.theme.dark ? 'indigo' : 'primary'" max-width="100%" width="600" class="px-5 mt-10 py-3 mx-auto">
                     <template v-slot:heading>
@@ -44,16 +44,16 @@
                     <v-card-text class="text-center">
                         <v-form ref="form">
                             <v-col cols="12" class="py-2">
-                                <v-text-field :color="$vuetify.theme.dark ? 'indigo' : 'primary'" @keyup.enter="connexion(email, password)" label="Email" v-model="email" prepend-icon="mdi-face" clearable />
+                                <v-text-field :color="$vuetify.theme.dark ? 'indigo' : 'primary'" @keyup.enter="connexion(login.email, login.password)" label="Email" v-model="login.email" prepend-icon="mdi-face" clearable />
                             </v-col>
                             <v-col cols="12" class="py-2">
-                                <v-text-field :color="$vuetify.theme.dark ? 'indigo' : 'primary'" @keyup.enter="connexion(email, password)" label="Password" v-model="password" prepend-icon="mdi-lock-outline" :type="showPassword ? 'text' : 'password'" @click:append="showPassword = !showPassword" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" clearable />
+                                <v-text-field :color="$vuetify.theme.dark ? 'indigo' : 'primary'" @keyup.enter="connexion(login.email, login.password)" label="Password" v-model="login.password" prepend-icon="mdi-lock-outline" :type="showPassword ? 'text' : 'password'" @click:append="showPassword = !showPassword" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" clearable />
                             </v-col>
                             <v-col cols="12" class="pt-2 mb-2">
                                 <span @click="isDialogForgotPassword = true" style="cursor: pointer">Mot de passe oublié ?</span>
                             </v-col>
-                            <v-badge bordered color="indigo" icon="mdi-lock-open-outline" overlap>
-                                <v-btn :color="$vuetify.theme.dark ? 'indigo' : 'primary'" @click="connexion(email, password)">
+                            <v-badge bordered :color="isActive ? 'indigo' : 'grey'" icon="mdi-lock-open-outline" overlap>
+                                <v-btn :disabled="!isActive" :color="$vuetify.theme.dark ? 'indigo' : 'primary'" @click="connexion(login.email, login.password)">
                                     <v-icon :color="!$vuetify.theme.dark ? 'black' : 'white'" left>mdi-check-circle-outline</v-icon>
                                     <span :class="!$vuetify.theme.dark ? 'black--text' : 'white--text'">Connexion</span>
                                 </v-btn>
@@ -92,6 +92,7 @@ import {
     AxiosResponse
 } from 'axios';
 import Gestion from "../../mixins/Gestion"
+import lodash from "lodash"
 
 export default Vue.extend({
     name: 'Login',
@@ -100,8 +101,11 @@ export default Vue.extend({
     mixins: [Gestion],
     data: (): any => ({
         isDialogForgotPassword: false as boolean,
-        email: null as string | null,
-        password: null as string | null,
+        login: {
+            email: '',
+            password: '',
+        },
+        isActive: false as boolean,
         email_reset: '',
     }),
     created() {},
@@ -110,20 +114,32 @@ export default Vue.extend({
         bus.$emit("connected", false);
         this.isOverlay = false;
     },
+    watch: {
+        /*login: {
+            handler(val: any) {
+                this.isActive = true
+            },
+            deep: true
+        }*/
+        'login.email': function (val) {
+            this.isActive = val !== null && val !== "";
+        }
+    },
+    computed: {},
     beforeDestroy() {
         bus.$emit("connected", true);
     },
     methods: {
-        connexion: function (login: string, password: string): void {
+        connexion: function (email: string, password: string): void {
             //bus.$emit("connected", true);
-            if (login == null || login == "")
+            if (email == null || email == "")
                 return this.errorMessage("Identifiant vide !");
             if (password == null || password == "")
                 return this.errorMessage("Mot de passe vide !");
 
             this.isOverlay = true;
             const payload = {
-                email: login,
+                email: email,
                 password: password
             };
             axiosApi

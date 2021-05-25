@@ -29,10 +29,10 @@ Vue.config.productionTip = false;
 }));*/
 //Vue.prototype.$socket = io(store.state.baseUrl);
 
-Vue.use(SequentialEntrance);
 Vue.use(qs.stringify); // querystringify
 Vue.use(moment);
 Vue.use(VuePageTransition);
+Vue.use(SequentialEntrance);
 
 export const bus = new Vue();
 
