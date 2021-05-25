@@ -554,11 +554,13 @@
                         <span>Options document</span>
                     </v-tooltip>
                     <v-switch color="pink darken-2" :disabled="isProgress" class="mr-5" v-model="isRandomArticles" dense label="Articles aléatoire"></v-switch>
-                    <v-badge class="my-3 ml-3 mr-5" v-if="!isRandomArticles" color="indigo" overlap :content="articles.length === 0 ? '0' : articles.length">
-                        <v-btn :disabled="isProgress" color="pink darken-2" @click="isDialogConfigurator = true" text outlined>
-                            <v-icon left>mdi-cog-transfer-outline</v-icon>Configurateur
-                        </v-btn>
-                    </v-badge>
+                    <v-fade-transition>
+                        <v-badge class="my-3 ml-3 mr-5" v-if="!isRandomArticles" color="indigo" overlap :content="articles.length === 0 ? '0' : articles.length">
+                            <v-btn :disabled="isProgress" color="pink darken-2" @click="isDialogConfigurator = true" text outlined>
+                                <v-icon left>mdi-cog-transfer-outline</v-icon>Configurateur
+                            </v-btn>
+                        </v-badge>
+                    </v-fade-transition>
                     <v-tooltip top>
                         <template v-slot:activator="{ on, attrs }">
                             <v-badge class="my-3" color="indigo" dot>
