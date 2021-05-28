@@ -32,3 +32,6 @@ pnpm-debug.log*
 
 chromedriver.log
 /tests/e2e/logs.txt
+
+#android
+/android
