@@ -5,15 +5,15 @@
             <base-material-card color="indigo">
                 <template v-slot:heading>
                     <div v-if="$route.params.isEdit === false">
-                        <div class="display-1 white--text">
+                        <div class="text-h5 white--text">
                             <span v-if="client.role === 'Administrateur'">Administrateur</span>
                             <span v-else>Client</span><br />
                         </div>
                         Dernière connexion : {{ client.lastLogin | moment("YYYY-MM-DD HH:mm") }}
                     </div>
                     <div v-else>
-                        <div class="display-2 white--text mb-4">
-                            <v-icon large>mdi-account-edit-outline</v-icon>Modification client
+                        <div class="text-h5 white--text mb-4">
+                            <v-icon large left>mdi-account-edit-outline</v-icon>Modification client
                         </div>
                         <div class="subtitle-2 white--text">
                             <span>{{ client.email }}</span>
@@ -54,7 +54,7 @@
                                 </tbody>
                             </template>
                         </v-simple-table>
-                        <v-row>
+                        <v-row class="mt-2">
                             <v-col cols="12" class="text-left">
                                 <v-btn class="mr-1" outlined color="error" text to="/clients">
                                     <v-icon left>mdi-close-circle-outline</v-icon>Retour
@@ -107,17 +107,18 @@
                                         </v-row>
                                     </div>
                                     <v-row>
-                                        <v-col cols="12" md="12">
-                                            <v-btn @click="changePassword = !changePassword" color="secondary" text outlined small>
-                                                <v-icon left>mdi-cog-outline</v-icon>Modifier le password
-                                            </v-btn>
+                                        <v-col v-if="changePassword">
+                                            <b class="text-h6 pink--text">Le champ password est disponible</b>
                                         </v-col>
                                     </v-row>
                                     <v-col cols="12" class="text-right">
-                                        <v-btn class="mr-1" outlined color="error" text to="/clients">
+                                        <v-btn @click="changePassword = !changePassword" class="mr-1" color="secondary" text outlined small>
+                                            <v-icon left>mdi-cog-outline</v-icon>Modifier le password
+                                        </v-btn>
+                                        <v-btn class="mr-1" outlined color="error" text to="/clients" small>
                                             <v-icon left>mdi-close-circle-outline</v-icon>Retour
                                         </v-btn>
-                                        <v-btn outlined color="success" text @click="modificationProfile">
+                                        <v-btn outlined color="success" text @click="modificationProfil" small>
                                             <v-icon left>mdi-content-save-outline</v-icon>Sauvegarder
                                         </v-btn>
                                     </v-col>
@@ -131,7 +132,7 @@
         <v-col cols="12" md="4">
             <v-skeleton-loader v-if="isFirstload" :loading="isLoading" type="table"></v-skeleton-loader>
             <div v-else>
-                <base-material-card color="indigo" class="v-card-profile">
+                <base-material-card color="indigo" icon="mdi-clipboard-account" max-width="100%" width="auto" inline class="px-5 py-3 mx-auto">
                     <v-row v-if="$route.params.isEdit === false">
                         <v-col cols="12">
                             <h4 class="display-1 font-weight-light mb-2 text-md-center indigo--text">{{ client.firstname }} {{ client.lastname }}</h4>
@@ -238,7 +239,7 @@ export default Vue.extend({
         }
     },
     methods: {
-        modificationProfile: function () {
+        modificationProfil: function () {
             if (!this.$refs.form.validate() && (!this.$refs.form.validate() && this.changePassword))
                 return this.errorMessage("Veuillez vérifier les champs !");
 

@@ -858,15 +858,11 @@ export default Vue.extend({
             });
         },
         generateDevis: async function (prospectsSelected: any[] = []) {
-            //this.isLoading = true;
-            //this.isFirstLoad = true;
             const products: any[] = this.shuffle(this.products.filter((product: any) => product.archive === false));
             let devis: any[] = [];
             prospectsSelected = prospectsSelected.filter((p: any) => p.disabled === false);
             prospectsSelected = this.optionsDoc.isCheckedProspect ? prospectsSelected.filter((pp: any) => pp.checked === true) : prospectsSelected
             if (prospectsSelected.length === 0 && this.optionsDoc.isCheckedProspect) {
-                //this.isLoading = false;
-                //this.isFirstLoad = false;
                 return this.errorMessage("Aucun prospect vérifié disponible");
             }
             if (this.isRandomArticles) {
@@ -878,8 +874,6 @@ export default Vue.extend({
                 });
             } else {
                 if (this.articles.length === 0) {
-                    //this.isLoading = false;
-                    //this.isFirstLoad = false;
                     return this.errorMessage("Veuillez saisir l'option articles aléatoire ou sauvegarder la configuration des produits");
                 } else {
                     prospectsSelected.forEach((prospect: any) => {
@@ -893,16 +887,12 @@ export default Vue.extend({
             const regexEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
             if (this.optionsDoc.isUser) {
                 if (this.optionsDoc.emailUser.match(regexEmail) == null) {
-                    //this.isLoading = false;
-                    //this.isFirstLoad = false;
                     return this.errorMessage('L\'email du destinataire suplémentaire n\'est pas au bon format')
                 }
             }
             if (this.optionsDoc.isAdminCommercial) {
                 for (let i = 0; i < this.optionsDoc.emailAdminCommercial.length; i++) {
                     if (this.optionsDoc.emailAdminCommercial[i].match(regexEmail) == null) {
-                        //this.isLoading = false;
-                        //this.isFirstLoad = false;
                         return this.errorMessage('La sélection d\'email n\'est pas au bon format')
                     }
                 }
@@ -951,8 +941,6 @@ export default Vue.extend({
                     clearTimeout(timeout);
                     this.optionsDoc.isDownload ? this.errorMessage('Erreur sur les traitements !') : this.catchAxios(error)
                     setTimeout(() => {
-                        //this.isLoading = false;
-                        //this.isFirstLoad = false;
                         this.isProgress = false;
                     }, 1000);
                 });

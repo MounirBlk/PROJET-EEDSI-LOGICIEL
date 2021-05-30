@@ -117,20 +117,18 @@
                                         </v-row>
                                     </div>
                                     <v-row>
-                                        <v-col cols="12" md="12">
-                                            <v-btn @click="changePassword = !changePassword" :color="!changePassword ? 'pink' : 'orange'" text outlined small>
-                                                <v-icon left>mdi-cog-outline</v-icon>Modifier le password
-                                            </v-btn>
-                                        </v-col>
                                         <v-col v-if="changePassword">
                                             <b class="text-h6 pink--text">Le champ password est disponible</b>
                                         </v-col>
                                     </v-row>
                                     <v-col cols="12" class="text-right">
-                                        <v-btn class="mr-1" outlined color="error" text to="/prospections">
+                                        <v-btn @click="changePassword = !changePassword" class="mr-1" color="secondary" text outlined small>
+                                            <v-icon left>mdi-cog-outline</v-icon>Modifier le password
+                                        </v-btn>
+                                        <v-btn class="mr-1" outlined color="error" text to="/prospections" small>
                                             <v-icon left>mdi-close-circle-outline</v-icon>Retour
                                         </v-btn>
-                                        <v-btn outlined color="success" text @click="modificationProfile">
+                                        <v-btn outlined color="success" text @click="modificationProfil" small>
                                             <v-icon left>mdi-content-save-outline</v-icon>Sauvegarder
                                         </v-btn>
                                     </v-col>
@@ -291,7 +289,7 @@ export default Vue.extend({
                     }, 1000);
                 });
         },
-        modificationProfile: async function () {
+        modificationProfil: async function () {
             if (!this.$refs.form.validate() && (!this.$refs.form.validate() && this.changePassword))
                 return this.errorMessage("Veuillez vérifier les champs !");
 
