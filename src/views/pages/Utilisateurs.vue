@@ -63,7 +63,7 @@
             </v-card-title>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn @click="isDialogDeleteUtilisateur = false" class="mx-2" icon outlined  color="red" dark>
+                <v-btn @click="isDialogDeleteUtilisateur = false" class="mx-2" icon outlined color="red" dark>
                     <v-icon dark>mdi-close</v-icon>
                 </v-btn>
                 <v-btn @click="deleteUtilisateur" class="mx-2" icon outlined color="green darken-1">
@@ -80,7 +80,7 @@
             </v-card-title>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn @click="isDialogDisableUtilisateur = false" class="mx-2" icon outlined  color="red" dark>
+                <v-btn @click="isDialogDisableUtilisateur = false" class="mx-2" icon outlined color="red" dark>
                     <v-icon dark>mdi-close</v-icon>
                 </v-btn>
                 <v-btn @click="disableUtilisateur" class="mx-2" icon outlined color="green darken-1">
@@ -91,9 +91,8 @@
     </v-dialog>
     <base-material-card color="info" icon="mdi-account-tie" max-width="100%" width="auto" inline class="px-5 py-3 mx-auto">
         <template v-slot:after-heading>
-            <div class="display-1 font-weight-light">Commerciaux/Administrateurs</div>
+            <div class="display-1 font-weight-light">Commerciaux</div>
         </template>
-
         <v-row class="mt-8 mr-1">
             <v-btn color="info" @click="isDialogNewUtilisateur = true" class="ml-3" :disabled="!isAdmin">
                 <v-icon left>mdi-account-plus-outline</v-icon>Ajouter Commercial
@@ -280,21 +279,21 @@ export default Vue.extend({
         deleteUtilisateur: async function (): Promise < void > {
             this.isDialogDeleteUtilisateur = false;
             axiosApi
-                .delete("/user/delete/" + this.utilisateurToDelete._id)
-                .then((response) => {
-                    console.log(response.data.message)
-                    const utilisateurFirstname = this.utilisateurToDelete.firstname;
-                    const utilisateurLastname = this.utilisateurToDelete.lastname;
-                    Object.assign(this.$data, this.$options.data()); //reset data
-                    //this.$refs.form.reset();
-                    this.successMessage(`L'utilisateur ${utilisateurFirstname} ${utilisateurLastname} a été supprimé avec succès`);
-                    setTimeout(() => {
-                        this.getUtilisateursData();
-                    }, 1000);
-                })
-                .catch((error) => {
-                    this.catchAxios(error)
-                });
+            .delete("/user/delete/" + this.utilisateurToDelete._id)
+            .then((response) => {
+                console.log(response.data.message)
+                const utilisateurFirstname = this.utilisateurToDelete.firstname;
+                const utilisateurLastname = this.utilisateurToDelete.lastname;
+                Object.assign(this.$data, this.$options.data()); //reset data
+                //this.$refs.form.reset();
+                this.successMessage(`L'utilisateur ${utilisateurFirstname} ${utilisateurLastname} a été supprimé avec succès`);
+                setTimeout(() => {
+                    this.getUtilisateursData();
+                }, 1000);
+            })
+            .catch((error) => {
+                this.catchAxios(error)
+            });
         },
         disableUtilisateur: async function (): Promise < void > {
             this.isDialogDeleteUtilisateur = false;

@@ -5,15 +5,15 @@
             <base-material-card color="info">
                 <template v-slot:heading>
                     <div v-if="$route.params.isEdit === false">
-                        <div class="display-1 white--text">
+                        <div class="text-h5 white--text">
                             <span v-if="user.role === 'Administrateur'">Administrateur</span>
                             <span v-else>Commercial</span><br />
                         </div>
                         Dernière connexion : {{ user.lastLogin | moment("YYYY-MM-DD HH:mm") }}
                     </div>
                     <div v-else>
-                        <div class="display-2 white--text mb-4">
-                            <v-icon large>mdi-account-edit-outline</v-icon>Modification utilisateur
+                        <div class="text-h5 white--text mb-4">
+                            <v-icon large left>mdi-account-edit-outline</v-icon>Modification utilisateur
                         </div>
                         <div class="subtitle-2 white--text">
                             <span>{{ user.email }}</span>
@@ -59,7 +59,7 @@
                                 </tbody>
                             </template>
                         </v-simple-table>
-                        <v-row>
+                        <v-row class="mt-2">
                             <v-col cols="12" class="text-left">
                                 <v-btn class="mr-1" outlined color="error" text to="/utilisateurs">
                                     <v-icon left>mdi-close-circle-outline</v-icon>Retour
@@ -112,20 +112,23 @@
                                         </v-row>
                                     </div>
                                     <v-row>
-                                        <v-col cols="12" md="8">
-                                            <v-switch class="my-n2" v-model="user.isAdmin" label="Super Admin ?" color="info"></v-switch>
+                                        <v-col cols="12" md="2">
+                                            <v-switch class="my-n2" v-model="user.isAdmin" label="Administrateur" color="info"></v-switch>
                                         </v-col>
-                                        <v-col cols="12" md="3">
-                                            <v-btn @click="changePassword = !changePassword" color="secondary" text outlined small>
-                                                <v-icon left>mdi-cog-outline</v-icon>Modifier le password
-                                            </v-btn>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col v-if="changePassword">
+                                            <b class="text-h6 pink--text">Le champ password est disponible</b>
                                         </v-col>
                                     </v-row>
                                     <v-col cols="12" class="text-right">
-                                        <v-btn class="mr-1" outlined color="error" text to="/utilisateurs">
+                                        <v-btn @click="changePassword = !changePassword" class="mr-1" color="secondary" text outlined small>
+                                            <v-icon left>mdi-cog-outline</v-icon>Modifier le password
+                                        </v-btn>
+                                        <v-btn class="mr-1" outlined color="error" text to="/utilisateurs" small>
                                             <v-icon left>mdi-close-circle-outline</v-icon>Retour
                                         </v-btn>
-                                        <v-btn outlined color="success" text @click="modificationProfile">
+                                        <v-btn outlined color="success" text @click="modificationProfil" small>
                                             <v-icon left>mdi-content-save-outline</v-icon>Sauvegarder
                                         </v-btn>
                                     </v-col>
@@ -228,12 +231,8 @@ export default Vue.extend({
     },
     computed: {},
     watch: {},
-    created() {
-        //console.log('created')
-    },
-    beforeMount() {
-        //console.log('beforeMount')
-    },
+    created() {},
+    beforeMount() {},
     mounted(): any {
         //modification du utilisateur choisi
         if (
@@ -253,13 +252,13 @@ export default Vue.extend({
         }
     },
     methods: {
-        modificationProfile: function () {
+        modificationProfil: function () {
             if (!this.$refs.form.validate() && (!this.$refs.form.validate() && this.changePassword))
                 return this.errorMessage("Veuillez vérifier les champs !");
 
             this.user.role = this.user.isAdmin === true ? 'Administrateur' : 'Commercial'
             axiosApi
-                .put("/user/update/" + this.user._id, qs.stringify(this.user),) //update du utilisateur
+                .put("/user/update/" + this.user._id, qs.stringify(this.user)) //update de l'utilisateur
                 .then((response: AxiosResponse) => {
                     if (response.data.error == false) {
                         this.$refs.form.reset();

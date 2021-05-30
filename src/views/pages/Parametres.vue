@@ -9,13 +9,15 @@
                 Modifier le mot de passe
                 <v-icon aria-label="Close" class="ml-auto" @click="clearPassword()">mdi-close</v-icon>
             </v-card-title>
-            <v-divider class="my-2" />
+            <v-divider class="mb-3 mt-n1" />
             <v-row>
-                <v-text-field color="purple" label="Mot de passe actuel" v-model="oldPasswordUser" prepend-inner-icon="mdi-lock-outline" clearable :type="showPassword ? 'text' : 'password'" @click:append="showPassword = !showPassword" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" />
-                <v-text-field color="purple" label="Nouveau mot de passe" v-model="passwordUser" prepend-inner-icon="mdi-lock-outline" clearable :type="showPassword ? 'text' : 'password'" @click:append="showPassword = !showPassword" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" />
                 <v-col cols="12" class="text-right">
-                    <v-btn class="mr-1" outlined color="error" text @click="clearPassword()">Annuler</v-btn>
-                    <v-btn outlined color="success" text @click="savePassword(oldPasswordUser, passwordUser)">Sauvegarder</v-btn>
+                    <v-form ref="form" v-model="rules.valid" lazy-validation>
+                        <v-text-field color="purple" label="Mot de passe actuel" v-model="oldPasswordUser" prepend-inner-icon="mdi-lock-outline" clearable :type="showPassword ? 'text' : 'password'" @click:append="showPassword = !showPassword" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" :rules="rules.passwordRules" required />
+                        <v-text-field color="purple" label="Nouveau mot de passe" v-model="passwordUser" prepend-inner-icon="mdi-lock-outline" clearable :type="showNewPassword ? 'text' : 'password'" @click:append="showNewPassword = !showNewPassword" :append-icon="showNewPassword ? 'mdi-eye' : 'mdi-eye-off'" :rules="rules.passwordRules" required />
+                        <v-btn class="mr-1" outlined color="error" text @click="clearPassword()">Annuler</v-btn>
+                        <v-btn outlined color="success" text @click="saveNewPassword(oldPasswordUser, passwordUser)">Sauvegarder</v-btn>
+                    </v-form>
                 </v-col>
             </v-row>
         </v-card>
@@ -68,12 +70,11 @@
                                 </div>
                             </v-col>
                             <v-row>
-                                <span v-if="isUpdateUser" class="red--text">
-                                    <li>
-                                        <u><strong>Note: N'oubliez pas d'enregistrer vos
-                                                modifications</strong></u>
-                                    </li>
-                                </span>
+                                <v-col cols="12">
+                                    <span v-if="isUpdateUser" class="red--text font-italic d-flex justify-end mr-3">
+                                        Note: N'oubliez pas d'enregistrer vos modifications
+                                    </span>
+                                </v-col>
                             </v-row>
                             <v-divider class="my-4" />
                             <v-row>
@@ -98,16 +99,14 @@
             </base-material-card>
         </v-col>
         <v-col cols="12" md="4">
-            <base-material-card color="purple" :avatar="user.avatar">
-                <template v-slot:heading>
-                    <div class="text-center">
-                        <h1 class="display-1 font-weight-bold">
-                            <v-icon large left>mdi-star</v-icon>{{ user.role }}
-                        </h1>
-                    </div>
+            <base-material-card color="purple" icon="mdi-account-tie-outline" max-width="100%" width="auto" inline class="px-5 py-3 mx-auto">
+                <template v-slot:after-heading>
+                    <span class="purple--text text-h5 font-weight-light">
+                        {{ user.role }}
+                    </span>
                 </template>
                 <v-card-text>
-                    <span class="display-1 mb-3">
+                    <span class="display-1 mb-3 font-weight-light">
                         {{ user.firstname }} {{ user.lastname }}
                     </span>
                     <p />
@@ -174,16 +173,13 @@ export default Vue.extend({
             isChangePasswordDialog: false,
             passwordUser: null,
             oldPasswordUser: null,
+            showNewPassword: false
         }
     },
     computed: {},
     watch: {},
-    created() {
-        //console.log('created')
-    },
-    beforeMount() {
-        //console.log('beforeMount')
-    },
+    created() {},
+    beforeMount() {},
     async mounted() {
         await this.getUserData();
     },
@@ -203,7 +199,6 @@ export default Vue.extend({
         },
         saveUpdate: async function () {
             this.isUpdateUser = false;
-
             axiosApi
                 .put("/user/update/" + this.user._id, qs.stringify(this.user)) //update de l'user
                 .then((response) => {
@@ -217,24 +212,21 @@ export default Vue.extend({
                     this.catchAxios(error)
                 });
         },
-        savePassword: async function (oldPasswordUser: string, passwordUser: string) {
+        saveNewPassword: async function (oldPasswordUser: string, passwordUser: string) {
             this.isChangePasswordDialog = false;
-
-            if (oldPasswordUser == null || oldPasswordUser == "")
-                return this.errorMessage("Mot de passe actuel vide !");
-            if (passwordUser == null || passwordUser == "")
-                return this.errorMessage("Nouveau mot de passe vide !");
-
+            if (!this.$refs.form.validate()) return this.errorMessage("Veuillez vérifier les champs !");
+            if (oldPasswordUser == null || oldPasswordUser == "") return this.errorMessage("Mot de passe actuel vide !");
+            if (passwordUser == null || passwordUser == "") return this.errorMessage("Nouveau mot de passe vide !");
             /*--------------------------------------------------- */
             const payload = {
                 oldPassword: oldPasswordUser,
                 newPassword: passwordUser,
             };
-            return this.errorMessage("IN PROGRESS !");
-            /*await axiosApi
-                .put("/userEditPass/" + this.user._id, qs.stringify(payload)) //edit password de l'user
+            axiosApi
+                .put("/user/password", qs.stringify(payload)) //edit password de l'user
                 .then((response) => {
                     Object.assign(this.$data, this.$options.data()); //reset data
+                    this.$refs.form.reset();
                     this.successMessage("Le mot de passe a bien été modifié !");
                     setTimeout(() => {
                         this.getUserData();
@@ -244,11 +236,12 @@ export default Vue.extend({
                     this.passwordUser = "";
                     this.oldPasswordUser = "";
                     this.catchAxios(error)
-                });*/
+                });
         },
         clearPassword: function () {
             this.isChangePasswordDialog = false;
             this.showPassword = false;
+            this.showNewPassword = false;
             this.passwordUser = "";
             this.oldPasswordUser = "";
             this.confirmPasswordUser = "";
