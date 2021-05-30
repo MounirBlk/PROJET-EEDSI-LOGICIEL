@@ -1,6 +1,7 @@
 {
     "name": "dashboard-ecommerce",
-    "version": "2.5.1",
+    "productName": "Dashboard EC",
+    "version": "2.5.2",
     "private": true,
     "description": "Dashboard e-commerce administrateurs/commerciaux",
     "author": "Mounir Ballouk",
