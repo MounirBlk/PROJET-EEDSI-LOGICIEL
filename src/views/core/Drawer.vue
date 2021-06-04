@@ -5,13 +5,13 @@
             <v-avatar color="teal" size="50">
                 <img alt="Avatar" :src="!$vuetify.theme.dark ? 'https://png.pngtree.com/element_our/20200610/ourlarge/pngtree-shopping-mall-logo-image_2235997.jpg' : require('@/assets/logo.jpg')">
             </v-avatar>
-            <strong class="ml-1">Dashboard E-Commerce </strong>
+            <span class="ml-2">Dashboard E-Commerce </span>
         </center>
     </sequential-entrance>
     <v-divider class="my-2"></v-divider>
     <v-list class="py-0" v-for="(item, index) in items" :key="index" v-if="item.disabled !== true">
         <sequential-entrance>
-            <v-list-item dense link :to="item.to" v-if="!item.group">
+            <v-list-item v-if="!item.group" dense link :to="item.to">
                 <v-list-item-action>
                     <v-icon v-if="!$vuetify.theme.dark" style="text-shadow: 0.1em 0.1em 0.1em white">{{ item.icon }}</v-icon>
                     <v-icon v-else>{{ item.icon }}</v-icon>

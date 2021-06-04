@@ -7,19 +7,21 @@
                     <v-list-item-avatar v-ripple :color="item.userInfos.role !== 'Administrateur' ? 'indigo' : 'orange'">
                         <span class="white--text">{{ item.userInfos.firstname.charAt(0).toUpperCase() }}{{ item.userInfos.lastname.charAt(0).toUpperCase() }}</span>
                     </v-list-item-avatar>
-                    <v-list-item-content class="mt-5">
-                        <v-card max-width="250" :color="item.userInfos.role !== 'Administrateur' ? 'rgba(63, 81, 181, .8)' : 'rgba(255, 152, 0, .8)'" v-ripple class="white--text py-1 px-2 mb-1">
-                            <v-divider class="mb-1" color="transparent"></v-divider>
-                            <v-list-item-title :class="item.userInfos.role !== 'Administrateur' ? 'grey--text subtitle-2 mb-1' : 'brown--text subtitle-2 mb-1'">
-                                <v-icon left small v-if="item.userInfos.role === 'Administrateur'">mdi-star</v-icon>
-                                <v-icon left small v-else>mdi-account</v-icon>{{ item.username }}
-                            </v-list-item-title>
-                            <!--<v-list-item-subtitle class="white--text subtitle-1">{{ item.message }}</v-list-item-subtitle>-->
-                            <span>{{ item.message }}</span>
-                            <v-divider class="mt-1" color="transparent"></v-divider>
-                        </v-card>
-                        <v-list-item-subtitle class="mx-2 caption grey--text">{{ item.createdAt | moment("YYYY/MM/DD HH:mm") }}</v-list-item-subtitle>
-                    </v-list-item-content>
+                    <v-hover v-slot="{ hover }">
+                        <v-list-item-content :style="hover ? 'filter: contrast(150%);' : ''" class="mt-5">
+                            <v-card max-width="250" :color="item.userInfos.role !== 'Administrateur' ? 'rgba(63, 81, 181, .8)' : 'rgba(255, 152, 0, .8)'" v-ripple class="white--text py-1 px-2 mb-1">
+                                <v-divider class="mb-1" color="transparent"></v-divider>
+                                <v-list-item-title :class="item.userInfos.role !== 'Administrateur' ? 'grey--text subtitle-2 mb-1' : 'brown--text subtitle-2 mb-1'">
+                                    <v-icon left small v-if="item.userInfos.role === 'Administrateur'">mdi-star</v-icon>
+                                    <v-icon left small v-else>mdi-account</v-icon>{{ item.username }}
+                                </v-list-item-title>
+                                <!--<v-list-item-subtitle class="white--text subtitle-1">{{ item.message }}</v-list-item-subtitle>-->
+                                <span>{{ item.message }}</span>
+                                <v-divider class="mt-1" color="transparent"></v-divider>
+                            </v-card>
+                            <v-list-item-subtitle class="mx-2 caption grey--text">{{ item.createdAt | moment("YYYY/MM/DD HH:mm") }}</v-list-item-subtitle>
+                        </v-list-item-content>
+                    </v-hover>
                 </v-list-item>
             </sequential-entrance>
         </v-col>
@@ -52,7 +54,7 @@ export default Vue.extend({
         return {
             msg: '',
             pageNumber: 1 as number,
-            size: 5 as number,
+            size: 4 as number,
         }
     },
     computed: {

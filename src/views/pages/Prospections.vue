@@ -45,10 +45,10 @@
                                     <v-text-field color="pink darken-2" disabled label="Siren" v-model="item.siren" prepend-inner-icon="mdi-numeric" clearable />
                                 </v-col>
                                 <v-col cols="12" md="4">
-                                    <v-text-field color="pink darken-2" :disabled="!isEditEntreprise" label="Nom" v-model="item.nom" prepend-inner-icon="mdi-face" clearable />
+                                    <v-text-field color="pink darken-2" :disabled="!isEditEntreprise" label="Nom" v-model="item.nom" prepend-inner-icon="mdi-alphabetical" clearable />
                                 </v-col>
                                 <v-col cols="12" md="5">
-                                    <v-text-field color="pink darken-2" :disabled="!isEditEntreprise" label="Adresse" v-model="item.adresse" prepend-inner-icon="mdi-face" clearable />
+                                    <v-text-field color="pink darken-2" :disabled="!isEditEntreprise" label="Adresse" v-model="item.adresse" prepend-inner-icon="mdi-alphabetical" clearable />
                                 </v-col>
                                 <v-col cols="12" md="4">
                                     <v-menu v-model="isDialogDateCreationOpen" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="290px" color="info">
@@ -73,9 +73,9 @@
                                 <v-col cols="12" md="4">
                                     <v-text-field color="pink darken-2" :disabled="!isEditEntreprise" label="Numéro TVA" v-model="item.numeroTvaIntra" prepend-inner-icon="mdi-numeric" clearable />
                                 </v-col>
-                                <v-col cols="12" class="d-flex justify-end" v-if="isEditEntreprise">
-                                    <v-btn color="success" @click="saveEditEntreprise(item)" outlined>
-                                        <v-icon color="success" left>mdi-content-save-outline</v-icon> Sauvegarder
+                                <v-col cols="12" class="d-flex justify-end pt-0" v-if="isEditEntreprise">
+                                    <v-btn color="success" small @click="saveEditEntreprise(item)" outlined>
+                                        <v-icon small color="success" left>mdi-content-save-outline</v-icon> Sauvegarder
                                     </v-btn>
                                 </v-col>
                             </v-row>
@@ -109,8 +109,8 @@
             <v-card-text>
                 <v-container>
                     <v-row no-gutters>
-                        <v-col cols="12" md="12">
-                            <v-badge v-if="isEditOptions" :value="isHoverCheckboxChecked" class="mr-10 mt-0" color="deep-purple accent-4" content="Seuls les prospects vérifié recevront un mail" right overlap transition="slide-x-transition">
+                        <v-col cols="12" md="12" class="mt-2">
+                            <v-badge v-if="isEditOptions" :value="isHoverCheckboxChecked" class="mr-10 mt-0 pa-0" color="deep-purple accent-4" content="Seuls les prospects vérifié recevront un mail" right overlap transition="slide-x-transition">
                                 <v-hover v-model="isHoverCheckboxChecked">
                                     <v-checkbox @change="activeProspectsSelected(optionsDoc.isCheckedProspect)" color="pink darken-2" v-model="optionsDoc.isCheckedProspect" :disabled="!isEditOptions" dense label="Checked prospect"></v-checkbox>
                                 </v-hover>
@@ -122,7 +122,7 @@
                             </div>
                         </v-col>
                         <v-col cols="12" md="12">
-                            <v-checkbox v-if="isEditOptions" color="pink darken-2" v-model="optionsDoc.isCgv" dense label="CGV"></v-checkbox>
+                            <v-checkbox v-if="isEditOptions" class="ma-0 pa-0" color="pink darken-2" v-model="optionsDoc.isCgv" dense label="CGV"></v-checkbox>
                             <div v-else class="mb-3">
                                 <v-icon left v-if="optionsDoc.isCgv" color="success">mdi-checkbox-marked-circle-outline</v-icon>
                                 <v-icon left v-if="!optionsDoc.isCgv" color="error">mdi-close-circle-outline</v-icon>
@@ -130,7 +130,7 @@
                             </div>
                         </v-col>
                         <v-col cols="12" md="5">
-                            <v-checkbox v-if="isEditOptions" color="pink darken-2" v-model="optionsDoc.isAdminCommercial" dense label="Admins/Commerciaux"></v-checkbox>
+                            <v-checkbox v-if="isEditOptions" class="ma-0 pa-0" color="pink darken-2" v-model="optionsDoc.isAdminCommercial" dense label="Admins/Commerciaux"></v-checkbox>
                             <div v-else class="mb-3">
                                 <v-icon left v-if="optionsDoc.isAdminCommercial" color="success">mdi-checkbox-marked-circle-outline</v-icon>
                                 <v-icon left v-if="!optionsDoc.isAdminCommercial" color="error">mdi-close-circle-outline</v-icon>
@@ -138,7 +138,7 @@
                             </div>
                         </v-col>
                         <v-col cols="12" md="7">
-                            <v-select v-if="isEditOptions && optionsDoc.isAdminCommercial" label="Sélectionner" small-chips chips counter item-text="email" item-value="email" deletable-chips disable-lookup multiple :items='administrateurs' color="pink darken-2" v-model="optionsDoc.emailAdminCommercial" prepend-icon="mdi-format-list-checkbox">
+                            <v-select v-if="isEditOptions && optionsDoc.isAdminCommercial" class="pa-0 ma-0" label="Sélectionner" small-chips chips counter item-text="email" item-value="email" deletable-chips disable-lookup multiple :items='administrateurs' color="pink darken-2" v-model="optionsDoc.emailAdminCommercial" prepend-icon="mdi-format-list-checkbox">
                                 <template v-slot:selection="{ item, index }">
                                     <v-chip dark small v-if="index === 0">
                                         <span>{{ item.email }}</span>
@@ -150,7 +150,7 @@
                             </v-select>
                         </v-col>
                         <v-col cols="12" md="5">
-                            <v-checkbox v-if="isEditOptions" color="pink darken-2" v-model="optionsDoc.isUser" dense label="Autre destinataire"></v-checkbox>
+                            <v-checkbox v-if="isEditOptions" class="ma-0 pa-0" color="pink darken-2" v-model="optionsDoc.isUser" dense label="Autre destinataire"></v-checkbox>
                             <div v-else class="mb-3">
                                 <v-icon left v-if="optionsDoc.isUser" color="success">mdi-checkbox-marked-circle-outline</v-icon>
                                 <v-icon left v-if="!optionsDoc.isUser" color="error">mdi-close-circle-outline</v-icon>
@@ -158,10 +158,10 @@
                             </div>
                         </v-col>
                         <v-col cols="12" md="7">
-                            <v-text-field v-if="isEditOptions && optionsDoc.isUser" color="pink darken-2" label="Email" v-model.trim="optionsDoc.emailUser" prepend-icon="mdi-face" clearable />
+                            <v-text-field v-if="isEditOptions && optionsDoc.isUser" class="pa-0 ma-0" color="pink darken-2" label="Email" v-model.trim="optionsDoc.emailUser" prepend-icon="mdi-email-plus-outline" clearable />
                         </v-col>
                         <v-col cols="12" md="12">
-                            <v-checkbox v-if="isEditOptions" color="pink darken-2" v-model="optionsDoc.isDownload" dense label="Téléchargement"></v-checkbox>
+                            <v-checkbox v-if="isEditOptions" class="ma-0 pa-0" color="pink darken-2" v-model="optionsDoc.isDownload" dense label="Téléchargement"></v-checkbox>
                             <div v-else class="mb-3">
                                 <v-icon left v-if="optionsDoc.isDownload" color="success">mdi-checkbox-marked-circle-outline</v-icon>
                                 <v-icon left v-if="!optionsDoc.isDownload" color="error">mdi-close-circle-outline</v-icon>
@@ -292,61 +292,59 @@
                     <v-icon aria-label="Close" class="ml-auto" @click="isDialogNewEntreprise = false">mdi-close</v-icon>
                 </v-card-title>
                 <v-col cols="12">
-                    <div class="text-center">
-                        <v-row v-if="!isSaisieEntData">
-                            <v-col cols="12" md="8">
-                                <v-text-field color="pink" label="Siret*" v-model="entreprise.siret" prepend-inner-icon="mdi-numeric" clearable :rules="rules.numericRules" required />
-                            </v-col>
-                            <v-col cols="12" md="4">
-                                <v-btn color="pink" @click="isSaisieEntData = true" outlined>
-                                    <v-icon left>mdi-pencil</v-icon>Saisie manuelle
-                                </v-btn>
-                            </v-col>
-                        </v-row>
-                        <v-row v-else>
-                            <v-col cols="12" md="6">
-                                <v-text-field color="pink" label="Siret*" v-model="entreprise.siret" prepend-inner-icon="mdi-numeric" clearable :rules="rules.numericRules" required />
-                            </v-col>
-                            <v-col cols="12" md="6">
-                                <v-text-field color="pink" label="Siren*" v-model="entreprise.siren" prepend-inner-icon="mdi-numeric" clearable :rules="rules.numericRules" required />
-                            </v-col>
-                            <v-col cols="12" md="6">
-                                <v-text-field color="pink" label="Nom*" v-model="entreprise.nom" prepend-inner-icon="mdi-face" clearable :rules="rules.caractereRules" required />
-                            </v-col>
-                            <v-col cols="12" md="6">
-                                <v-text-field color="pink" label="Adresse*" v-model="entreprise.adresse" prepend-inner-icon="mdi-face" clearable :rules="rules.champRules" required />
-                            </v-col>
-                            <v-col cols="12" md="4">
-                                <v-menu v-model="isDialogDateCreationOpen" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="290px" color="info">
-                                    <template v-slot:activator="{ on, attrs }">
-                                        <v-text-field color="pink" v-model="entreprise.dateCreation" label="Date de création*" prepend-inner-icon="mdi-calendar-outline" readonly v-bind="attrs" v-on="on"></v-text-field>
-                                    </template>
-                                    <v-date-picker color="pink" locale="fr" first-day-of-week="1" v-model="entreprise.dateCreation" @input="isDialogDateCreationOpen = false"></v-date-picker>
-                                </v-menu>
-                            </v-col>
-                            <v-col cols="12" md="3">
-                                <v-text-field color="pink" label="Téléphone" v-model="entreprise.telephone" prepend-inner-icon="mdi-numeric" clearable />
-                            </v-col>
-                            <v-col cols="12" md="5">
-                                <v-select color="pink" prepend-inner-icon="mdi-format-list-bulleted-type" v-model="entreprise.etatAdministratif" :items="['Actif', 'Ferme']" label="Etat administratif*" :rules="rules.champRules" required></v-select>
-                            </v-col>
-                            <v-col cols="12" md="4">
-                                <v-select color="pink" label="Catégorie entreprise*" :items='["GE", "ETI", "PME", "MIC", "AUTRES"]' v-model="entreprise.categorieEntreprise" prepend-inner-icon="mdi-numeric" clearable :rules="rules.champRules" required />
-                            </v-col>
-                            <v-col cols="12" md="4">
-                                <v-text-field color="pink" label="Catégorie juridique" v-model="entreprise.categorieJuridique" prepend-inner-icon="mdi-numeric" clearable />
-                            </v-col>
-                            <v-col cols="12" md="4">
-                                <v-text-field color="pink" label="Numéro TVA" v-model="entreprise.numeroTvaIntra" prepend-inner-icon="mdi-numeric" clearable />
-                            </v-col>
-                        </v-row>
-                    </div>
-                    <small>*Veuillez remplir les champs</small>
+                    <v-row v-if="!isSaisieEntData">
+                        <v-col cols="12" md="8">
+                            <v-text-field color="pink" label="Siret*" v-model="entreprise.siret" prepend-inner-icon="mdi-numeric" clearable :rules="rules.numericRules" required />
+                        </v-col>
+                        <v-col cols="12" md="4">
+                            <v-btn color="pink" @click="isSaisieEntData = true" outlined>
+                                <v-icon left>mdi-pencil</v-icon>Saisie manuelle
+                            </v-btn>
+                        </v-col>
+                    </v-row>
+                    <v-row v-else>
+                        <v-col cols="12" md="6">
+                            <v-text-field color="pink" label="Siret*" v-model="entreprise.siret" prepend-inner-icon="mdi-numeric" clearable :rules="rules.numericRules" required />
+                        </v-col>
+                        <v-col cols="12" md="6">
+                            <v-text-field color="pink" label="Siren*" v-model="entreprise.siren" prepend-inner-icon="mdi-numeric" clearable :rules="rules.numericRules" required />
+                        </v-col>
+                        <v-col cols="12" md="6">
+                            <v-text-field color="pink" label="Nom*" v-model="entreprise.nom" prepend-inner-icon="mdi-alphabetical" clearable :rules="rules.caractereRules" required />
+                        </v-col>
+                        <v-col cols="12" md="6">
+                            <v-text-field color="pink" label="Adresse*" v-model="entreprise.adresse" prepend-inner-icon="mdi-alphabetical" clearable :rules="rules.champRules" required />
+                        </v-col>
+                        <v-col cols="12" md="4">
+                            <v-menu v-model="isDialogDateCreationOpen" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="290px" color="info">
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-text-field color="pink" v-model="entreprise.dateCreation" label="Date de création*" prepend-inner-icon="mdi-calendar-outline" readonly v-bind="attrs" v-on="on"></v-text-field>
+                                </template>
+                                <v-date-picker color="pink" locale="fr" first-day-of-week="1" v-model="entreprise.dateCreation" @input="isDialogDateCreationOpen = false"></v-date-picker>
+                            </v-menu>
+                        </v-col>
+                        <v-col cols="12" md="3">
+                            <v-text-field color="pink" label="Téléphone" v-model="entreprise.telephone" prepend-inner-icon="mdi-numeric" clearable />
+                        </v-col>
+                        <v-col cols="12" md="5">
+                            <v-select color="pink" prepend-inner-icon="mdi-format-list-bulleted-type" v-model="entreprise.etatAdministratif" :items="['Actif', 'Ferme']" label="Etat administratif*" :rules="rules.champRules" required></v-select>
+                        </v-col>
+                        <v-col cols="12" md="4">
+                            <v-select color="pink" label="Catégorie entreprise*" :items='["GE", "ETI", "PME", "MIC", "AUTRES"]' v-model="entreprise.categorieEntreprise" prepend-inner-icon="mdi-format-list-bulleted-type" clearable :rules="rules.champRules" required />
+                        </v-col>
+                        <v-col cols="12" md="4">
+                            <v-text-field color="pink" label="Catégorie juridique" v-model="entreprise.categorieJuridique" prepend-inner-icon="mdi-numeric" clearable />
+                        </v-col>
+                        <v-col cols="12" md="4">
+                            <v-text-field color="pink" label="Numéro TVA" v-model="entreprise.numeroTvaIntra" prepend-inner-icon="mdi-numeric" clearable />
+                        </v-col>
+                    </v-row>
+                    <small class="font-italic font-weight-light">*Champs obligatoires</small>
                     <v-col cols="12" class="text-right">
-                        <v-btn class="mr-3" color="indigo" v-if="isSaisieEntData" text @click="resetForm">Reset</v-btn>
                         <v-btn class="mr-3" color="red" v-if="isSaisieEntData" text @click="isSaisieEntData = false">Retour</v-btn>
+                        <v-btn class="mr-3" color="indigo" v-if="isSaisieEntData" text @click="resetForm">Reset</v-btn>
                         <v-btn class="mr-3" color="error" text @click="isDialogNewEntreprise = false">Fermer</v-btn>
-                        <v-btn color="orange" v-if="!isSaisieEntData" @click="getDataCompagny(entreprise.siret)" text>Rechercher ?</v-btn>
+                        <v-btn color="orange" v-if="!isSaisieEntData" @click="getDataCompagny(entreprise.siret)" text>Rechercher</v-btn>
                         <v-btn color="success" v-if="isSaisieEntData" @click="saveNewEntreprise" text>Sauvegarder</v-btn>
                     </v-col>
                 </v-col>
@@ -553,17 +551,9 @@
                         </template>
                         <span>Options document</span>
                     </v-tooltip>
-                    <v-switch color="pink darken-2" :disabled="isProgress" class="mr-5" v-model="isRandomArticles" dense label="Articles aléatoire"></v-switch>
-                    <v-fade-transition>
-                        <v-badge class="my-3 ml-3 mr-5" v-if="!isRandomArticles" color="indigo" overlap :content="articles.length === 0 ? '0' : articles.length">
-                            <v-btn :disabled="isProgress" color="pink darken-2" @click="isDialogConfigurator = true" text outlined>
-                                <v-icon left>mdi-cog-transfer-outline</v-icon>Configurateur
-                            </v-btn>
-                        </v-badge>
-                    </v-fade-transition>
                     <v-tooltip top>
                         <template v-slot:activator="{ on, attrs }">
-                            <v-badge class="my-3" color="indigo" dot>
+                            <v-badge class="my-3 mr-5" color="indigo" dot>
                                 <v-btn color="pink darken-2" v-bind="attrs" v-on="on" icon to="/produits" outlined text>
                                     <v-icon>mdi-sofa</v-icon>
                                 </v-btn>
@@ -571,6 +561,14 @@
                         </template>
                         <span>Page produits</span>
                     </v-tooltip>
+                    <v-switch color="pink darken-2" :disabled="isProgress" class="mr-5" v-model="isRandomArticles" dense label="Articles aléatoire"></v-switch>
+                    <v-fade-transition>
+                        <v-badge class="my-3 ml-3" v-if="!isRandomArticles" color="indigo" overlap :content="articles.length === 0 ? '0' : articles.length">
+                            <v-btn :disabled="isProgress" color="pink darken-2" @click="isDialogConfigurator = true" text outlined>
+                                <v-icon left>mdi-cog-transfer-outline</v-icon>Configurateur
+                            </v-btn>
+                        </v-badge>
+                    </v-fade-transition>
                     <v-text-field v-model="search" prepend-icon="mdi-magnify" class="ml-auto mr-5" label="Recherche" color="pink" hide-details single-line style="max-width: 250px" clearable />
                 </v-row>
                 <v-divider></v-divider>
@@ -679,47 +677,59 @@ export default Vue.extend({
             expandedEnt: [] as Array < any > ,
             headersProspects: [{
                 text: "Nom",
-                value: "lastname"
+                value: "lastname",
+                align: 'center',
             }, {
                 text: "Prénom",
                 value: "firstname",
+                align: 'center',
             }, {
                 text: "Email",
                 value: "email",
+                align: 'center',
             }, {
                 //sortable: false,
                 text: "Entreprise",
                 value: "idEntreprise",
+                align: 'center',
             }, {
                 sortable: false,
                 text: "Checked",
                 value: "checked",
+                align: 'center',
             }, {
                 sortable: false,
                 text: "Actif",
                 value: "disabled",
+                align: 'center',
             }, ] as Array < any > ,
             headersEntreprises: [{
                 text: "Siret",
                 value: "siret",
+                align: 'center',
             }, {
                 text: "Nom",
                 value: "nom",
+                align: 'center',
             }, {
                 text: "Catégorie entreprise",
                 value: "categorieEntreprise",
+                align: 'center',
             }, {
                 sortable: false,
                 text: "Création",
                 value: "createdAt",
+                align: 'center',
             }, {
                 sortable: false,
                 text: "Mise à jour",
                 value: "updateAt",
+                align: 'center',
             }, {
                 sortable: false,
                 text: "Etat administratif actif",
                 value: "etatAdministratif",
+                align: 'center',
             }, ] as Array < any > ,
             prospects: [] as Array < any > ,
             isDialogNewEntreprise: false as boolean,

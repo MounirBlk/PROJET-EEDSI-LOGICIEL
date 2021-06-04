@@ -19,7 +19,7 @@
 
     <v-tooltip bottom>
         <template v-slot:activator="{ on }">
-            <v-btn class="ml-2" :color="$vuetify.theme.dark ? 'orange' : 'indigo'" min-width="0" v-on="on" @click="$vuetify.theme.dark = !$vuetify.theme.dark" text>
+            <v-btn class="ml-2" :color="$vuetify.theme.dark ? 'orange' : 'indigo'" min-width="0" v-on="on" @click="$vuetify.theme.dark = !$vuetify.theme.dark;openNotification('top-right', !$vuetify.theme.dark ? 'warn' : 'primary', !$vuetify.theme.dark ? 'Mode Jour' : 'Mode Nuit', '')" text>
                 <v-icon color="orange" v-if="$vuetify.theme.dark">mdi-weather-sunny</v-icon>
                 <v-icon color="indigo" v-else>mdi-weather-night</v-icon>
             </v-btn>
@@ -110,6 +110,7 @@ export default Vue.extend({
         synchronisation: function () {
             this.isDisabledSynchro = true;
             bus.$emit("synchro");
+            this.openNotification('top-right', 'primary', 'Synchronisation', 'La synchronisation des données a bien été effectuée')
             setTimeout(() => {
                 this.isDisabledSynchro = false;
             }, 10000);

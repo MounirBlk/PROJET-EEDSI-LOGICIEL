@@ -443,11 +443,13 @@ export default Vue.extend({
                 {
                     text: "Disponible",
                     value: "archive",
+                    divider: true,
                 },
                 {
-                    text: '',
+                    text: 'Actions',
                     value: 'actions',
-                    sortable: false
+                    sortable: false,
+                    align: 'center'
                 },
             ] as Array < any > ,
             items: [] as Array < any > ,
