@@ -76,9 +76,9 @@
                                     </span>
                                 </v-col>
                             </v-row>
-                            <v-divider class="my-4" />
+                            <v-divider class="mb-4 mx-2" />
                             <v-row>
-                                <v-col cols="12" md="12" class="d-flex justify-end">
+                                <v-col cols="12" md="12" :class="{ 'd-flex justify-end': $vuetify.breakpoint.mdAndUp, }">
                                     <v-btn @click="isChangePasswordDialog = true" class="mx-2" color="purple" text outlined :disabled="!isUpdateUser" small>
                                         <v-icon left>mdi-cog-outline</v-icon>Changer le password
                                     </v-btn>

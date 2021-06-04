@@ -163,10 +163,12 @@ export default Vue.extend({
             }, {
                 text: "Livreur",
                 value: "livreurID.lastname",
+                divider: true
             }, {
-                text: '',
+                text: 'Actions',
                 value: 'actions',
-                sortable: false
+                sortable: false,
+                align: 'center'
             }] as Array < any > ,
             commandes: [] as Array < any > ,
             livreurs: [] as Array < any > ,

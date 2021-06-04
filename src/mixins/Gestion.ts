@@ -103,5 +103,16 @@ export default Vue.extend({
             }
             return true;
         },
+        openNotification(position: any = null, color: '#3f51b5', title: '', message: '') {//indigo = #3f51b5
+            this.$vs.notification({
+                color,
+                position,
+                width: null,
+                icon: null,// `<i class='bx bx-select-multiple' ></i>`
+                duration: '5000',//en ms ou null
+                title: "<h1 style='font-weight: lighter'>" + title +"</h1>",
+                text: "<h2 style='font-weight: lighter'>" + message + "</h2>"
+            })
+        }
     }
 })

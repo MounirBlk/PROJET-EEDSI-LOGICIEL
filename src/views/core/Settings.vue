@@ -1,10 +1,14 @@
 <template>
 <div id="settings-wrapper">
+
     <v-card :disabled="isChatReload" id="settings" class="py-2 px-5" color="rgba(0, 0, 0, .4)" dark flat link min-width="110" style="position: fixed; top: 115px; right: -35px; z-index:99">
-        <v-icon color="indigo" large>
-            mdi-chat-processing-outline
-        </v-icon>
+        <v-badge color="indigo" left overlap bordered :content="chatNbMsgs">
+            <v-icon color="indigo" large>
+                mdi-chat-processing-outline
+            </v-icon>
+        </v-badge>
     </v-card>
+
     <v-menu v-model="menu" :close-on-content-click="false" activator="#settings" bottom content-class="v-settings" left nudge-left="30" offset-x origin="top right" transition="scale-transition">
         <v-card class="mb-0" width="500" max-height="800">
             <v-card-text class="px-0 pb-0">
@@ -21,7 +25,7 @@
                     </v-item>
                 </v-item-group>
                 <v-divider class="mt-2 mb-n1 indigo" />
-                <Chat class="pa-0" />
+                <Chat class="pa-0" @messagesCounter="chatNbMsgs = $event" />
             </v-card-text>
         </v-card>
     </v-menu>

@@ -4,12 +4,12 @@
         <v-row>
             <v-col cols="12" md="12" sm="12">
                 <v-hover v-slot="{ hover }">
-                    <base-material-card :color="hover ? 'red lighten-1' :'red'" max-width="100%" width="auto" class="px-5 py-3 mx-auto">
+                    <base-material-card :color="hover ? 'red lighten-1' :'red'" max-width="100%" width="auto" :style="hover ? 'filter: drop-shadow(5px 5px 9px red) invert(10%);' : 'filter: opacity(100%);'" class="px-5 py-3 mx-auto">
                         <template v-slot:heading>
                             <div class="text-center">
-                                <h1 class="display-1 font-weight-bold">
+                                <span class="display-1 font-weight-bold">
                                     <v-icon large left>mdi-package-variant</v-icon>Commandes
-                                </h1>
+                                </span>
                             </div>
                         </template>
                         <base-area-chart :key="resetComponentKey" :labels="chartCommandes.labels" :datasets="chartCommandes.datasets" />
@@ -18,12 +18,12 @@
             </v-col>
             <v-col cols="12" md="6" sm="12">
                 <v-hover v-slot="{ hover }">
-                    <base-material-card :color="hover ? 'indigo lighten-1' : 'indigo'" max-width="100%" width="auto" class="px-5 py-3 mx-auto">
+                    <base-material-card :color="hover ? 'indigo lighten-1' : 'indigo'" max-width="100%" width="auto" :style="hover ? 'filter: drop-shadow(5px 5px 9px indigo) invert(10%);' : 'filter: opacity(100%);'" class="px-5 py-3 mx-auto">
                         <template v-slot:heading>
                             <div class="text-center">
-                                <h1 class="display-1 font-weight-bold">
+                                <span class="display-1 font-weight-bold">
                                     <v-icon large left>mdi-chair-school</v-icon>Produits/Composants
-                                </h1>
+                                </span>
                             </div>
                         </template>
                         <base-bar-chart :key="resetComponentKey" :labels="chartProductComp.labels" :datasets="chartProductComp.datasets" :title="chartProductComp.title" />
@@ -32,12 +32,12 @@
             </v-col>
             <v-col cols="12" md="6" sm="12">
                 <v-hover v-slot="{ hover }">
-                    <base-material-card :color="hover ? 'pink lighten-1' : 'pink'" max-width="100%" width="auto" class="px-5 py-3 mx-auto">
+                    <base-material-card :color="hover ? 'pink lighten-1' : 'pink'" max-width="100%" width="auto" :style="hover ? 'filter: drop-shadow(5px 5px 9px pink) invert(10%);' : 'filter: opacity(100%);'" class="px-5 py-3 mx-auto">
                         <template v-slot:heading>
                             <div class="text-center">
-                                <h1 class="display-1 font-weight-bold">
+                                <span class="display-1 font-weight-bold">
                                     <v-icon large left>mdi-account-group-outline</v-icon>Utilisateurs actifs
-                                </h1>
+                                </span>
                             </div>
                         </template>
                         <base-pie-chart :key="resetComponentKey" :labels="chartPieUsers.labels" :datasets="chartPieUsers.datasets" :title="chartPieUsers.title" />
@@ -46,12 +46,12 @@
             </v-col>
             <v-col cols="12" md="12" sm="12">
                 <v-hover v-slot="{ hover }">
-                    <base-material-card :color="hover ? 'orange lighten-1' :'orange'" max-width="100%" width="auto" class="px-5 py-3 mx-auto">
+                    <base-material-card :color="hover ? 'orange lighten-1' :'orange'" max-width="100%" width="auto" :style="hover ? 'filter: drop-shadow(5px 5px 9px orange) invert(10%);' : 'filter: opacity(100%);'" class="px-5 py-3 mx-auto">
                         <template v-slot:heading>
                             <div class="text-center">
-                                <h1 class="display-1 font-weight-bold">
+                                <span class="display-1 font-weight-bold">
                                     <v-icon large left>mdi-finance</v-icon>Budgétisation (<v-icon large>mdi-currency-eur</v-icon>)
-                                </h1>
+                                </span>
                             </div>
                         </template>
                         <base-line-chart :key="resetComponentKey" :chartData="chartBudget" :options="optionsChartBudget" />
@@ -164,6 +164,7 @@ export default Vue.extend({
                 text: "Budgétisation (€)"
             }
         },
+        //value: 'filter: opacity(100%);',
     }),
     created() {
         bus.$on("synchro", async () => {
@@ -184,9 +185,6 @@ export default Vue.extend({
             Promise.all(ttPromise)
                 .then((response: AxiosResponse[]) => {
                     if (!response[0].data.error) {
-                        /*const months = ["January", "February", "March", "April", "May", "June","July", "August", "September", "October", "November", "December"];
-                        const d = new Date("2021-04-30 20:40");
-                        console.log("The current month is " + months[d.getMonth()]);*/
                         let pieCommandesClientData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                         let pieCommandesProspectData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                         let pieCommandesRevenusData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]

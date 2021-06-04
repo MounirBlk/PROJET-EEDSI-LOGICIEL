@@ -15,7 +15,7 @@
             </v-tooltip>
         </v-badge>
     </v-subheader>
-    <base-chat-box :messages="messages" @sendMessage="this.sendMessage" />
+    <base-chat-box :messages="messages" @sendMessage="this.sendNewMessage" />
 </v-container>
 </template>
 
@@ -67,6 +67,7 @@ export default Vue.extend({
         listen: function () {
             this.socket.on('getMessagesEmpty', (messages: any) => {
                 this.messages = messages;
+                this.$emit('messagesCounter', this.messages.length)
             });
             this.socket.on('userOnline', (username: string) => {
                 this.users.push(username);
@@ -74,20 +75,22 @@ export default Vue.extend({
             this.socket.on('userLeft', (user: any) => {
                 this.users.splice(this.users.indexOf(user), 1);
             });
-            this.socket.on('getMessage', (message: string) => { //recuperation msg de socket node
-                this.messages.push(message)
+            this.socket.on('getMessage', (data: any) => { //recuperation msg de socket node
+                this.openNotification('top-right', data.userInfos.role === 'Administrateur' ? 'primary' : '#FFA500', '' , ' Message de ' + data.username + '<br /> > ' + data.message)
+                this.messages.push(data)
+                this.$emit('messagesCounter', this.messages.length)
             });
             this.socket.on('getAllMessages', (messages: any[]) => { //recuperation msg de socket node
                 this.messages = messages;
+                this.$emit('messagesCounter', this.messages.length)
             });
         },
-        sendMessage: function (message: string) {
+        sendNewMessage: function (message: string) {
             this.socket.emit('newMessage', message); // envoie msg vers socket node
         },
         resetMessages: function () {
             this.socket.emit('resetMessages')
         },
-
     }
 });
 </script>
