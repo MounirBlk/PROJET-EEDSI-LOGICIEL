@@ -1,7 +1,7 @@
 {
-    "name": "dashboard-ecommerce",
+    "name": "Dashboard EC",
     "productName": "Dashboard EC",
-    "version": "2.6.0",
+    "version": "2.6.1",
     "private": true,
     "description": "Dashboard e-commerce administrateurs/commerciaux",
     "author": "Mounir Ballouk",
@@ -18,7 +18,8 @@
         "git:sync": "git checkout main && git fetch -p && git pull && git branch",
         "postinstall": "electron-builder install-app-deps",
         "postuninstall": "electron-builder install-app-deps",
-        "start": "vue-cli-service electron:serve"
+        "start": "vue-cli-service electron:serve",
+        "build:all": "npm run capacitor:build && npm run electron:build"
     },
     "main": "background.js",
     "dependencies": {
