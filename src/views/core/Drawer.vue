@@ -1,5 +1,5 @@
 <template>
-<v-navigation-drawer :src="!$vuetify.theme.dark ? barImageJour : barImageNuit" v-model="drawer" app id="core-navigation-drawer">
+<v-navigation-drawer :src="$vuetify.theme.dark ? barImageNuit : ''" color="primary" v-model="drawer" app id="core-navigation-drawer">
     <sequential-entrance>
         <center class="mt-5">
             <v-avatar color="teal" size="50">
@@ -50,13 +50,12 @@
 
 <script lang="ts">
 import Vue from "vue";
-//import * as index from 'vuex';
 
 export default Vue.extend({
     name: "DashboardCoreDrawer",
     data: (): any => ({
-        barImageJour: "https://i.pinimg.com/236x/f1/90/04/f19004dd1da67e6077ecac88c86dd665.jpg", //https://img.fruugo.com/product/5/47/85504475_max.jpg
-        barImageNuit: "https://www.euractiv.fr/wp-content/uploads/sites/3/2019/07/shutterstock_233084350-800x450.jpg",
+        barImageJour: "https://images.prismic.io/cadremploi-edito/MjZjZTU0MDMtNDJkZC00MWM4LTk5M2EtYjNhODExZmRjYzli_shutterstock_664647223.jpg?auto=compress,format&rect=0,0,1000,500&w=800&h=400", //https://blog.reedexpo.fr/wp-content/uploads/2020/04/plan-d-action-commercial-scaled.jpg
+        barImageNuit: "https://img.freepik.com/photos-gratuite/podium-scene-geometrique-noir-3d-fond-sombre_167650-652.jpg?size=626&ext=jpg&ga=GA1.2.1686371180.1616284800",
         name: 'Dashboard',
         items: [{
             icon: 'mdi-home-outline',

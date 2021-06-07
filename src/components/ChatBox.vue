@@ -1,14 +1,14 @@
 <template>
 <v-card class="mx-auto px-3" max-width="auto" tile>
     <v-row>
-        <v-col cols="12" md="12" sm="12">
+        <v-col cols="12" md="12" sm="12" class="pb-0">
             <sequential-entrance delay="250">
                 <v-list-item class="mt-n7" two-line v-for="(item, index) in paginatedData" :key="index">
                     <v-list-item-avatar v-ripple :color="item.userInfos.role !== 'Administrateur' ? 'indigo' : 'orange'">
                         <span class="white--text">{{ item.userInfos.firstname.charAt(0).toUpperCase() }}{{ item.userInfos.lastname.charAt(0).toUpperCase() }}</span>
                     </v-list-item-avatar>
                     <v-hover v-slot="{ hover }">
-                        <v-list-item-content :style="hover ? 'filter: contrast(150%);' : ''" class="mt-5">
+                        <v-list-item-content :style="hover ? 'filter: contrast(150%);' : ''" :class="hover ? 'mt-5 ml-3' : 'mt-5'">
                             <v-card max-width="250" :color="item.userInfos.role !== 'Administrateur' ? 'rgba(63, 81, 181, .8)' : 'rgba(255, 152, 0, .8)'" v-ripple class="white--text py-1 px-2 mb-1">
                                 <v-divider class="mb-1" color="transparent"></v-divider>
                                 <v-list-item-title :class="item.userInfos.role !== 'Administrateur' ? 'grey--text subtitle-2 mb-1' : 'brown--text subtitle-2 mb-1'">
@@ -28,8 +28,8 @@
         <v-col cols="12" md="12" sm="12" class="pa-0">
             <v-pagination circle color="indigo" v-model="pageNumber" :length="Math.ceil(messages.length/size)" prev-icon="mdi-menu-left" next-icon="mdi-menu-right" total-visible="5" @input="nextPage" />
         </v-col>
-        <v-col cols="12" md="12" sm="12">
-            <v-text-field class="mx-3 mb-1" color="indigo" hint="Les messages seront automatiquement supprimés" label="Taper un message" @keyup.enter="sendMessage(msg)" v-model.trim="msg" prepend-inner-icon="mdi-alphabetical" clearable />
+        <v-col cols="12" md="12" sm="12" class="py-0">
+            <v-text-field class="mx-3 mb-1" color="indigo" hint="Les messages seront automatiquement supprimés" label="Taper un message" @keyup.enter="sendMessage(msg)" v-model.trim="msg" prepend-inner-icon="mdi-message-draw" clearable />
             <v-btn class="float-right" color="indigo" @click.prevent="sendMessage(msg)" :disabled="!msg" outlined>
                 <v-icon left>mdi-send</v-icon>Envoyer
             </v-btn>
