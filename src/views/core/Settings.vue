@@ -1,6 +1,5 @@
 <template>
 <div id="settings-wrapper">
-
     <v-card :disabled="isChatReload" id="settings" class="py-2 px-5" color="rgba(0, 0, 0, .4)" dark flat link min-width="110" style="position: fixed; top: 115px; right: -35px; z-index:99">
         <v-badge color="indigo" left overlap bordered :content="chatNbMsgs">
             <v-icon color="indigo" large>
@@ -13,18 +12,18 @@
         <v-card class="mb-0" width="500" max-height="800">
             <v-card-text class="px-0 pb-0">
                 <div class="text-center ">
-                    <strong class="indigo--text mb-2 d-inline-block">
-                        <v-icon small left color="indigo">mdi-palette</v-icon>Couleurs personnalisées
-                    </strong>
+                    <span class="indigo--text mb-2 d-inline-block text-h6">
+                        <v-icon left color="indigo">mdi-message-bulleted</v-icon>Messages
+                    </span>
                 </div>
-                <v-item-group v-model="color" class="text-center">
+                <!--<v-item-group v-model="color" class="text-center">
                     <v-item v-for="color in colors" :key="color" :value="color" class="ma-1">
                         <template v-slot="{ active, toggle }">
                             <v-avatar :class="active" :color="color" style="cursor: pointer" size="25" @click="toggle" />
                         </template>
                     </v-item>
-                </v-item-group>
-                <v-divider class="mt-2 mb-n1 indigo" />
+                </v-item-group>-->
+                <v-divider class="mb-3 mx-8 indigo" />
                 <Chat class="pa-0" @messagesCounter="chatNbMsgs = $event" />
             </v-card-text>
         </v-card>
