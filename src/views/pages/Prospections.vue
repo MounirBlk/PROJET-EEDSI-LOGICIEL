@@ -930,6 +930,8 @@ export default Vue.extend({
                 .post("/devis/add", payload, configAxios)
                 .then(async (response: AxiosResponse) => {
                     //clearTimeout(timeout);
+                    this.isLoading = true;
+                    this.isFirstLoad = true;
                     if (this.optionsDoc.isDownload) {
                         //window.open(`${this.baseUrl}/download/${response.data.destPath}`, '_self') // _self _blank 
                         //console.log(window.URL.createObjectURL(response.data))
@@ -946,7 +948,7 @@ export default Vue.extend({
                         this.valueTraitement = 0;
                         this.isProgress = false;
                         this.getProspectionsData();
-                    }, 8000);
+                    }, 6000);
                 }).catch((error: AxiosError) => {
                     //clearTimeout(timeout);
                     this.optionsDoc.isDownload ? this.errorMessage('Erreur sur les traitements !') : this.catchAxios(error)
@@ -976,9 +978,6 @@ export default Vue.extend({
                 });
             }
             return articles;
-        },
-        randNumber: function (min: number, max: number): number {
-            return Math.floor(Math.random() * (max - min + 1) + min);
         },
         /**@param {Array} a Shuffles array in place. ES6 version*/
         shuffle: function (a: any[]): any[] {

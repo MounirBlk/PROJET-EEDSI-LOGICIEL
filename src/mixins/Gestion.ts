@@ -85,7 +85,7 @@ export default Vue.extend({
                 this.errorMessage(errorObj.data.message);
             }else{
                 console.log(JSON.stringify(errorObj))
-                this.errorMessage('Serveur ne répond plus !')
+                this.errorMessage('Le serveur ne répond plus !')
             }
         },
         changeToFormatDateFr (input: string): string{
@@ -113,6 +113,27 @@ export default Vue.extend({
                 title: "<h1 style='font-weight: lighter'>" + title +"</h1>",
                 text: "<h2 style='font-weight: lighter'>" + message + "</h2>"
             })
+        },
+        randNumber: function (min: number, max: number): number {
+            return Math.floor(Math.random() * (max - min + 1) + min);
+        },
+        /**
+         * @param {Array} tabDates Tableau de dates
+         * @param {string} keyObject Clé de l'objet du tab
+         * @param {boolean} isPriorityNewDate true -> retourne les dernières dates proche du présent
+         */
+        triDate(tabDates: any[], keyObject: string, isPriorityNewDate: boolean){
+            return tabDates.sort((a: any, b: any) => {
+                const dateA = a[keyObject];
+                const dateB = b[keyObject];
+                if (isPriorityNewDate ? dateA > dateB : dateA < dateB) {
+                    return -1;
+                } else if (dateA == dateB) {
+                    return 0;
+                } else {
+                    return 1;
+                }
+            });
         }
     }
 })

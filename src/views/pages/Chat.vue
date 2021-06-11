@@ -67,6 +67,7 @@ export default Vue.extend({
         listen: function () {
             this.socket.on('getMessagesEmpty', (messages: any) => {
                 this.messages = messages;
+                this.messages = this.triDate(this.messages, 'createdAt', true);
                 this.$emit('messagesCounter', this.messages.length)
             });
             this.socket.on('userOnline', (username: string) => {
@@ -78,10 +79,12 @@ export default Vue.extend({
             this.socket.on('getMessage', (data: any) => { //recuperation msg de socket node
                 this.openNotification('top-right', data.userInfos.role === 'Administrateur' ? 'primary' : '#FFA500', '' , ' Message de ' + data.username + '<br /> > ' + data.message)
                 this.messages.push(data)
+                this.messages = this.triDate(this.messages, 'createdAt', true);
                 this.$emit('messagesCounter', this.messages.length)
             });
             this.socket.on('getAllMessages', (messages: any[]) => { //recuperation msg de socket node
                 this.messages = messages;
+                this.messages = this.triDate(this.messages, 'createdAt', true);
                 this.$emit('messagesCounter', this.messages.length)
             });
         },
