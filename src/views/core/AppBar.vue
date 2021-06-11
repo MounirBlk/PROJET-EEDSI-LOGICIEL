@@ -110,7 +110,7 @@ export default Vue.extend({
         synchronisation: function () {
             this.isDisabledSynchro = true;
             bus.$emit("synchro");
-            this.openNotification('top-right', 'primary', 'Synchronisation', 'La synchronisation des données a bien été effectuée')
+            this.openNotification('top-right', 'primary', 'Synchronisation', 'La synchronisation est en cours d\'exécution')
             setTimeout(() => {
                 this.isDisabledSynchro = false;
             }, 10000);

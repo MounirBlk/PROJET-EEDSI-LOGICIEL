@@ -218,16 +218,17 @@ export default Vue.extend({
                     headers: {
                         'Content-Type': 'application/json;charset=utf-8',
                     },
+                    timeout: 1000 * 60 * 60,
                     responseType: 'blob'
                 };
                 axiosApi.post("/commande/download", payload, configAxios)
-                    .then((response) => {
+                    .then((response: AxiosResponse) => {
                         fileSaver.saveAs(response.data, `${infosCommande.refID}.pdf`); //application/pdf;charset=utf-8
                         this.successMessage("Téléchargement effectué avec succès");
                         setTimeout(() => {
                             this.isLoading = false;
                             this.isFirstLoad = false;
-                        }, 1000);
+                        }, 1500);
                     })
                     .catch((error) => {
                         this.catchAxios(error)
@@ -248,7 +249,7 @@ export default Vue.extend({
             payload.livreurID = this.isEditLivreur ? payload.livreurID : undefined
             axiosApi
                 .put("/commande/update/" + commandeToUpdate._id, qs.stringify(payload))
-                .then((response) => {
+                .then((response: AxiosResponse) => {
                     Object.assign(this.$data, this.$options.data()); //reset data
                     this.successMessage("Sauvegarde des modifications effectuée !");
                     setTimeout(() => {
@@ -263,7 +264,7 @@ export default Vue.extend({
             this.isDialogDeleteCommande = false;
             axiosApi
                 .delete("/commande/delete/" + this.commandeToDelete._id)
-                .then((response) => {
+                .then((response: AxiosResponse) => {
                     Object.assign(this.$data, this.$options.data()); //reset data
                     //this.$refs.form.reset();
                     this.successMessage(`La commande a été supprimée avec succès`);
