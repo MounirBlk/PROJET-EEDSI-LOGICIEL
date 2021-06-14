@@ -219,7 +219,7 @@ export default Vue.extend({
                         'Content-Type': 'application/json;charset=utf-8',
                     },
                     timeout: 1000 * 60 * 60,
-                    responseType: 'blob'
+                    responseType: 'arraybuffer'//blob
                 };
                 axiosApi.post("/commande/download", payload, configAxios)
                     .then((response: AxiosResponse) => {
