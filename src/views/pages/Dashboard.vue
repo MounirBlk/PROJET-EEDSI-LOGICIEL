@@ -84,7 +84,7 @@
             </v-col>
         </v-row>
         <base-go-to-up />
-        <v-snackbar v-model="isSnackbarOpened" elevation="24" :color="isSuccess ? 'success' : 'error'">
+        <v-snackbar v-model="isSnackbarOpened" elevation="24" :color="isSuccess ? 'success' : 'error'" style="filter: opacity(95%);">
             <div class="text-center subtitle-1">
                 <v-icon v-if="!isSuccess" color="white" left>mdi-alert-outline</v-icon>
                 <v-icon v-else color="white" left>mdi-checkbox-marked-circle-outline</v-icon>
