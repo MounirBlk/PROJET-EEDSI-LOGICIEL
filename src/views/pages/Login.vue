@@ -4,7 +4,7 @@
         <v-progress-circular color="warning" indeterminate size="80"></v-progress-circular>
     </v-overlay>
     <v-dialog v-model="isDialogForgotPassword" width="400px" overlay-opacity="0.9">
-        <v-card class="px-6">
+        <v-card class="px-6" style="filter: opacity(90%);">
             <v-card-title class="indigo--text">
                 Mot de passe oublié ?
                 <v-icon aria-label="Close" class="ml-auto" @click="isDialogForgotPassword = false">mdi-close</v-icon>
@@ -32,7 +32,7 @@
     <v-row justify="center">
         <v-col cols="12">
             <v-slide-y-transition appear>
-                <base-material-card :color="$vuetify.theme.dark ? 'indigo' : 'primary'" max-width="100%" width="600" class="px-5 mt-10 py-3 mx-auto">
+                <base-material-card style="filter: opacity(85%);" :color="$vuetify.theme.dark ? 'indigo' : 'primary'" max-width="100%" width="600" class="px-5 mt-10 py-3 mx-auto">
                     <template v-slot:heading>
                         <div class="text-center">
                             <h1 class="display-1 font-weight-bold">
@@ -66,7 +66,7 @@
             </v-slide-y-transition>
         </v-col>
     </v-row>
-    <v-snackbar v-model="isSnackbarOpened" elevation="24" :color="isSuccess ? 'success' : 'error'">
+    <v-snackbar v-model="isSnackbarOpened" elevation="24" :color="isSuccess ? 'success' : 'error'" style="filter: opacity(95%);">
         <div class="text-center subtitle-1">
             <v-icon v-if="!isSuccess" color="white" left>mdi-alert-outline</v-icon>
             <v-icon v-else color="white" left>mdi-checkbox-marked-circle-outline</v-icon>
