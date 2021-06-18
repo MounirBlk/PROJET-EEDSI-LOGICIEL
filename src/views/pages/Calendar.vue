@@ -73,7 +73,7 @@
                     </v-col>
                 </v-row>
                 <v-row class="fill-height">
-                    <v-col>
+                    <v-col cols="12">
                         <v-sheet height="64">
                             <v-toolbar flat>
                                 <v-btn outlined class="mr-4" color="red darken-2" @click="focus = ''">
@@ -109,7 +109,6 @@
                                         </template>
                                         <span>Livraison en signalement</span>
                                     </v-tooltip>
-
                                     <v-tooltip top v-if="$vuetify.breakpoint.mdAndUp">
                                         <template v-slot:activator="{ on, attrs }">
                                             <v-icon v-bind="attrs" v-on="on" color="green" left> mdi-sticker </v-icon>
@@ -117,7 +116,6 @@
                                         <span>Livraison terminé</span>
                                     </v-tooltip>
                                 </v-toolbar-title>
-
                                 <v-spacer></v-spacer>
                                 <v-menu bottom right>
                                     <template v-slot:activator="{ on, attrs }">

@@ -1,11 +1,11 @@
 <template>
-<v-footer absolute :inset="insetFooter" :color="$vuetify.theme.dark ? '#424242' : 'primary'" id="dashboard-core-footer">
+<v-footer style="filter:opacity(99%)" class="py-1" tile :fixed="isFixed" :inset="insetFooter" :color="$vuetify.theme.dark ? '#424242' : 'primary'" id="dashboard-core-footer">
     <v-row align="center" no-gutters>
         <v-spacer class="hidden-sm-and-down" />
         <v-col cols="12" md="auto">
-            <div class="body-1 font-weight-light pt-0 pt-md-0 text-center">
+            <div class="caption font-weight-light pt-0 pt-md-0 text-center">
                 &copy;
-                <strong> {{ new Date().getFullYear() }} - Dashboard E-Commerce</strong>
+                <span> {{ new Date().getFullYear() }} - Dashboard E-Commerce</span>
             </div>
         </v-col>
     </v-row>
@@ -19,8 +19,10 @@ export default Vue.extend({
     name: "DashboardCoreFooter",
 
     data: () => ({
-        insetFooter: false
-    })
+        insetFooter: false,
+        isFixed: false
+    }),
+
 });
 </script>
 
