@@ -1,5 +1,5 @@
 <template>
-<v-footer style="filter:opacity(99%)" class="py-1" tile :fixed="isFixed" :inset="insetFooter" :color="$vuetify.theme.dark ? '#424242' : 'primary'" id="dashboard-core-footer">
+<v-footer style="filter:opacity(99%)" absolute class="py-1" tile :fixed="isFixed" :inset="insetFooter" :color="$vuetify.theme.dark ? '#424242' : 'primary'" id="dashboard-core-footer">
     <v-row align="center" no-gutters>
         <v-spacer class="hidden-sm-and-down" />
         <v-col cols="12" md="auto">
