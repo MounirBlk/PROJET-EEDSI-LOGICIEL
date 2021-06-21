@@ -1,6 +1,9 @@
 <template>
 <div id="dashboard" class="pb-10">
     <v-container>
+        <v-overlay :absolute="isAbsolute" :opacity="opacity" :value="isOverlay">
+            <v-progress-circular color="primary" indeterminate size="80"></v-progress-circular>
+        </v-overlay>
         <v-row>
             <v-col cols="12" md="12" sm="12">
                 <v-hover v-slot="{ hover }">
@@ -187,6 +190,7 @@ export default Vue.extend({
     },
     methods: {
         getData: function (): void {
+            this.isOverlay = true;
             let ttPromise: Promise < AxiosResponse < any >> [] = []
             ttPromise.push(axiosApi.get("/commande/all/all"));
             ttPromise.push(axiosApi.get("/user/all/all"));
@@ -243,7 +247,10 @@ export default Vue.extend({
                         this.chartProductComp.datasets[0].data = pieProductData;
                         this.chartProductComp.datasets[1].data = pieCompData;
                     }
-                    this.resetComponentKey++ //reset data chart
+                    this.isOverlay = false;
+                    setTimeout(() => {
+                        this.resetComponentKey++ //reset data chart
+                    }, 500);
                 }).catch((error: AxiosError) => {
                     this.catchAxios(error)
                 });

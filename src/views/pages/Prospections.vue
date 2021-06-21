@@ -74,6 +74,10 @@
                                     <v-text-field color="pink darken-2" :disabled="!isEditEntreprise" label="Numéro TVA" v-model="item.numeroTvaIntra" prepend-inner-icon="mdi-numeric" clearable />
                                 </v-col>
                                 <v-col cols="12" class="d-flex justify-end pt-0" v-if="isEditEntreprise">
+                                    <v-btn color="error" small @click="deleteEntreprise(item._id)" outlined>
+                                        <v-icon small color="error" left>mdi-trash-can-outline</v-icon> Supprimer
+                                    </v-btn>
+                                    <v-spacer></v-spacer>
                                     <v-btn color="success" small @click="saveEditEntreprise(item)" outlined>
                                         <v-icon small color="success" left>mdi-content-save-outline</v-icon> Sauvegarder
                                     </v-btn>
@@ -92,6 +96,10 @@
                     <template v-slot:[`item.etatAdministratif`]="{ item }">
                         <v-icon color="error" v-if="item.etatAdministratif !== 'Actif'">mdi-close-circle-outline</v-icon>
                         <v-icon color="success" v-else>mdi-checkbox-marked-circle-outline</v-icon>
+                    </template>
+                    <template v-slot:[`item.dateCreation`]="{ item }">
+                        <span v-if="item.dateCreation">{{ item.dateCreation }}</span>
+                        <v-icon color="error" v-else>mdi-close-circle-outline</v-icon>
                     </template>
                     <span slot="no-results" :value="true" icon="warning" class="error--text">
                         La recherche "{{ searchEnt }}" est inconnu.
@@ -459,7 +467,7 @@
     <v-dialog v-model="isDialogDisableUtilisateur" width="500" overlay-opacity="0.8">
         <v-card outlined>
             <v-card-title>
-                Désactivé le client prospect {{ utilisateurToDisable.firstname }}
+                Désactiver le client prospect {{ utilisateurToDisable.firstname }}
                 {{ utilisateurToDisable.lastname }} ?
             </v-card-title>
             <v-card-actions>
@@ -717,12 +725,17 @@ export default Vue.extend({
                 align: 'center',
             }, {
                 sortable: false,
-                text: "Création",
+                text: "Date de création",
+                value: "dateCreation",
+                align: 'center',
+            }, {
+                sortable: false,
+                text: "Ajout en base",
                 value: "createdAt",
                 align: 'center',
             }, {
                 sortable: false,
-                text: "Mise à jour",
+                text: "Mise à jour en base",
                 value: "updateAt",
                 align: 'center',
             }, {
@@ -1089,12 +1102,25 @@ export default Vue.extend({
                     this.catchAxios(error)
                 });
         },
+        deleteEntreprise: function (idEntreprise: string): void {
+            axiosApi
+                .delete("/entreprise/" + idEntreprise)
+                .then((response: AxiosResponse) => {
+                    //Object.assign(this.$data, this.$options.data()); //reset data
+                    this.successMessage(`L'entreprise a été supprimée avec succès`);
+                    setTimeout(() => {
+                        this.getProspectionsData();
+                    }, 3000);
+                })
+                .catch((error) => {
+                    this.catchAxios(error)
+                });
+        },
         disableUtilisateur: function (): void {
             this.isDialogDisableUtilisateur = false;
             axiosApi
                 .put("/user/disable/" + this.utilisateurToDisable._id)
                 .then((response: AxiosResponse) => {
-                    console.log(response.data.message)
                     const utilisateurFirstname = this.utilisateurToDisable.firstname;
                     const utilisateurLastname = this.utilisateurToDisable.lastname;
                     Object.assign(this.$data, this.$options.data()); //reset data
