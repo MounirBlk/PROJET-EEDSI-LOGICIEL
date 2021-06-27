@@ -1,7 +1,7 @@
 <template>
 <v-img :src="$vuetify.breakpoint.mdAndUp ? 'https://www.potentiel-humain.eu/wp-content/uploads/2020/09/hand.jpg' : ''">
     <v-overlay :absolute="isAbsolute" :opacity="opacity" :value="isOverlay">
-        <v-progress-circular color="warning" indeterminate size="80"></v-progress-circular>
+        <v-progress-circular color="indigo" indeterminate size="80"></v-progress-circular>
     </v-overlay>
     <v-dialog v-model="isDialogForgotPassword" width="400px" overlay-opacity="0.9">
         <v-card class="px-6" style="filter: opacity(90%);">

@@ -253,6 +253,7 @@ export default Vue.extend({
                     }, 500);
                 }).catch((error: AxiosError) => {
                     this.catchAxios(error)
+                    this.isOverlay = false;
                 });
         },
     }
