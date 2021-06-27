@@ -85,13 +85,13 @@ import Vue, {
 } from 'vue';
 import {
     bus
-} from "../../main";
-import axiosApi from "../../plugins/axiosApi";
+} from "@/main";
+import axiosApi from "@/plugins/axiosApi";
 import qs from "qs";
 import {
     AxiosResponse
 } from 'axios';
-import Gestion from "../../mixins/Gestion"
+import Gestion from "@/mixins/Gestion"
 import lodash from "lodash"
 
 export default Vue.extend({

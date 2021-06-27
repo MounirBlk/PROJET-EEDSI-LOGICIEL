@@ -65,9 +65,9 @@ import {
 import Vue from 'vue';
 import {
     bus
-} from "../../main";
+} from "@/main";
 import io from 'socket.io-client';
-import Gestion from "../../mixins/Gestion"
+import Gestion from "@/mixins/Gestion"
 
 export default Vue.extend({
     name: "DashboardCoreAppBar",

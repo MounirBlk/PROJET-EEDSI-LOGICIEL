@@ -10,7 +10,7 @@
 <script lang="ts">
 import {
     bus
-} from "../../main";
+} from "@/main";
 import Vue from 'vue';
 
 const ops = {

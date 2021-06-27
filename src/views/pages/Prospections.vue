@@ -641,8 +641,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import Gestion from "../../mixins/Gestion"
-import axiosApi from '../../plugins/axiosApi';
+import Gestion from "@/mixins/Gestion"
+import axiosApi from '@/plugins/axiosApi';
 import qs from "qs";
 import axios, {
     AxiosResponse,
@@ -654,7 +654,7 @@ import fileSaver from 'file-saver';
 import io from 'socket.io-client';
 import {
     bus
-} from "../../main";
+} from "@/main";
 
 export default Vue.extend({
     name: 'Prospections',

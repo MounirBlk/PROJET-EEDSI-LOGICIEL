@@ -5,7 +5,21 @@
             <v-progress-circular color="primary" indeterminate size="80"></v-progress-circular>
         </v-overlay>
         <v-row>
-            <v-col cols="12" md="12" sm="12">
+            <v-col cols="12" class="pb-0">
+                <v-hover v-slot="{ hover }">
+                    <base-material-card :color="hover ? 'green lighten-1' :'green'" max-width="100%" width="auto" :style="hover ? 'filter: drop-shadow(3px 3px 7px green) invert(5%);' : 'filter: opacity(100%);'" class="px-5 py-3 mx-auto">
+                        <template v-slot:heading>
+                            <div class="text-center">
+                                <span class="display-1 font-weight-bold">
+                                    <v-icon large left>mdi-map-legend</v-icon>Carte des livraisons
+                                </span>
+                            </div>
+                        </template>
+                        <base-map :size="400" />
+                    </base-material-card>
+                </v-hover>
+            </v-col>
+            <v-col cols="12" md="12" sm="12" class="py-0">
                 <v-hover v-slot="{ hover }">
                     <base-material-card :color="hover ? 'red lighten-1' :'red'" max-width="100%" width="auto" :style="hover ? 'filter: drop-shadow(3px 3px 7px red) invert(5%);' : 'filter: opacity(100%);'" class="px-5 py-3 mx-auto">
                         <template v-slot:heading>
@@ -19,7 +33,7 @@
                     </base-material-card>
                 </v-hover>
             </v-col>
-            <v-col cols="12" md="6" sm="12">
+            <v-col cols="12" md="6" sm="12" class="py-0">
                 <v-hover v-slot="{ hover }">
                     <base-material-card :color="hover ? 'indigo lighten-1' : 'indigo'" max-width="100%" width="auto" :style="hover ? 'filter: drop-shadow(3px 3px 7px indigo) invert(5%);' : 'filter: opacity(100%);'" class="px-5 py-3 mx-auto">
                         <template v-slot:heading>
@@ -33,7 +47,7 @@
                     </base-material-card>
                 </v-hover>
             </v-col>
-            <v-col cols="12" md="6" sm="12">
+            <v-col cols="12" md="6" sm="12" class="py-0">
                 <v-hover v-slot="{ hover }">
                     <base-material-card :color="hover ? 'pink lighten-1' : 'pink'" max-width="100%" width="auto" :style="hover ? 'filter: drop-shadow(3px 3px 7px pink) invert(5%);' : 'filter: opacity(100%);'" class="px-5 py-3 mx-auto">
                         <template v-slot:heading>
@@ -47,7 +61,7 @@
                     </base-material-card>
                 </v-hover>
             </v-col>
-            <v-col cols="12" md="12" sm="12">
+            <v-col cols="12" md="12" sm="12" class="py-0">
                 <v-hover v-slot="{ hover }">
                     <base-material-card :color="hover ? 'orange lighten-1' :'orange'" max-width="100%" width="auto" :style="hover ? 'filter: drop-shadow(3px 3px 7px orange) invert(5%);' : 'filter: opacity(100%);'" class="px-5 py-3 mx-auto">
                         <template v-slot:heading>
@@ -103,10 +117,10 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import Gestion from "../../mixins/Gestion"
-import Commandes from "./Commandes.vue"
-import Calendar from "./Calendar.vue"
-import axiosApi from '../../plugins/axiosApi';
+import Gestion from "@/mixins/Gestion"
+import Commandes from "@/views/pages/Commandes.vue"
+import Calendar from "@/views/pages/Calendar.vue"
+import axiosApi from '@/plugins/axiosApi';
 import qs from "qs";
 import {
     AxiosResponse,
@@ -115,7 +129,7 @@ import {
 import moment from 'moment';
 import {
     bus
-} from "../../main";
+} from "@/main";
 
 export default Vue.extend({
     name: 'Dashboard',

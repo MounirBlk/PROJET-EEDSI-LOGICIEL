@@ -5,4 +5,5 @@ declare module 'lodash/camelCase';
 declare module 'vue-sequential-entrance';
 declare module 'lodash';
 declare module 'vuesax';
+declare module 'leaflet';
 //declare module 'vuescroll';
