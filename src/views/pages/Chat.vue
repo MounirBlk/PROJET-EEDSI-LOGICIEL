@@ -25,8 +25,8 @@ import io from 'socket.io-client';
 import Vue from 'vue';
 import {
     bus
-} from "../../main";
-import axiosApi from '../../plugins/axiosApi';
+} from "@/main";
+import axiosApi from '@/plugins/axiosApi';
 import qs from "qs";
 import {
     AxiosResponse

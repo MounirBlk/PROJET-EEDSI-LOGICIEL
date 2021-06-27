@@ -42,7 +42,7 @@ import {
 import qs from 'qs'
 import {
     bus
-} from "../../main";
+} from "@/main";
 
 export default Vue.extend({
     name: 'DashboardCoreSettings',

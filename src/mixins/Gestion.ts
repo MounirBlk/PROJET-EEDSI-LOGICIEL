@@ -47,7 +47,8 @@ export default Vue.extend({
             colorOne: "rgba(193, 34, 214, 0.9)",
             colorTwo: "rgba(193, 34, 214, 0.25)",
             colorThree: "rgba(193, 34, 214, 0)",
-        }]
+        }],
+        urlUsersData: 'https://jsonplaceholder.typicode.com/users'
     }),
     computed: {
         rules(){

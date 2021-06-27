@@ -10,10 +10,11 @@ import './plugins/socket';
 import './plugins/vuesax';
 //import '@mdi/font/css/materialdesignicons.css'
 import qs from 'qs';
-import moment from 'vue-moment'
+import moment from 'vue-moment';
 import VuePageTransition from 'vue-page-transition';
-import SequentialEntrance from 'vue-sequential-entrance'
-import 'vue-sequential-entrance/vue-sequential-entrance.css'
+import SequentialEntrance from 'vue-sequential-entrance';
+import 'vue-sequential-entrance/vue-sequential-entrance.css';
+import './plugins/vue-leaflet';
 //import vuescroll from 'vuescroll';
 
 Vue.config.productionTip = false;

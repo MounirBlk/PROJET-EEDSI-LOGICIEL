@@ -166,8 +166,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import Gestion from "../../mixins/Gestion"
-import axiosApi from '../../plugins/axiosApi';
+import Gestion from "@/mixins/Gestion"
+import axiosApi from '@/plugins/axiosApi';
 import qs from "qs";
 import {
     AxiosResponse
