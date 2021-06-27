@@ -1,8 +1,10 @@
 <template>
 <div>
-    <v-btn style="filter: opacity(80%);" v-scroll="onScroll" v-show="fab" fab dark fixed bottom right color="indigo" @click="toTop">
-        <v-icon large>mdi-chevron-up</v-icon>
-    </v-btn>
+    <v-fab-transition>
+        <v-btn style="filter: opacity(80%);" v-scroll="onScroll" v-show="fab" fab dark fixed bottom right color="indigo" @click="toTop">
+            <v-icon large>mdi-chevron-up</v-icon>
+        </v-btn>
+    </v-fab-transition>
 </div>
 </template>
 
