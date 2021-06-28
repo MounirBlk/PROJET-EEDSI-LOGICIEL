@@ -6,6 +6,7 @@ import { rules } from "@/plugins/observable"
 import { mapState, mapMutations } from "vuex";
 import moment from 'moment';
 import io from 'socket.io-client';
+import { AxiosRequestConfig } from 'axios';
 
 export default Vue.extend({
     name: 'Mixins',
@@ -88,6 +89,15 @@ export default Vue.extend({
                 console.log(JSON.stringify(errorObj))
                 this.errorMessage('Le serveur ne répond plus !')
             }
+        },
+        configAxios: function(): AxiosRequestConfig {
+            return {
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8',
+                    "Accept": 'application/json'
+                },
+                responseType: 'json'
+            } as AxiosRequestConfig
         },
         changeToFormatDateFr (input: string): string{
             return moment(input).format('DD-MM-YYYY')

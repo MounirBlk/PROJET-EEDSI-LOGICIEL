@@ -35,28 +35,17 @@
                 <v-icon color="green" left>mdi-map-marker-radius-outline</v-icon>Terminée
             </v-chip>
         </LControl>
-        <LMarker :lat-lng="[48.992106, 2.429232]" :opacity="0.9" :icon="getIcon('blue')">
+        <LMarker v-for="(item, index) in commandes" :key="index" :lat-lng="[item.coordinate.latitude, item.coordinate.longitude]" :opacity="0.9" :icon="getIcon(new Date(item.dateLivraison) < new Date() && item.statut !== 'Termine' ? !isBlink ? getCommandeColor(item.statut) : 'black' : getCommandeColor(item.statut))">
             <LPopup>
-                <v-icon color="indigo" left>mdi-map-marker-radius-outline</v-icon>En attente
+                <v-icon :color="getCommandeColor(item.statut)" left>mdi-map-marker-radius-outline</v-icon><span :class="`${getCommandeColor(item.statut)}--text font-weight-bold`">{{ item.statut }}</span> <v-chip small outlined color="red" v-if="new Date(item.dateLivraison) < new Date() && item.statut !== 'Termine'"><v-icon color="red" left small>mdi-alert-outline</v-icon>Retard</v-chip>
+                <br /><span :class="`${getCommandeColor(item.statut)}--text font-weight-bold`">Date de Livraison {{ item.dateLivraison }}</span>
+                <br v-if="item.clientID && item.statut === 'Termine'" /><span v-if="item.clientID && item.statut === 'Termine'" class="font-weight-bold">Livré chez: M/Mme {{ item.clientID.lastname }}</span>
+                <br v-if="item.clientID && item.statut !== 'Termine'" /><span v-if="item.clientID && item.statut !== 'Termine'" class="font-weight-bold">Livraison prévu chez: M/Mme {{ item.clientID.lastname }}</span>
+                <br v-if="item.livreurID" /><span v-if="item.livreurID" class="font-weight-bold">Livreur: M/Mme {{ item.livreurID.lastname }}</span>
             </LPopup>
             <LTooltip>
-                <v-icon color="indigo" left>mdi-map-marker-radius-outline</v-icon><span class="indigo--text font-weight-bold">En attente</span>
-            </LTooltip>
-        </LMarker>
-        <LMarker :lat-lng="[48.891269, 2.283995]" :opacity="0.9" :icon="getIcon('green')">
-            <LPopup>
-                <v-icon color="green" left>mdi-map-marker-radius-outline</v-icon>Terminée
-            </LPopup>
-            <LTooltip>
-                <v-icon color="green" left>mdi-map-marker-radius-outline</v-icon><span class="green--text font-weight-bold">Terminée</span>
-            </LTooltip>
-        </LMarker>
-        <LMarker :lat-lng="[48.992854, 2.382245]" :opacity="0.9" :icon="getIcon(!isBlink ? 'gold' : 'black')">
-            <LPopup>
-                <v-icon color="orange" left>mdi-map-marker-radius-outline</v-icon>En cours
-            </LPopup>
-            <LTooltip>
-                <v-icon color="orange" left>mdi-map-marker-radius-outline</v-icon><span class="orange--text font-weight-bold">En cours</span>
+                <v-icon :color="getCommandeColor(item.statut)" left>mdi-map-marker-radius-outline</v-icon><span :class="`${getCommandeColor(item.statut)}--text font-weight-bold`">{{ item.statut }}</span><v-icon right color="red" v-if="new Date(item.dateLivraison) < new Date() && item.statut !== 'Termine'" small>mdi-alert-outline</v-icon>
+                <br /><span :class="`${getCommandeColor(item.statut)}--text font-weight-bold`">Date de Livraison {{ item.dateLivraison }}</span>
             </LTooltip>
         </LMarker>
     </LMap>
@@ -74,7 +63,8 @@ import axiosApi from '@/plugins/axiosApi';
 import qs from "qs";
 import {
     AxiosResponse,
-    AxiosError
+    AxiosError,
+    AxiosRequestConfig
 } from 'axios';
 
 export default Vue.extend({
@@ -100,11 +90,12 @@ export default Vue.extend({
                     visible: false,
                     url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
                     //attribution: 'Map data: &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
-                },
+                }
             ],
             geoJsonData: null,
             isBlink: false,
-            intervalid1: null
+            intervalid1: null,
+            commandes: []
         }
     },
     computed: {},
@@ -125,10 +116,9 @@ export default Vue.extend({
         },
         getData: function (): void {
             this.isOverlay = true;
-            let adresse = "70 Rue Marius Aufan 92300 Levallois-Perre"
-            axiosApi.get("https://api-adresse.data.gouv.fr/search/?q=" + adresse.replace(/ /g, '+'))
+            axiosApi.get("/commande/all/all", this.configAxios())
                 .then((response: AxiosResponse) => {
-                    console.log(response.data)
+                    this.commandes = response.data.commandes
                     setTimeout(() => {
                         this.isOverlay = false;
                     }, 1000);
@@ -138,6 +128,14 @@ export default Vue.extend({
                         this.isOverlay = false;
                     }, 1000);
                 });
+        },
+        getCommandeColor: function (statut: string): string {
+            let color = 'grey';
+            if (statut === 'Attente') color = 'blue'
+            if (statut === 'Livraison') color = 'orange'
+            if (statut === 'Signalement') color = 'red'
+            if (statut === 'Termine') color = 'green'
+            return color;
         },
         getIcon: function (color: string = null): void {
             const colors: string[] = ['blue', 'gold', 'red', 'green', 'orange', 'yellow', 'violet', 'grey', 'black']
