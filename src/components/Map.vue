@@ -126,7 +126,7 @@ export default Vue.extend({
         getData: function (): void {
             this.isOverlay = true;
             let adresse = "70 Rue Marius Aufan 92300 Levallois-Perre"
-            axiosApi.get("https://api-adresse.data.gouv.fr/search/?q=" + adresse.replaceAll(' ', '+'))
+            axiosApi.get("https://api-adresse.data.gouv.fr/search/?q=" + adresse.replace(/ /g, '+'))
                 .then((response: AxiosResponse) => {
                     console.log(response.data)
                     setTimeout(() => {
