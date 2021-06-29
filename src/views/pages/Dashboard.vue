@@ -15,7 +15,7 @@
                                 </span>
                             </div>
                         </template>
-                        <base-map :size="400" />
+                        <base-map :size="400" :commandes="commandes" />
                     </base-material-card>
                 </v-hover>
             </v-col>
@@ -191,7 +191,7 @@ export default Vue.extend({
                 text: "Budgétisation (€)"
             }
         },
-        //value: 'filter: opacity(100%);',
+        commandes: []
     }),
     created() {
         bus.$on("synchro", async () => {
@@ -216,7 +216,8 @@ export default Vue.extend({
                         let pieCommandesClientData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                         let pieCommandesProspectData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                         let pieCommandesRevenusData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                        response[0].data.commandes.forEach((commande: any) => {
+                        this.commandes = response[0].data.commandes
+                        this.commandes.forEach((commande: any) => {
                             if (commande.clientID && commande.clientID !== null && commande.clientID.role === "Prospect") { //Prospect
                                 for (let j = 0; j < 12; j++) {
                                     pieCommandesProspectData[j] = (new Date(commande.dateLivraison).getMonth() + 1) === (j + 1) ? pieCommandesProspectData[j] + 1 : pieCommandesProspectData[j]

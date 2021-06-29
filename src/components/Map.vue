@@ -3,15 +3,15 @@
     <v-overlay :absolute="isAbsolute" :opacity="opacity" :value="isOverlay">
         <v-progress-circular color="green" indeterminate size="80"></v-progress-circular>
     </v-overlay>
-    <LMap ref="map" style="z-index: 0;" :zoom="10" :center="[48.992106, 2.429232]" :options="{zoomControl: false}">
+    <LMap ref="map" style="z-index: 0;" :zoom="5" :center="[48.992106, 2.429232]" :options="{zoomControl: false}">
         <LControlLayers position="bottomright"></LControlLayers>
         <LTileLayer v-for="tileProvider in tileProviders" :key="tileProvider.name" :name="tileProvider.name" :visible="tileProvider.visible" :url="tileProvider.url" layer-type="base" />
         <!--:attribution="tileProvider.attribution" -->
         <!--<LGeoJson :geojson="geoJsonData" />-->
         <LControlZoom position="topleft" zoomInTitle="Zoom avant" zoomOutTitle="Zoom arrière"></LControlZoom>
         <LControl position="bottomleft">
-            <v-btn color="green" style="filter: opacity(85%)" @click.prevent="getData()">
-                <v-icon left>mdi-refresh</v-icon> Refresh
+            <v-btn color="green" dark style="filter: opacity(85%)" @click.prevent="getData()">
+                <v-icon>mdi-refresh</v-icon>
             </v-btn>
         </LControl>
         <LControlAttribution position="topright" prefix="Dashbord ECommerce" />
@@ -82,6 +82,19 @@ export default Vue.extend({
             type: Number,
             default: 400
         },
+        commandes: {
+            type: Array,
+            default: []
+        },
+        /*item: {
+            type: Object,
+            default: () => ({
+                avatar: undefined,
+                group: undefined,
+                title: undefined,
+                children: [],
+            }),
+        },*/
     },
     mixins: [Gestion],
     components: {},
@@ -103,7 +116,7 @@ export default Vue.extend({
             geoJsonData: null,
             isBlink: false,
             intervalid1: null,
-            commandes: []
+            //commandes: []
         }
     },
     computed: {},
@@ -114,7 +127,7 @@ export default Vue.extend({
         //this.geoJsonData = await axiosApi.get('https://france-geojson.gregoiredavid.fr/repo/regions/ile-de-france/region-ile-de-france.geojson') //https://france-geojson.gregoiredavid.fr/  geojson
         //console.log(this.geoJsonData)
         this.setBlink()
-        await this.getData();
+        this.isOverlay = false;
     },
     methods: {
         setBlink: function () {

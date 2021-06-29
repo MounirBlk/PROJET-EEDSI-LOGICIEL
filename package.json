@@ -1,7 +1,7 @@
 {
     "name": "dashboard-ecommerce",
     "productName": "Dashboard EC",
-    "version": "2.7.0",
+    "version": "2.7.1",
     "private": true,
     "description": "Dashboard e-commerce administrateurs/commerciaux",
     "author": "Mounir Ballouk",
@@ -19,7 +19,8 @@
         "postinstall": "electron-builder install-app-deps",
         "postuninstall": "electron-builder install-app-deps",
         "start": "vue-cli-service electron:serve",
-        "build:all": "npm run capacitor:build && npm run electron:build"
+        "build:all": "npm run capacitor:build && npm run electron:build",
+        "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'"
     },
     "main": "background.js",
     "dependencies": {
@@ -39,6 +40,7 @@
         "socket.io-client": "^4.0.1",
         "vue": "^2.6.11",
         "vue-chartjs": "^3.5.1",
+        "vue-i18n": "^8.24.5",
         "vue-moment": "^4.1.0",
         "vue-page-transition": "^0.2.2",
         "vue-router": "^3.2.0",
