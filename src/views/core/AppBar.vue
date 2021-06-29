@@ -45,6 +45,22 @@
         <span>Paramètres</span>
     </v-tooltip>
 
+    <v-menu open-on-hover offset-y>
+        <template v-slot:activator="{ on, attrs }">
+            <v-btn class="ml-2" min-width="0" v-on="on" text>
+                <v-icon color="anchor">mdi-web</v-icon> {{ $i18n.locale }}
+            </v-btn>
+        </template>
+        <v-list style="cursor:pointer">
+            <v-list-item>
+                <v-list-item-title @click.prevent="changeLang('fr')"> {{ $t('languageFr') }}</v-list-item-title>
+            </v-list-item>
+            <v-list-item>
+                <v-list-item-title @click.prevent="changeLang('en')"> {{ $t('languageEn') }}</v-list-item-title>
+            </v-list-item>
+        </v-list>
+    </v-menu>
+
     <v-tooltip bottom>
         <template v-slot:activator="{ on }">
             <v-btn @click="deconnexion" v-on="on" class="ml-2" min-width="0" text color="error">
@@ -77,7 +93,7 @@ export default Vue.extend({
         isProgress: false as boolean,
         isAbsolute: false as boolean,
         isHideOnScroll: false as boolean,
-        isTransparent: true as boolean,
+        isTransparent: true as boolean
     }),
     mixins: [Gestion],
     computed: {
@@ -118,8 +134,16 @@ export default Vue.extend({
                 this.isDisabledSynchro = false;
             }, 10000);
         },
-        onScroll() {
+        onScroll: function () {
             this.isTransparent = window.pageYOffset < 25
+        },
+        changeLang: function (lang: string) {
+            this.$i18n.locale = lang
+            /*this.$router.push({
+                params: {
+                    lang: lang
+                }
+            })*/
         }
     }
 });
