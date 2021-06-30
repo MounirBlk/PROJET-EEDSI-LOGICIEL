@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuetify from 'vuetify/lib/framework';
 import fr from 'vuetify/src/locale/fr';
+import en from 'vuetify/src/locale/en';
 import colors from 'vuetify/lib/util/colors'
 
 Vue.use(Vuetify);
@@ -32,7 +33,7 @@ export default new Vuetify({
     },
   },
     lang: {
-      locales: { fr },
+      locales: { fr, en },
       current: 'fr',
     },
 });

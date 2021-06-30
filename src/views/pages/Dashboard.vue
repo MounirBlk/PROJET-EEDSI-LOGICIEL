@@ -15,7 +15,7 @@
                                 </span>
                             </div>
                         </template>
-                        <base-map :size="400" :commandes="commandes" />
+                        <base-map :size="400" :commandes="commandes" :center="[48.992106, 2.429232]" />
                     </base-material-card>
                 </v-hover>
             </v-col>
