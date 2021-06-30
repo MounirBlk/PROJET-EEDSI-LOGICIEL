@@ -10,6 +10,7 @@ Icon.Default.mergeOptions({
     iconUrl: require('leaflet/dist/images/marker-icon.png'),
     shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
 });
+
 Vue.component('LMap', LMap);
 Vue.component('LTileLayer', LTileLayer);
 Vue.component('LMarker', LMarker);
