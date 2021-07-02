@@ -1,63 +1,49 @@
 <template>
-<div id="map" class="map" :style="`height: ${size}px; width: 100%; z-index: 0;`">
-    <v-overlay :absolute="isAbsolute" :opacity="opacity" :value="isOverlay">
-        <v-progress-circular color="green" indeterminate size="80"></v-progress-circular>
-    </v-overlay>
-    <LMap ref="map" style="z-index: 0;" :zoom="5" :center="center" :options="{zoomControl: false}">
+<div id="map" class="map" :style="`height: ${mapOptions.size}px; width: 100%; z-index: 0;`">
+    <LMap ref="map" style="z-index: 0;" :zoom="mapOptions.zoom" :center="mapOptions.center" :options="{zoomControl: false}">
         <LControlLayers position="bottomright"></LControlLayers>
         <LTileLayer v-for="tileProvider in tileProviders" :key="tileProvider.name" :name="tileProvider.name" :visible="tileProvider.visible" :url="tileProvider.url" layer-type="base" />
         <!--:attribution="tileProvider.attribution" -->
         <!--<LGeoJson :geojson="geoJsonData" />-->
         <LControlZoom position="topleft" zoomInTitle="Zoom avant" zoomOutTitle="Zoom arrière"></LControlZoom>
         <LControl position="bottomleft">
-            <v-btn color="green" dark style="filter: opacity(85%)" @click.prevent="getData()">
+            <v-btn color="green" dark style="filter: opacity(85%)" @click.prevent="$emit('getCommandes')">
                 <v-icon>mdi-refresh</v-icon>
             </v-btn>
         </LControl>
         <LControlAttribution position="topright" prefix="Dashbord ECommerce" />
-        <LControl position="topright">
-            <v-chip color="indigo" small outlined class="font-weight-bold">
-                <v-icon color="indigo" left>mdi-map-marker-radius-outline</v-icon> En attente
+        <LControl position="topright" v-for="statut in statutsCommandes" :key="statut">
+            <v-chip :color="getCommandeColor(statut)" small outlined class="font-weight-bold">
+                <v-icon :color="getCommandeColor(statut)" left>mdi-map-marker-radius-outline</v-icon>
+                <span v-if="statut === 'Attente'">En attente</span>
+                <span v-if="statut === 'Livraison'">En cours</span>
+                <span v-if="statut === 'Signalement'">Signalement</span>
+                <span v-if="statut === 'Termine'">Terminée</span>
             </v-chip>
         </LControl>
-        <LControl position="topright">
-            <v-chip color="orange" small outlined class="font-weight-bold">
-                <v-icon color="orange" left>mdi-map-marker-radius-outline</v-icon>En cours
-            </v-chip>
-        </LControl>
-        <LControl position="topright">
-            <v-chip color="red" small outlined class="font-weight-bold">
-                <v-icon color="red" left>mdi-map-marker-radius-outline</v-icon>Signalement
-            </v-chip>
-        </LControl>
-        <LControl position="topright">
-            <v-chip color="green" small outlined class="font-weight-bold">
-                <v-icon color="green" left>mdi-map-marker-radius-outline</v-icon>Terminée
-            </v-chip>
-        </LControl>
-        <LMarker v-for="(item, index) in commandes" :key="index" :lat-lng="[item.coordinate.latitude, item.coordinate.longitude]" :opacity="0.9" :icon="getIcon(new Date(item.dateLivraison) < new Date() && item.statut !== 'Termine' ? !isBlink ? getCommandeColor(item.statut) : 'black' : getCommandeColor(item.statut))">
+        <LMarker v-for="(commande, index) in commandes" :key="index" :lat-lng="[commande.coordinate.latitude, commande.coordinate.longitude]" :opacity="0.9" :icon="getIcon(new Date(commande.dateLivraison) < new Date() && commande.statut !== 'Termine' ? !isBlink ? getCommandeColor(commande.statut) : 'black' : getCommandeColor(commande.statut))">
             <LPopup>
-                <v-btn small color="indigo" @click="voirLivraison(item._id)" icon class="mr-3 mt-1">
+                <v-btn small color="indigo" @click="voirLivraison(commande._id)" icon class="mr-1 mt-1">
                     <v-icon>mdi-information-outline</v-icon>
                 </v-btn>
-                <v-icon :color="getCommandeColor(item.statut)" left>mdi-map-marker-radius-outline</v-icon><span :class="`${getCommandeColor(item.statut)}--text font-weight-bold`">{{ item.statut }}</span>
-                <br /><span :class="`${getCommandeColor(item.statut)}--text font-weight-bold`">Date de Livraison {{ item.dateLivraison }}</span>
-                <br v-if="item.clientID && item.statut === 'Termine'" /><span v-if="item.clientID && item.statut === 'Termine'" class="font-weight-bold">Livré chez: </span><span v-if="item.clientID && item.statut === 'Termine'">M/Mme {{ item.clientID.lastname }}</span>
-                <br v-if="item.clientID && item.statut !== 'Termine'" /><span v-if="item.clientID && item.statut !== 'Termine'" class="font-weight-bold">Livraison prévu chez: </span><span v-if="item.clientID && item.statut !== 'Termine'">M/Mme {{ item.clientID.lastname }}</span>
-                <br v-if="item.livreurID" /><span v-if="item.livreurID" class="font-weight-bold">Livreur: </span> <span v-if="item.livreurID">M/Mme {{ item.livreurID.lastname }}</span>
-                <br /><span class="font-weight-bold">Référence:</span> {{ item.refID }}
-                <br /><span class="font-weight-bold">Adresse:</span> {{ item.adresseLivraison }}
+                <v-icon :color="getCommandeColor(commande.statut)" left>mdi-map-marker-radius-outline</v-icon><span :class="`${getCommandeColor(commande.statut)}--text font-weight-bold`">{{ commande.statut }}</span>
+                <br /><span :class="`${getCommandeColor(commande.statut)}--text font-weight-bold`">Date de Livraison: {{ commande.dateLivraison }}</span>
+                <br v-if="commande.clientID && commande.statut === 'Termine'" /><span v-if="commande.clientID && commande.statut === 'Termine'" class="font-weight-bold">Livré chez: </span><span v-if="commande.clientID && commande.statut === 'Termine'">M/Mme {{ commande.clientID.lastname }}</span>
+                <br v-if="commande.clientID && commande.statut !== 'Termine'" /><span v-if="commande.clientID && commande.statut !== 'Termine'" class="font-weight-bold">Livraison prévu chez: </span><span v-if="commande.clientID && commande.statut !== 'Termine'">M/Mme {{ commande.clientID.lastname }}</span>
+                <br v-if="commande.livreurID" /><span v-if="commande.livreurID" class="font-weight-bold">Livreur: </span> <span v-if="commande.livreurID">M/Mme {{ commande.livreurID.lastname }}</span>
+                <br /><span class="font-weight-bold">Référence:</span> {{ commande.refID }}
+                <br /><span class="font-weight-bold">Adresse:</span> {{ commande.adresseLivraison }}
                 <br />
-                <v-chip small outlined color="red" class="mt-1" v-if="new Date(item.dateLivraison) < new Date() && item.statut !== 'Termine'">
+                <v-chip small outlined color="red" class="mt-1" v-if="new Date(commande.dateLivraison) < new Date() && commande.statut !== 'Termine'">
                     <v-icon color="red" left small>mdi-alert-outline</v-icon>Retard
                 </v-chip>
             </LPopup>
             <LTooltip v-if="$vuetify.breakpoint.mdAndUp">
-                <v-icon :color="getCommandeColor(item.statut)" left>mdi-map-marker-radius-outline</v-icon><span :class="`${getCommandeColor(item.statut)}--text font-weight-bold`">{{ item.statut }}</span>
-                <v-icon right color="red" v-if="new Date(item.dateLivraison) < new Date() && item.statut !== 'Termine'" small>mdi-alert-outline</v-icon>
-                <br /><span :class="`${getCommandeColor(item.statut)}--text font-weight-bold`">Date de Livraison {{ item.dateLivraison }}</span>
-                <br /><span class="font-weight-bold">Référence: {{ item.refID }}</span>
-                <br /><span class="font-weight-bold">Adresse: {{ item.adresseLivraison }}</span>
+                <v-icon :color="getCommandeColor(commande.statut)" left>mdi-map-marker-radius-outline</v-icon><span :class="`${getCommandeColor(commande.statut)}--text font-weight-bold`">{{ commande.statut }}</span>
+                <v-icon right color="red" v-if="new Date(commande.dateLivraison) < new Date() && commande.statut !== 'Termine'" small>mdi-alert-outline</v-icon>
+                <br /><span :class="`${getCommandeColor(commande.statut)}--text font-weight-bold`">Date de Livraison: {{ commande.dateLivraison }}</span>
+                <br /><span class="font-weight-bold">Référence:</span> {{ commande.refID }}
+                <br /><span class="font-weight-bold">Adresse:</span> {{ commande.adresseLivraison }}
             </LTooltip>
         </LMarker>
     </LMap>
@@ -82,27 +68,27 @@ import {
 export default Vue.extend({
     name: 'Map',
     props: {
-        size: {
-            type: Number,
-            default: 400
-        },
         commandes: {
             type: Array,
             default: []
         },
-        center: {
-            type: Array,
-            default: [48.992106, 2.429232]
-        }
-        /*item: {
+        mapOptions: {
             type: Object,
-            default: () => ({
-                avatar: undefined,
-                group: undefined,
-                title: undefined,
-                children: [],
-            }),
-        },*/
+            default: {
+                size: {
+                    type: Number,
+                    default: 420
+                },
+                zoom: {
+                    type: Number,
+                    default: 5
+                },
+                center: {
+                    type: Array,
+                    default: [48.992106, 2.429232]
+                },
+            },
+        },
     },
     mixins: [Gestion],
     components: {},
@@ -123,7 +109,7 @@ export default Vue.extend({
             ],
             geoJsonData: null,
             isBlink: false,
-            //commandes: []
+            statutsCommandes: ['Attente', 'Livraison', 'Signalement', 'Termine'],
         }
     },
     computed: {},
@@ -134,28 +120,12 @@ export default Vue.extend({
         //this.geoJsonData = await axiosApi.get('https://france-geojson.gregoiredavid.fr/repo/regions/ile-de-france/region-ile-de-france.geojson') //https://france-geojson.gregoiredavid.fr/  geojson
         //console.log(this.geoJsonData)
         this.setBlink()
-        this.isOverlay = false;
     },
     methods: {
         setBlink: function () {
             setInterval(() => {
                 this.isBlink = !this.isBlink;
-            }, 1000);
-        },
-        getData: function (): void {
-            this.isOverlay = true;
-            axiosApi.get("/commande/all/all", this.configAxios())
-                .then((response: AxiosResponse) => {
-                    this.commandes = response.data.commandes
-                    setTimeout(() => {
-                        this.isOverlay = false;
-                    }, 1000);
-                }).catch((error) => {
-                    this.catchAxios(error)
-                    setTimeout(() => {
-                        this.isOverlay = false;
-                    }, 1000);
-                });
+            }, 750);
         },
         voirLivraison: function (id: string): void {
             if (id) {

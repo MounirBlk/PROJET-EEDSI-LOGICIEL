@@ -139,6 +139,7 @@ export default Vue.extend({
         },
         changeLang: function (lang: string) {
             this.$i18n.locale = lang
+            this.$vuetify.lang.current = lang
             /*this.$router.push({
                 params: {
                     lang: lang
