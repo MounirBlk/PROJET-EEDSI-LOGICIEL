@@ -83,8 +83,8 @@ export default Vue.extend({
         },
         catchAxios: function (errorObj: any): void {
             if(errorObj.data){
-                console.log(`ERROR ${JSON.stringify(errorObj.status)} : ${JSON.stringify(errorObj.data.message)}`);
-                this.errorMessage(errorObj.data.message);
+                console.log(`ERROR ${JSON.stringify(errorObj.status ? errorObj.status : 500)} : ${JSON.stringify(errorObj.data.message ? errorObj.data.message : '')}`);
+                this.errorMessage(errorObj.data.message ? errorObj.data.message : 'Le serveur ne répond plus !');
             }else{
                 console.log(JSON.stringify(errorObj))
                 this.errorMessage('Le serveur ne répond plus !')
@@ -96,7 +96,7 @@ export default Vue.extend({
                     'Content-Type': 'application/json;charset=utf-8',
                     "Accept": 'application/json'
                 },
-                responseType: 'json'
+                //responseType: 'json'
             } as AxiosRequestConfig
         },
         changeToFormatDateFr (input: string): string{

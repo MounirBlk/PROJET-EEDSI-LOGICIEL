@@ -5,7 +5,7 @@
             <v-progress-circular color="primary" indeterminate size="80"></v-progress-circular>
         </v-overlay>
         <v-row>
-            <v-col cols="12" class="pb-0">
+            <v-col cols="12" md="12" sm="12" class="pb-0">
                 <v-hover v-slot="{ hover }">
                     <base-material-card :color="hover ? 'green lighten-1' :'green'" max-width="100%" width="auto" :style="hover ? 'filter: drop-shadow(3px 3px 7px green) invert(5%);' : 'filter: opacity(100%);'" class="px-5 py-3 mx-auto">
                         <template v-slot:heading>
@@ -15,7 +15,12 @@
                                 </span>
                             </div>
                         </template>
-                        <base-map :size="400" :commandes="commandes" :center="[48.992106, 2.429232]" />
+                        <v-row no-gutters>
+                            <v-col cols="12" md="12" class="mt-n2">
+                                <v-text-field prepend-inner-icon="mdi-magnify" label="Recherche" @keyup.enter="search(searchAddress)" v-model="searchAddress" color="green" />
+                            </v-col>
+                        </v-row>
+                        <base-map :mapOptions="mapOptions" :commandes="commandes" @getCommandes="getCommandes()" />
                     </base-material-card>
                 </v-hover>
             </v-col>
@@ -191,7 +196,13 @@ export default Vue.extend({
                 text: "Budgétisation (€)"
             }
         },
-        commandes: []
+        commandes: [],
+        searchAddress: '',
+        mapOptions: {
+            size: 420 as number,
+            zoom: 5 as number,
+            center: [48.992106, 2.429232] as number[],
+        }
     }),
     created() {
         bus.$on("synchro", async () => {
@@ -271,6 +282,42 @@ export default Vue.extend({
                     this.isOverlay = false;
                 });
         },
+        getCommandes: function (): void {
+            this.isOverlay = true;
+            axiosApi.get("/commande/all/all", this.configAxios())
+                .then((response: AxiosResponse) => {
+                    this.commandes = response.data.commandes
+                    this.isOverlay = false;
+                }).catch((error) => {
+                    this.catchAxios(error)
+                    this.isOverlay = false;
+                });
+        },
+        search: function (adresse: string): void {
+            this.isOverlay = true;
+            axiosApi.post('/coordinate/one', {
+                    adresse
+                }, this.configAxios())
+                .then((response: AxiosResponse) => {
+                    const data = response.data.data;
+                    console.log(data)
+                    const latitude: number = data.features.length > 0 ? data.features[0].geometry.coordinates[1] : 0
+                    const longitude: number = data.features.length > 0 ? data.features[0].geometry.coordinates[0] : 0
+                    this.mapOptions.center = [0, 0]
+                    if (latitude === 0 && longitude === 0) {
+                        this.mapOptions.zoom = 5
+                        this.mapOptions.center = [48.992106, 2.429232]
+                        this.errorMessage('L\'adresse recherchée est introuvable')
+                    } else {
+                        this.mapOptions.zoom = 16
+                        this.mapOptions.center = [latitude, longitude]
+                    }
+                    this.isOverlay = false;
+                }).catch((error) => {
+                    this.catchAxios(error)
+                    this.isOverlay = false;
+                });
+        }
     }
 });
 </script>

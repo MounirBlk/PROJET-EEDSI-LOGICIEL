@@ -44,10 +44,10 @@
                     <v-card-text class="text-center">
                         <v-form ref="form">
                             <v-col cols="12" class="py-2">
-                                <v-text-field :color="$vuetify.theme.dark ? 'indigo' : 'primary'" @keyup.enter="connexion(login.email, login.password)" label="Email" v-model="login.email" prepend-icon="mdi-face" clearable />
+                                <v-text-field  :color="$vuetify.theme.dark ? 'indigo' : 'primary darken-1'" @keyup.enter="connexion(login.email, login.password)" label="Email" v-model="login.email" prepend-icon="mdi-face" clearable />
                             </v-col>
                             <v-col cols="12" class="py-2">
-                                <v-text-field :color="$vuetify.theme.dark ? 'indigo' : 'primary'" @keyup.enter="connexion(login.email, login.password)" label="Password" v-model="login.password" prepend-icon="mdi-lock-outline" :type="showPassword ? 'text' : 'password'" @click:append="showPassword = !showPassword" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" clearable />
+                                <v-text-field  :color="$vuetify.theme.dark ? 'indigo' : 'primary darken-1'" @keyup.enter="connexion(login.email, login.password)" label="Password" v-model="login.password" prepend-icon="mdi-lock-outline" :type="showPassword ? 'text' : 'password'" @click:append="showPassword = !showPassword" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" clearable />
                             </v-col>
                             <v-col cols="12" class="pt-2 mb-2">
                                 <span @click="isDialogForgotPassword = true" style="cursor: pointer">Mot de passe oublié ?</span>

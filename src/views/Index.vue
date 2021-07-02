@@ -28,7 +28,7 @@ export default Vue.extend({
   }),
   computed:{},
   created() {
-    this.$vuetify.theme.dark = true;
+    this.$vuetify.theme.dark = new Date().getHours() >= 21 || new Date().getHours() <= 9 ? true : false;
     bus.$on("connected",(data: any) => {
       this.connected = data;
     })
