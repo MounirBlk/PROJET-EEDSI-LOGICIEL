@@ -136,10 +136,6 @@ export default Vue.extend({
         bus.$emit("connected", true);
     },
     methods: {
-        ...mapMutations({
-            setUser: 'SET_USER',
-            setToken: 'SET_TOKEN',
-        }),
         connexion: function (email: string, password: string): void {
             if (email == null || email == "")
                 return this.errorMessage("Identifiant vide !");
@@ -151,7 +147,7 @@ export default Vue.extend({
                 email,
                 password
             }).then(async (response: AxiosResponse) => {
-                const token: string | null = localStorage.getItem('SET_TOKEN');
+                const token: string | null = localStorage.getItem('SET_TOKEN');// ou response.data.token
                 if (token == null || response === null) {
                     this.isOverlay = false;
                     this.infos.password = '';
@@ -166,7 +162,7 @@ export default Vue.extend({
                 } else {
                     setTimeout(() => {
                         this.setUser(response.data.user); //this.$store.commit("SET_USER", response.data.user) / $store.state.auth.user
-                        this.setToken(token)//this.$store.commit("SET_TOKEN", token);
+                        //this.setToken(token)//this.$store.commit("SET_TOKEN", token);
                         bus.$emit("connected", true);
                         return this.$router.push({
                             name: "Accueil",

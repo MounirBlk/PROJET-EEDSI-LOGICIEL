@@ -157,7 +157,7 @@ export default Vue.extend({
 				}
 			});
 		},
-		getUserData(){
+		getOwnUserData(){
 			return new Promise((resolve, reject) => {
 				const token: string | null = localStorage.getItem('SET_TOKEN');
 				if (token && token !== undefined && token !== null) {
