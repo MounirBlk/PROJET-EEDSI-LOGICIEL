@@ -504,7 +504,7 @@ export default Vue.extend({
             const config = {
                 headers: {
                     'Content-Type': 'multipart/form-data; ', //boundary=----WebKitFormBoundaryu2bwWC2UJRwib11V
-                    'Authorization': 'Bearer ' + localStorage.getItem("token")
+                    'Authorization': 'Bearer ' + localStorage.getItem("SET_TOKEN")
                 },
             };
             if (this.composant.taxe < 0 || this.composant.taxe > 1) return this.errorMessage("Veuillez vérifier la taxe !");
@@ -585,7 +585,7 @@ export default Vue.extend({
             const config = {
                 headers: {
                     'Content-Type': 'multipart/form-data; ', //boundary=----WebKitFormBoundaryu2bwWC2UJRwib11V
-                    'Authorization': 'Bearer ' + localStorage.getItem("token")
+                    'Authorization': 'Bearer ' + localStorage.getItem("SET_TOKEN")
                 },
             };
             const payload = this.setComposantFormData(this.composantToUpdate);

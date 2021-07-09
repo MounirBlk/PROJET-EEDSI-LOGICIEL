@@ -1,6 +1,6 @@
 import Vue from 'vue';
-import io from 'socket.io-client'
-import VueSocketIO from 'vue-socket.io'
+import io from 'socket.io-client';
+import VueSocketIO from 'vue-socket.io';
 import store from '../store';
 
 /*Vue.use(new VueSocketIO({
@@ -12,4 +12,5 @@ import store from '../store';
         mutationPrefix: "SOCKET_"
     }
 }));
+
 Vue.prototype.$socket = io(store.state.baseUrl);*/

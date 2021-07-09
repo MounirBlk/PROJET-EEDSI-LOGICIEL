@@ -60,7 +60,7 @@ export default Vue.extend({
             this.socket.on('loggedIn', (data: any) => {
                 this.users = data.users;
                 this.socket.emit('getMessagesDB')
-                this.socket.emit('newUser', localStorage.getItem("token"));
+                this.socket.emit('newUser', localStorage.getItem("SET_TOKEN"));
             });
             this.listen();
         },

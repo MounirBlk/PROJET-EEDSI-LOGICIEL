@@ -13,28 +13,15 @@ import {
 } from "@/main";
 import Vue from 'vue';
 
-const ops = {
-    bar: {
-        background: 'red',
-    }
-};
-
 export default Vue.extend({
     name: "DashboardCoreView",
-
     components: {
         DashboardCoreFooter: () => import("./Footer.vue")
     },
     data() {
-        return {
-            connected: true,
-        }
+        return {}
     },
-    created() {
-        bus.$on("connected", (data: any) => {
-            this.connected = data;
-        })
-    },
+    created() {},
     watch: {},
     computed: {}
 });

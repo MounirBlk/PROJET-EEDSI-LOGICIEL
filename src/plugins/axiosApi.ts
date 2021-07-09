@@ -14,7 +14,7 @@ const axiosApi = axios.create({
 
 // Add a request interceptor
 axiosApi.interceptors.request.use((config: any) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("SET_TOKEN");
     if (token) {
         config.headers.common["Authorization"] = `Bearer ${token}`;
     }
@@ -36,7 +36,7 @@ axiosApi.interceptors.response.use((response: any) => {
                     /*query: {
                         redirect: router.currentRoute.fullPath
                     }*/
-                }).catch(()=>{});;
+                }).catch(() => {});;
                 break;
         }
         return Promise.reject(error.response);
