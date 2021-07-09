@@ -44,16 +44,16 @@
                     <v-card-text class="text-center">
                         <v-form ref="form">
                             <v-col cols="12" class="py-2">
-                                <v-text-field  :color="$vuetify.theme.dark ? 'indigo' : 'primary darken-1'" @keyup.enter="connexion(login.email, login.password)" label="Email" v-model="login.email" prepend-icon="mdi-face" clearable />
+                                <v-text-field :color="$vuetify.theme.dark ? 'indigo' : 'primary darken-1'" @keyup.enter="connexion(infos.email, infos.password)" label="Email" v-model="infos.email" prepend-icon="mdi-face" clearable />
                             </v-col>
                             <v-col cols="12" class="py-2">
-                                <v-text-field  :color="$vuetify.theme.dark ? 'indigo' : 'primary darken-1'" @keyup.enter="connexion(login.email, login.password)" label="Password" v-model="login.password" prepend-icon="mdi-lock-outline" :type="showPassword ? 'text' : 'password'" @click:append="showPassword = !showPassword" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" clearable />
+                                <v-text-field :color="$vuetify.theme.dark ? 'indigo' : 'primary darken-1'" @keyup.enter="connexion(infos.email, infos.password)" label="Password" v-model="infos.password" prepend-icon="mdi-lock-outline" :type="showPassword ? 'text' : 'password'" @click:append="showPassword = !showPassword" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" clearable />
                             </v-col>
                             <v-col cols="12" class="pt-2 mb-2">
                                 <span @click="isDialogForgotPassword = true" style="cursor: pointer">Mot de passe oublié ?</span>
                             </v-col>
                             <v-badge bordered :color="isActive ? 'indigo' : 'grey'" icon="mdi-lock-open-outline" overlap>
-                                <v-btn :disabled="!isActive" :color="$vuetify.theme.dark ? 'indigo' : 'primary'" @click="connexion(login.email, login.password)">
+                                <v-btn rounded :disabled="!isActive" :color="$vuetify.theme.dark ? 'indigo' : 'primary'" @click="connexion(infos.email, infos.password)">
                                     <v-icon :color="!$vuetify.theme.dark ? 'black' : 'white'" left>mdi-check-circle-outline</v-icon>
                                     <span :class="!$vuetify.theme.dark ? 'black--text' : 'white--text'">Connexion</span>
                                 </v-btn>
@@ -92,7 +92,13 @@ import {
     AxiosResponse
 } from 'axios';
 import Gestion from "@/mixins/Gestion"
-import lodash from "lodash"
+import {
+    mapState,
+    mapMutations,
+    mapActions,
+    mapGetters,
+    Store
+} from 'vuex';
 
 export default Vue.extend({
     name: 'Login',
@@ -101,7 +107,7 @@ export default Vue.extend({
     mixins: [Gestion],
     data: (): any => ({
         isDialogForgotPassword: false as boolean,
-        login: {
+        infos: {
             email: '',
             password: '',
         },
@@ -115,13 +121,13 @@ export default Vue.extend({
         this.isOverlay = false;
     },
     watch: {
-        /*login: {
+        /*infos: {
             handler(val: any) {
                 this.isActive = true
             },
             deep: true
         }*/
-        'login.email': function (val) {
+        'infos.email': function (val) {
             this.isActive = val !== null && val !== "";
         }
     },
@@ -130,7 +136,50 @@ export default Vue.extend({
         bus.$emit("connected", true);
     },
     methods: {
+        ...mapMutations({
+            setUser: 'SET_USER',
+            setToken: 'SET_TOKEN',
+        }),
         connexion: function (email: string, password: string): void {
+            if (email == null || email == "")
+                return this.errorMessage("Identifiant vide !");
+            if (password == null || password == "")
+                return this.errorMessage("Mot de passe vide !");
+
+            this.isOverlay = true;
+            this.$store.dispatch('authLogin', {
+                email,
+                password
+            }).then(async (response: AxiosResponse) => {
+                const token: string | null = localStorage.getItem('SET_TOKEN');
+                if (token == null || response === null) {
+                    this.isOverlay = false;
+                    this.infos.password = '';
+                    await this.$store.dispatch('clearToken');
+                    return this.errorMessage("L'utilisateur est introuvable !");
+                }
+                if (response.data.user.role.toLowerCase() !== "administrateur" && response.data.user.role.toLowerCase() !== "commercial") {
+                    this.isOverlay = false;
+                    this.infos.password = '';
+                    await this.$store.dispatch('clearToken');
+                    return this.errorMessage('Vous n\'avez pas l\'autorisation d\'accéder à la plateforme');
+                } else {
+                    setTimeout(() => {
+                        this.setUser(response.data.user); //this.$store.commit("SET_USER", response.data.user) / $store.state.auth.user
+                        this.setToken(token)//this.$store.commit("SET_TOKEN", token);
+                        bus.$emit("connected", true);
+                        return this.$router.push({
+                            name: "Accueil",
+                        });
+                    }, 500);
+                }
+            }).catch((error: any) => {
+                this.catchAxios(error);
+                this.isOverlay = false;
+                this.infos.password = '';
+            })
+        },
+        /*oldConnexion: function (email: string, password: string): void {
             //bus.$emit("connected", true);
             if (email == null || email == "")
                 return this.errorMessage("Identifiant vide !");
@@ -145,21 +194,21 @@ export default Vue.extend({
             axiosApi
                 .post("/login", qs.stringify(payload))
                 .then((response: AxiosResponse) => {
-                    localStorage.setItem("token", response.data.token);
-                    axiosApi.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem("token")}`;
-                    if (localStorage.getItem("token") == null) return this.errorMessage("Token inconnu !");
-                    //this.isOverlay = false;
+                    localStorage.setItem("SET_TOKEN", response.data.token);
+                    axiosApi.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem("SET_TOKEN")}`;
+                    if (localStorage.getItem("SET_TOKEN") == null) return this.errorMessage("Token inconnu !");
                     const isAdmin = response.data.user.role.toLowerCase() === "administrateur" ? true : false;
                     if (response.data.user.role.toLowerCase() !== "administrateur" && response.data.user.role.toLowerCase() !== "commercial") {
                         this.isOverlay = false;
+                        localStorage.clear();
                         return this.errorMessage('Vous n\'avez pas l\'autorisation d\'accéder à la plateforme');
                     } else {
                         if (isAdmin === undefined || isAdmin === null) {
                             this.isOverlay = false;
+                            localStorage.clear();
                             return this.errorMessage('Erreur');
                         } else {
-                            //this.$store.commit("SET_IS_ADMIN", isAdmin);
-                            this.setAdminStatus(isAdmin)
+                            this.setAdminStatus(isAdmin) //this.$store.commit("SET_IS_ADMIN", isAdmin);
                             bus.$emit("connected", true);
                             return this.$router.push({
                                 name: "Accueil",
@@ -170,8 +219,9 @@ export default Vue.extend({
                 .catch((error) => {
                     this.catchAxios(error);
                     this.isOverlay = false;
+                    this.infos.password = '';
                 })
-        },
+        },*/
         resetPassword: function (email: string) {
             if (email == null || email == "") return this.errorMessage("Email vide !");
 

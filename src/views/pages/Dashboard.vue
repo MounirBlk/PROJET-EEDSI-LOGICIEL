@@ -123,10 +123,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Gestion from "@/mixins/Gestion"
-import Commandes from "@/views/pages/Commandes.vue"
-import Calendar from "@/views/pages/Calendar.vue"
 import axiosApi from '@/plugins/axiosApi';
-import qs from "qs";
 import {
     AxiosResponse,
     AxiosError
@@ -135,15 +132,22 @@ import moment from 'moment';
 import {
     bus
 } from "@/main";
+import {
+    mapState,
+    mapMutations,
+    mapActions,
+    mapGetters,
+    Store
+} from 'vuex';
 
 export default Vue.extend({
     name: 'Dashboard',
     props: {},
     mixins: [Gestion],
     components: {
-        Commandes,
-        Calendar,
-        VuetifyAudio: () => import('vuetify-audio'),
+        Commandes: () => import('@/views/pages/Commandes.vue'),
+        Calendar: () => import('@/views/pages/Calendar.vue'),
+        VuetifyAudio: () => import('vuetify-audio')
     },
     data: (): any => ({
         panelCalendrier: 1,
@@ -213,6 +217,7 @@ export default Vue.extend({
     async mounted() {
         await this.getData();
     },
+    computed: {},
     methods: {
         getData: function (): void {
             this.isOverlay = true;

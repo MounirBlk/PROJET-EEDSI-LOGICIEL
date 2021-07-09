@@ -1,11 +1,12 @@
 <template>
 <v-app-bar style="filter:opacity(99%)" v-scroll="onScroll" tile dense :hide-on-scroll="isHideOnScroll" flat :color="isTransparent ? 'transparent' : $vuetify.theme.dark ? '#424242' : 'primary'" id="app-bar" app :absolute="isAbsolute">
     <v-app-bar-nav-icon @click.stop="setDrawer(!drawer)"></v-app-bar-nav-icon>
-    <v-toolbar-title class="hidden-sm-and-down font-weight-light" v-text="$route.name"></v-toolbar-title>
-    <v-spacer class="mx-3"></v-spacer>
-
+    <sequential-entrance fromTop>
+        <v-toolbar-title :style="$vuetify.theme.dark ? 'filter: drop-shadow(4px 4px 9px white) invert(5%);' : 'filter: drop-shadow(4px 4px 9px black) invert(10%);'" class="hidden-sm-and-down font-weight-light" v-text="$route.name"></v-toolbar-title>
+    </sequential-entrance>
+    <v-spacer class="mx-2"></v-spacer>
     <v-progress-linear width="100%" v-if="isProgress && $router.history.current.name !== 'Prospections'" dark striped color="indigo" v-model="valueTraitement" height="20">
-        <strong>En cours de traitement {{ Math.ceil(valueTraitement) > 100 ? 100 : Math.ceil(valueTraitement) }}%</strong>
+        <span class="font-weight-bold">En cours de traitement {{ Math.ceil(valueTraitement) > 100 ? 100 : Math.ceil(valueTraitement) }}%</span>
     </v-progress-linear>
 
     <v-tooltip bottom v-if="$router.history.current.name === 'Accueil'">

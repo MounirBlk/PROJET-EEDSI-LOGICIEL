@@ -1,16 +1,26 @@
 <template>
 <v-navigation-drawer :src="$vuetify.theme.dark ? barImageNuit : ''" color="primary" v-model="drawer" app id="core-navigation-drawer">
-    <sequential-entrance>
+    <sequential-entrance fromBottom>
         <center class="mt-5">
             <v-avatar color="teal" size="50">
                 <img alt="Avatar" :src="!$vuetify.theme.dark ? 'https://png.pngtree.com/element_our/20200610/ourlarge/pngtree-shopping-mall-logo-image_2235997.jpg' : require('@/assets/logo.jpg')">
             </v-avatar>
-            <span class="ml-2">Dashboard E-Commerce </span>
+            <span class="ml-2" :style="$vuetify.theme.dark ? 'filter: drop-shadow(4px 4px 9px white) invert(0%);' : 'filter: drop-shadow(4px 4px 9px black) invert(0%);'">Dashboard E-Commerce </span>
         </center>
     </sequential-entrance>
-    <v-divider class="my-2"></v-divider>
+    <sequential-entrance fromBottom>
+        <v-divider class="my-2"></v-divider>
+        <v-row :style="$vuetify.theme.dark ? 'filter: drop-shadow(8px 8px 18px indigo) invert(0%);' : 'filter: drop-shadow(4px 4px 9px white) invert(0%);'">
+            <v-col cols="12" class="d-flex justify-center">
+                <span class="mx-2 font-weight-light text-h6">
+                    <v-icon left>mdi-face</v-icon>{{ $store.state.auth.user.firstname }} {{ $store.state.auth.user.lastname }}
+                </span>
+            </v-col>
+        </v-row>
+        <v-divider class="my-2"></v-divider>
+    </sequential-entrance>
     <v-list class="py-0" v-for="(item, index) in items" :key="index" v-if="item.disabled !== true">
-        <sequential-entrance>
+        <sequential-entrance fromBottom>
             <v-list-item v-if="!item.group" dense link :to="item.to">
                 <v-list-item-action>
                     <v-icon v-if="!$vuetify.theme.dark" style="text-shadow: 0.1em 0.1em 0.1em white">{{ item.icon }}</v-icon>

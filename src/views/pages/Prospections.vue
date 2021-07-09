@@ -1197,7 +1197,7 @@ export default Vue.extend({
             this.productsConfigurator.forEach((el: any) => {
                 if (el.saved === true) isEmpty = false;
             });
-            if (isEmpty) this.errorMessage('Attention aucun article a été sauvegarder')
+            if (isEmpty) this.errorMessage('Attention aucun article a été sauvegardé')
             this.isRandomArticles = false;
             this.isDialogConfigurator = false
         },
