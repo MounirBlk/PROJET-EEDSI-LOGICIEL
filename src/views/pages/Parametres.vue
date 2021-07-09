@@ -188,8 +188,9 @@ export default Vue.extend({
             this.isOverlay = true;
             axiosApi
                 .get("/user/own")
-                .then((response) => {
+                .then(async(response) => {
                     this.user = response.data.user;
+                    await this.setUser(this.user); //this.$store.commit("SET_USER", response.data.user) / $store.state.auth.user
                     this.isOverlay = false;
                 })
                 .catch((error) => {
@@ -202,11 +203,13 @@ export default Vue.extend({
             axiosApi
                 .put("/user/update/" + this.user._id, qs.stringify(this.user)) //update de l'user
                 .then((response) => {
-                    Object.assign(this.$data, this.$options.data()); //reset data
-                    this.successMessage("Sauvegarde des modifications effectuée !");
-                    setTimeout(() => {
-                        this.getUserData();
-                    }, 1000);
+                    if(response.data && response.data.user){
+                        Object.assign(this.$data, this.$options.data()); //reset data
+                        this.successMessage("Sauvegarde des modifications effectuée !");
+                        setTimeout(() => {
+                            this.getUserData();
+                        }, 1000);
+                    }
                 })
                 .catch((error) => {
                     this.catchAxios(error)
