@@ -12,6 +12,7 @@ export default Vue.extend({
     data: () => ({}),
     computed: {},
     async beforeMount() {
+        console.log(this.$appName)
         await this.getOwnUserData();
     },
     mounted() {},
