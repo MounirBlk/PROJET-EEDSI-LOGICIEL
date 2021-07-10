@@ -168,7 +168,7 @@ export default Vue.extend({
 								setTimeout(() => {
 									this.setUser(response.data.user); //$store.state.auth.user
 									this.setToken(token)
-									resolve(true)
+									resolve(response.data.user)//USER
 								}, 1000);
 							}
 						})

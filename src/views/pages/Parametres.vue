@@ -85,7 +85,7 @@
                                     <v-btn dark small v-if="!isUpdateUser" color="purple" @click="isUpdateUser = true" class="mx-2">
                                         <v-icon left>mdi-account-edit-outline</v-icon>Modifier le Profil
                                     </v-btn>
-                                    <v-btn small color="error" class="mx-2" v-if="isUpdateUser" @click="isUpdateUser = false">
+                                    <v-btn small color="error" class="mx-2" v-if="isUpdateUser" @click="cancelUpdate">
                                         <v-icon left>mdi-close-circle-outline</v-icon>Annuler
                                     </v-btn>
                                     <v-btn small color="success" class="mx-2" v-if="isUpdateUser" @click="saveUpdate">
@@ -183,27 +183,32 @@ export default Vue.extend({
     async mounted() {
         await this.getUserData();
     },
+    async beforeDestroy() {
+        await this.getUserData();
+    },
     methods: {
         getUserData: async function () {
             this.isOverlay = true;
             axiosApi
                 .get("/user/own")
-                .then(async(response) => {
-                    this.user = response.data.user;
-                    await this.setUser(this.user); //this.$store.commit("SET_USER", response.data.user) / $store.state.auth.user
-                    this.isOverlay = false;
+                .then(async (response) => {
+                    if(response){
+                        this.user = response.data.user;
+                        await this.setUser(this.user); //this.$store.commit("SET_USER", response.data.user) / $store.state.auth.user
+                        this.isOverlay = false;
+                    }
                 })
                 .catch((error) => {
                     this.catchAxios(error)
                     this.isOverlay = false;
                 })
         },
-        saveUpdate: async function () {
+        saveUpdate: function () {
             this.isUpdateUser = false;
             axiosApi
                 .put("/user/update/" + this.user._id, qs.stringify(this.user)) //update de l'user
                 .then((response) => {
-                    if(response.data && response.data.user){
+                    if (response && response.data) {
                         Object.assign(this.$data, this.$options.data()); //reset data
                         this.successMessage("Sauvegarde des modifications effectuée !");
                         setTimeout(() => {
@@ -215,7 +220,11 @@ export default Vue.extend({
                     this.catchAxios(error)
                 });
         },
-        saveNewPassword: async function (oldPasswordUser: string, passwordUser: string) {
+        cancelUpdate: async function () {
+            this.isUpdateUser = false
+            await this.getUserData();
+        },
+        saveNewPassword: function (oldPasswordUser: string, passwordUser: string) {
             this.isChangePasswordDialog = false;
             if (!this.$refs.form.validate()) return this.errorMessage("Veuillez vérifier les champs !");
             if (oldPasswordUser == null || oldPasswordUser == "") return this.errorMessage("Mot de passe actuel vide !");
@@ -228,12 +237,14 @@ export default Vue.extend({
             axiosApi
                 .put("/user/password", qs.stringify(payload)) //edit password de l'user
                 .then((response) => {
-                    Object.assign(this.$data, this.$options.data()); //reset data
-                    this.$refs.form.reset();
-                    this.successMessage("Le mot de passe a bien été modifié !");
-                    setTimeout(() => {
-                        this.getUserData();
-                    }, 1000);
+                    if(response){
+                        Object.assign(this.$data, this.$options.data()); //reset data
+                        this.$refs.form.reset();
+                        this.successMessage("Le mot de passe a bien été modifié !");
+                        setTimeout(() => {
+                            this.getUserData();
+                        }, 1000);
+                    }
                 })
                 .catch((error) => {
                     this.passwordUser = "";

@@ -19,6 +19,7 @@ import 'vue-sequential-entrance/vue-sequential-entrance.css';
 //import vuescroll from 'vuescroll';
 
 Vue.config.productionTip = false;
+Vue.prototype.$appName = 'Dashboard EC'
 
 Vue.use(qs.stringify); // querystringify
 Vue.use(moment);
