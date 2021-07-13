@@ -53,7 +53,7 @@
                                 <span @click="isDialogForgotPassword = true" style="cursor: pointer">Mot de passe oublié ?</span>
                             </v-col>
                             <v-badge bordered :color="isActive ? 'indigo' : 'grey'" icon="mdi-lock-open-outline" overlap>
-                                <v-btn rounded :disabled="!isActive" :color="$vuetify.theme.dark ? 'indigo' : 'primary'" @click="connexion(infos.email, infos.password)">
+                                <v-btn dark rounded :disabled="!isActive" :color="$vuetify.theme.dark ? 'indigo' : 'primary'" @click="connexion(infos.email, infos.password)">
                                     <v-icon :color="!$vuetify.theme.dark ? 'black' : 'white'" left>mdi-check-circle-outline</v-icon>
                                     <span :class="!$vuetify.theme.dark ? 'black--text' : 'white--text'">Connexion</span>
                                 </v-btn>
@@ -66,15 +66,17 @@
             </v-slide-y-transition>
         </v-col>
     </v-row>
-    <v-snackbar v-model="isSnackbarOpened" elevation="24" :color="isSuccess ? 'success' : 'error'" style="filter: opacity(95%);">
+    <v-snackbar shaped v-model="isSnackbarOpened" elevation="24" :color="isSuccess ? 'success' : 'error'" style="filter: opacity(95%);">
         <div class="text-center subtitle-1">
             <v-icon v-if="!isSuccess" color="white" left>mdi-alert-outline</v-icon>
             <v-icon v-else color="white" left>mdi-checkbox-marked-circle-outline</v-icon>
             <span>{{ snackbarMessage }}</span>
-            <v-btn dark icon class="ml-6" @click="isSnackbarOpened = false">
+        </div>
+        <template v-slot:action="{ attrs }">
+            <v-btn dark icon  @click="isSnackbarOpened = false">
                 <v-icon>mdi-close</v-icon>
             </v-btn>
-        </div>
+        </template>
     </v-snackbar>
 </v-img>
 </template>
