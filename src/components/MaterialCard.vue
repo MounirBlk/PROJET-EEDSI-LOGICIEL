@@ -2,7 +2,7 @@
 <v-card v-bind="$attrs" :class="classes" class="v-card--material pa-3 mt-12 mb-10">
     <div class="d-flex grow flex-wrap">
         <v-avatar v-if="avatar" size="128" class="mx-auto v-card--material__avatar elevation-6" color="grey">
-            <v-img :src="avatar" />
+            <v-img transition="scale-transition" :src="avatar" />
         </v-avatar>
 
         <v-sheet dark v-else style="border-radius: 4px;" v-ripple :class="{

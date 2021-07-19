@@ -210,12 +210,12 @@
                         <v-col cols="12" md="12">
                             <v-row class="mt-0">
                                 <v-col cols="12" md="2">
-                                    <v-img v-if="product.imgLink !== null" :src="product.imgLink" height="80" width="120" aspect-ratio="1" class="grey lighten-2">
+                                    <v-img v-if="product.imgLink !== null" transition="scale-transition" :src="product.imgLink" height="80" width="120" aspect-ratio="1" class="grey lighten-2">
                                         <template v-slot:placeholder>
                                             <v-row class="fill-height ma-0" align="center" justify="center"> </v-row>
                                         </template>
                                     </v-img>
-                                    <v-img v-else height="80" width="120" :src="require('@/assets/ecommerce_logo.png')" aspect-ratio="1" class="grey lighten-2">
+                                    <v-img v-else height="80" width="120" transition="scale-transition" :src="require('@/assets/ecommerce_logo.png')" aspect-ratio="1" class="grey lighten-2">
                                         <template v-slot:placeholder>
                                             <v-row class="fill-height ma-0" align="center" justify="center"> </v-row>
                                         </template>
@@ -249,12 +249,12 @@
                                     <v-expansion-panel-content>
                                         <v-row class="mt-0">
                                             <v-col cols="12" md="2">
-                                                <v-img v-if="composant.imgLink !== null" :src="composant.imgLink" height="80" width="120" aspect-ratio="1" class="grey lighten-2">
+                                                <v-img v-if="composant.imgLink !== null" transition="scale-transition" :src="composant.imgLink" height="80" width="120" aspect-ratio="1" class="grey lighten-2">
                                                     <template v-slot:placeholder>
                                                         <v-row class="fill-height ma-0" align="center" justify="center"> </v-row>
                                                     </template>
                                                 </v-img>
-                                                <v-img v-else height="80" width="120" :src="require('@/assets/ecommerce_logo.png')" aspect-ratio="1" class="grey lighten-2">
+                                                <v-img v-else height="80" width="120" transition="scale-transition" :src="require('@/assets/ecommerce_logo.png')" aspect-ratio="1" class="grey lighten-2">
                                                     <template v-slot:placeholder>
                                                         <v-row class="fill-height ma-0" align="center" justify="center"> </v-row>
                                                     </template>
@@ -633,7 +633,7 @@
             <span>{{ snackbarMessage }}</span>
         </div>
         <template v-slot:action="{ attrs }">
-            <v-btn dark icon  @click="isSnackbarOpened = false">
+            <v-btn dark icon @click="isSnackbarOpened = false">
                 <v-icon>mdi-close</v-icon>
             </v-btn>
         </template>
@@ -968,7 +968,7 @@ export default Vue.extend({
                     //clearTimeout(timeout);
                     this.optionsDoc.isDownload ? this.errorMessage('Erreur sur les traitements !') : this.catchAxios(error)
                     setTimeout(() => {
-                        this.isProgress = false;
+                        return this.isProgress = false;
                     }, 1000);
                 });
         },

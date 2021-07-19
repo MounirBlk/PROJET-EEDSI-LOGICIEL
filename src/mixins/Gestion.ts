@@ -1,7 +1,7 @@
 import Vue, { VNode } from 'vue';
 import { bus } from '@/main';
 import { rules } from '@/plugins/observable';
-import { mapState, mapMutations } from 'vuex';
+import { mapState, mapMutations, mapActions } from 'vuex';
 import moment from 'moment';
 import io from 'socket.io-client';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
@@ -60,7 +60,6 @@ export default Vue.extend({
 		rules() {
 			return rules;
 		},
-		//...mapState([ 'isAdmin' ]),
 		...mapState([ 'baseUrl' ]),
 		isAdmin(): boolean {
             return this.$store.state.auth.user.role === 'Administrateur';
@@ -77,6 +76,9 @@ export default Vue.extend({
             setUser: 'SET_USER',
             setToken: 'SET_TOKEN'
         }),
+		...mapActions({
+			logOut: 'clearToken',
+		}),
 		successMessage: function(message: string): void {
 			this.snackbarMessage = message;
 			this.isSuccess = true;
@@ -88,13 +90,13 @@ export default Vue.extend({
 			this.isSnackbarOpened = true;
 		},
 		catchAxios: function(errorObj: any): void {
-			if (errorObj.data) {
+			if (this.isObjectNotEmpty(errorObj.data)) {
 				console.log(
 					`ERROR ${JSON.stringify(errorObj.status ? errorObj.status : 500)} : ${JSON.stringify(
-						errorObj.data.message ? errorObj.data.message : ''
+						this.isDataOk(errorObj.data.message) ? errorObj.data.message : ''
 					)}`
 				);
-				this.errorMessage(errorObj.data.message ? errorObj.data.message : 'Le serveur ne répond plus !');
+				this.errorMessage(this.isDataOk(errorObj.data.message) ? errorObj.data.message : 'Le serveur ne répond plus !');
 			} else {
 				console.log(JSON.stringify(errorObj));
 				this.errorMessage('Le serveur ne répond plus !');
@@ -160,16 +162,18 @@ export default Vue.extend({
 		getOwnUserData(){
 			return new Promise((resolve, reject) => {
 				const token: string | null = localStorage.getItem('SET_TOKEN');
-				if (token && token !== undefined && token !== null) {
+				if (token && this.isDataOk(token)) {
 					axiosApi
 						.get("/user/own")
 						.then((response: AxiosResponse) => {
-							if (!response.data.error) {
-								setTimeout(() => {
-									this.setUser(response.data.user); //$store.state.auth.user
-									this.setToken(token)
-									resolve(response.data.user)//USER
-								}, 1000);
+							if(this.isObjectNotEmpty(response.data)){
+								if (!response.data.error && response.data.user) {
+									setTimeout(() => {
+										this.setUser(response.data.user); //$store.state.auth.user
+										this.setToken(token)
+										resolve(response.data.user)//USER
+									}, 1000);
+								}
 							}
 						})
 						.catch((error) => {
@@ -177,6 +181,26 @@ export default Vue.extend({
 						});
 				}
 			});
-		}
+		},
+		isObjectNotEmpty(objectTest: any) {
+			return objectTest && typeof objectTest === 'object' && Object.keys(objectTest).length !== 0 ? true : false;
+		},
+		isDataOk(data: string | any[] | object | number | null | undefined) {
+            if (typeof data === 'string') {
+                return data && data !== null && data !== undefined /*&& data.length !== 0 && data !== ''*/
+            } else {
+                return data && data !== null && data !== undefined
+            }
+        },
+        scrollToByRef(refName: string) {
+            this.$nextTick(() => { //this.$nextTick to refresh DOM
+                const el = this.$refs[refName];
+                if (el) {
+                    el.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        }
 	}
 });

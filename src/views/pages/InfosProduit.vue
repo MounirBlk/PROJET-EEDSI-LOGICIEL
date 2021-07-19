@@ -82,7 +82,7 @@
                             <v-col cols="12" md="5">
                                 <v-row v-if="produit.tabImgLinks !== undefined">
                                     <v-col cols="12" v-for="(img, index) in paginatedData" :key="index">
-                                        <v-img :src="img" height="300" width="auto" aspect-ratio="1" class="grey lighten-2">
+                                        <v-img :src="img" transition="scale-transition" height="300" width="auto" aspect-ratio="1" class="grey lighten-2">
                                             <template v-slot:placeholder>
                                                 <v-row class="fill-height ma-0" align="center" justify="center">
                                                     <v-progress-circular indeterminate color="brown"></v-progress-circular>
@@ -247,7 +247,7 @@
             <span>{{ snackbarMessage }}</span>
         </div>
         <template v-slot:action="{ attrs }">
-            <v-btn dark icon  @click="isSnackbarOpened = false">
+            <v-btn dark icon @click="isSnackbarOpened = false">
                 <v-icon>mdi-close</v-icon>
             </v-btn>
         </template>

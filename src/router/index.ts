@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import VueRouter, { RouteConfig } from 'vue-router';
 import { bus } from '../main';
+import store from '@/store/index';
 //import Home from '../views/Home.vue'
 
 Vue.use(VueRouter);
@@ -152,13 +153,15 @@ const router = new VueRouter({
 	routes
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async(to, from, next) => {
 	if (to.matched.some((record) => record.meta.requiresAuth)) {
 		// this route requires auth, check if logged in
 		// if not, redirect to login page.
-		if (localStorage.getItem('SET_TOKEN') === null || localStorage.getItem('SET_TOKEN') === undefined) {
-			localStorage.clear();
+		const token = localStorage.getItem('SET_TOKEN');
+		if (token === null || token === undefined) {
+			//localStorage.clear();
 			bus.$emit('connected', false);
+			await store.dispatch('clearToken');
 			next({
 				//path: '/login',
 				//query: { redirect: to.path }

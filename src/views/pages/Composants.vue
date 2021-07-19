@@ -251,7 +251,7 @@
                                         <v-col cols="12" md="5">
                                             <v-row v-if="composantInfos.tabImgLinks !== undefined">
                                                 <v-col cols="12" v-for="(img, index) in paginatedData" :key="index">
-                                                    <v-img :src="img" height="300" width="auto" aspect-ratio="1" class="grey lighten-2">
+                                                    <v-img transition="scale-transition" :src="img" height="300" width="auto" aspect-ratio="1" class="grey lighten-2">
                                                         <template v-slot:placeholder>
                                                             <v-row class="fill-height ma-0" align="center" justify="center">
                                                                 <v-progress-circular indeterminate color="orange"></v-progress-circular>
@@ -298,12 +298,12 @@
         <v-skeleton-loader v-if="isFirstLoad" :loading="isLoading" type="table"></v-skeleton-loader>
         <v-data-table v-else :headers="headers" :items="items" :search.sync="search" :sort-by="['nom']" :sort-desc="[false]" item-key="nom">
             <template v-slot:[`item.imgLink`]="{ item }">
-                <v-img v-if="item.imgLink !== null" :src="item.imgLink" height="80" width="120" aspect-ratio="1" class="grey lighten-2">
+                <v-img v-if="item.imgLink !== null" transition="scale-transition" :src="item.imgLink" height="80" width="120" aspect-ratio="1" class="grey lighten-2">
                     <template v-slot:placeholder>
                         <v-row class="fill-height ma-0" align="center" justify="center"> </v-row>
                     </template>
                 </v-img>
-                <v-img v-else height="80" width="120" :src="require('@/assets/ecommerce_logo.png')" aspect-ratio="1" class="grey lighten-2">
+                <v-img v-else transition="scale-transition" height="80" width="120" :src="require('@/assets/ecommerce_logo.png')" aspect-ratio="1" class="grey lighten-2">
                     <template v-slot:placeholder>
                         <v-row class="fill-height ma-0" align="center" justify="center"> </v-row>
                     </template>
@@ -343,7 +343,7 @@
             <span>{{ snackbarMessage }}</span>
         </div>
         <template v-slot:action="{ attrs }">
-            <v-btn dark icon  @click="isSnackbarOpened = false">
+            <v-btn dark icon @click="isSnackbarOpened = false">
                 <v-icon>mdi-close</v-icon>
             </v-btn>
         </template>

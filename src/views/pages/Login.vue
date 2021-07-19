@@ -1,5 +1,5 @@
 <template>
-<v-img :src="$vuetify.breakpoint.mdAndUp ? 'https://www.potentiel-humain.eu/wp-content/uploads/2020/09/hand.jpg' : ''">
+<v-img transition="scale-transition" :src="$vuetify.breakpoint.mdAndUp ? 'https://www.potentiel-humain.eu/wp-content/uploads/2020/09/hand.jpg' : ''">
     <v-overlay :absolute="isAbsolute" :opacity="opacity" :value="isOverlay">
         <v-progress-circular color="indigo" indeterminate size="80"></v-progress-circular>
     </v-overlay>
@@ -52,10 +52,10 @@
                             <v-col cols="12" class="pt-2 mb-2">
                                 <span @click="isDialogForgotPassword = true" style="cursor: pointer">Mot de passe oublié ?</span>
                             </v-col>
-                            <v-badge bordered :color="isActive ? 'indigo' : 'grey'" icon="mdi-lock-open-outline" overlap>
+                            <v-badge bordered :color="isActive ? 'primary' : 'grey'" icon="mdi-lock-open-outline" overlap>
                                 <v-btn dark rounded :disabled="!isActive" :color="$vuetify.theme.dark ? 'indigo' : 'primary'" @click="connexion(infos.email, infos.password)">
-                                    <v-icon :color="!$vuetify.theme.dark ? 'black' : 'white'" left>mdi-check-circle-outline</v-icon>
-                                    <span :class="!$vuetify.theme.dark ? 'black--text' : 'white--text'">Connexion</span>
+                                    <v-icon left>mdi-check-circle-outline</v-icon>
+                                    <span>Connexion</span>
                                 </v-btn>
                             </v-badge>
                         </v-form>
@@ -73,7 +73,7 @@
             <span>{{ snackbarMessage }}</span>
         </div>
         <template v-slot:action="{ attrs }">
-            <v-btn dark icon  @click="isSnackbarOpened = false">
+            <v-btn dark icon @click="isSnackbarOpened = false">
                 <v-icon>mdi-close</v-icon>
             </v-btn>
         </template>
@@ -149,7 +149,7 @@ export default Vue.extend({
                 email,
                 password
             }).then(async (response: AxiosResponse) => {
-                const token: string | null = localStorage.getItem('SET_TOKEN');// ou response.data.token
+                const token: string | null = localStorage.getItem('SET_TOKEN'); // ou response.data.token
                 if (token == null || response === null) {
                     this.isOverlay = false;
                     this.infos.password = '';

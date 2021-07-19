@@ -209,8 +209,16 @@ export default Vue.extend({
         }
     }),
     created() {
-        bus.$on("synchro", async () => {
-            await this.getData();
+        bus.$on("synchro", () => {
+            axiosApi.get("/synchro").then(async (response: AxiosResponse) => {
+                if (response) {
+                    await this.getData();
+                }
+            }).catch((error: AxiosError) => {
+                this.catchAxios(error)
+            }).finally(() => {
+                this.isOverlay = false;
+            });
         });
     },
     beforeMount() {},
@@ -226,77 +234,81 @@ export default Vue.extend({
             ttPromise.push(axiosApi.get("/user/all/all"));
             ttPromise.push(axiosApi.get("/product/all"));
             ttPromise.push(axiosApi.get("/composant/all"));
-            Promise.all(ttPromise)
-                .then((response: AxiosResponse[]) => {
-                    if (!response[0].data.error) {
-                        let pieCommandesClientData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                        let pieCommandesProspectData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                        let pieCommandesRevenusData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                        this.commandes = response[0].data.commandes
-                        this.commandes.forEach((commande: any) => {
-                            if (commande.clientID && commande.clientID !== null && commande.clientID.role === "Prospect") { //Prospect
-                                for (let j = 0; j < 12; j++) {
-                                    pieCommandesProspectData[j] = (new Date(commande.dateLivraison).getMonth() + 1) === (j + 1) ? pieCommandesProspectData[j] + 1 : pieCommandesProspectData[j]
-                                }
-                            } else { //Client
-                                for (let i = 0; i < 12; i++) {
-                                    pieCommandesClientData[i] = (new Date(commande.dateLivraison).getMonth() + 1) === (i + 1) ? pieCommandesClientData[i] + 1 : pieCommandesClientData[i]
-                                }
+            Promise.all(ttPromise).then((response: AxiosResponse[]) => {
+                if (!response[0].data.error) {
+                    let pieCommandesClientData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    let pieCommandesProspectData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    let pieCommandesRevenusData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    this.commandes = response[0].data.commandes
+                    this.commandes.forEach((commande: any) => {
+                        if (commande.clientID && commande.clientID !== null && commande.clientID.role === "Prospect") { //Prospect
+                            for (let j = 0; j < 12; j++) {
+                                pieCommandesProspectData[j] = (new Date(commande.dateLivraison).getMonth() + 1) === (j + 1) ? pieCommandesProspectData[j] + 1 : pieCommandesProspectData[j]
                             }
-                            for (let k = 0; k < 12; k++) {
-                                pieCommandesRevenusData[k] = (new Date(commande.dateLivraison).getMonth() + 1) === (k + 1) ? pieCommandesRevenusData[k] + commande.prixTotal : pieCommandesRevenusData[k]
+                        } else { //Client
+                            for (let i = 0; i < 12; i++) {
+                                pieCommandesClientData[i] = (new Date(commande.dateLivraison).getMonth() + 1) === (i + 1) ? pieCommandesClientData[i] + 1 : pieCommandesClientData[i]
                             }
+                        }
+                        for (let k = 0; k < 12; k++) {
+                            pieCommandesRevenusData[k] = (new Date(commande.dateLivraison).getMonth() + 1) === (k + 1) ? pieCommandesRevenusData[k] + commande.prixTotal : pieCommandesRevenusData[k]
+                        }
+                    });
+                    this.chartCommandes.datasets[0].data = pieCommandesClientData;
+                    this.chartCommandes.datasets[1].data = pieCommandesProspectData;
+                    this.chartBudget.datasets[0].data = pieCommandesRevenusData.map((el: any) => el = parseFloat(el.toFixed(2)))
+                }
+                if (!response[1].data.error) {
+                    let pieUsersData = [0, 0, 0, 0, 0]
+                    const tabRoles = ["Administrateur", "Commercial", "Client", "Livreur", "Prospect"]
+                    response[1].data.users.filter((user: any) => user.disabled === false).forEach((user: any) => {
+                        tabRoles.forEach((role: string, index: number) => {
+                            pieUsersData[index] = user.role === role ? pieUsersData[index] + 1 : pieUsersData[index]
                         });
-                        this.chartCommandes.datasets[0].data = pieCommandesClientData;
-                        this.chartCommandes.datasets[1].data = pieCommandesProspectData;
-                        this.chartBudget.datasets[0].data = pieCommandesRevenusData.map((el: any) => el = parseFloat(el.toFixed(2)))
-                    }
-                    if (!response[1].data.error) {
-                        let pieUsersData = [0, 0, 0, 0, 0]
-                        const tabRoles = ["Administrateur", "Commercial", "Client", "Livreur", "Prospect"]
-                        response[1].data.users.filter((user: any) => user.disabled === false).forEach((user: any) => {
-                            tabRoles.forEach((role: string, index: number) => {
-                                pieUsersData[index] = user.role === role ? pieUsersData[index] + 1 : pieUsersData[index]
-                            });
+                    });
+                    this.chartPieUsers.datasets.data = pieUsersData;
+                }
+                if (!response[2].data.error && !response[3].data.error) {
+                    const tabTypes = ["Chaise", "Table", "Armoire", "Lit", "Autres"]
+                    let pieProductData = [0, 0, 0, 0, 0]
+                    response[2].data.products.forEach((product: any) => {
+                        tabTypes.forEach((type: string, index: number) => {
+                            pieProductData[index] = product.type === type ? pieProductData[index] + 1 : pieProductData[index]
                         });
-                        this.chartPieUsers.datasets.data = pieUsersData;
-                    }
-                    if (!response[2].data.error && !response[3].data.error) {
-                        const tabTypes = ["Chaise", "Table", "Armoire", "Lit", "Autres"]
-                        let pieProductData = [0, 0, 0, 0, 0]
-                        response[2].data.products.forEach((product: any) => {
-                            tabTypes.forEach((type: string, index: number) => {
-                                pieProductData[index] = product.type === type ? pieProductData[index] + 1 : pieProductData[index]
-                            });
+                    });
+                    let pieCompData = [0, 0, 0, 0, 0]
+                    response[3].data.composants.forEach((composant: any) => {
+                        tabTypes.forEach((type: string, index: number) => {
+                            pieCompData[index] = composant.type === type ? pieCompData[index] + 1 : pieCompData[index]
                         });
-                        let pieCompData = [0, 0, 0, 0, 0]
-                        response[3].data.composants.forEach((composant: any) => {
-                            tabTypes.forEach((type: string, index: number) => {
-                                pieCompData[index] = composant.type === type ? pieCompData[index] + 1 : pieCompData[index]
-                            });
-                        });
-                        this.chartProductComp.datasets[0].data = pieProductData;
-                        this.chartProductComp.datasets[1].data = pieCompData;
-                    }
-                    this.isOverlay = false;
-                    setTimeout(() => {
-                        this.resetComponentKey++ //reset data chart
-                    }, 500);
-                }).catch((error: AxiosError) => {
-                    this.catchAxios(error)
-                    this.isOverlay = false;
-                });
+                    });
+                    this.chartProductComp.datasets[0].data = pieProductData;
+                    this.chartProductComp.datasets[1].data = pieCompData;
+                }
+                setTimeout(() => {
+                    this.resetComponentKey++ //reset data chart
+                }, 500);
+            }).catch((error: AxiosError) => {
+                this.catchAxios(error)
+            }).finally(() => {
+                this.isOverlay = false;
+            });
         },
         getCommandes: function (): void {
             this.isOverlay = true;
             axiosApi.get("/commande/all/all", this.configAxios())
                 .then((response: AxiosResponse) => {
                     this.commandes = response.data.commandes
-                    this.isOverlay = false;
-                }).catch((error) => {
+                    console.log(this.commandes[104])
+                    console.log(this.commandes[104].articles[0].idProduct.tabImgLinks)
+                    this.commandes[104].articles[0].idProduct.tabImgLinks.forEach((el: any) => {
+                        console.log(el.split(`${this.commandes[104].articles[0].idProduct._id}/`)[1].includes('rouge'))
+                    });
+                }).catch((error: AxiosError) => {
                     this.catchAxios(error)
+                }).finally(() => {
                     this.isOverlay = false;
-                });
+                })
         },
         search: function (adresse: string): void {
             this.isOverlay = true;
@@ -317,9 +329,9 @@ export default Vue.extend({
                         this.mapOptions.zoom = 16
                         this.mapOptions.center = [latitude, longitude]
                     }
-                    this.isOverlay = false;
-                }).catch((error) => {
+                }).catch((error: AxiosError) => {
                     this.catchAxios(error)
+                }).finally(() => {
                     this.isOverlay = false;
                 });
         }

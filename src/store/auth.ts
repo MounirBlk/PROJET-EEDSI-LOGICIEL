@@ -37,6 +37,7 @@ export default {
 		},
 		clearToken: function({ commit }) {
 			commit('SET_TOKEN', null);
+			commit('SET_USER', {});
 			localStorage.clear();
 			axiosApi.defaults.headers.common['Authorization'] = null;
 		}
