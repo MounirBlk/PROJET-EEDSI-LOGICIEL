@@ -171,12 +171,12 @@
                 <v-chip dark color="brown">{{ item.type }}</v-chip>
             </template>
             <template v-slot:[`item.imgLink`]="{ item }">
-                <v-img v-if="item.imgLink !== null" :src="item.imgLink" height="80" width="120" aspect-ratio="1" class="grey lighten-2">
+                <v-img v-if="item.imgLink !== null" transition="scale-transition" :src="item.imgLink" height="80" width="120" aspect-ratio="1" class="grey lighten-2">
                     <template v-slot:placeholder>
                         <v-row class="fill-height ma-0" align="center" justify="center"> </v-row>
                     </template>
                 </v-img>
-                <v-img v-else height="80" width="120" :src="require('@/assets/ecommerce_logo.png')" aspect-ratio="1" class="grey lighten-2">
+                <v-img v-else transition="scale-transition" height="80" width="120" :src="require('@/assets/ecommerce_logo.png')" aspect-ratio="1" class="grey lighten-2">
                     <template v-slot:placeholder>
                         <v-row class="fill-height ma-0" align="center" justify="center"> </v-row>
                     </template>
@@ -209,7 +209,7 @@
             <span>{{ snackbarMessage }}</span>
         </div>
         <template v-slot:action="{ attrs }">
-            <v-btn dark icon  @click="isSnackbarOpened = false">
+            <v-btn dark icon @click="isSnackbarOpened = false">
                 <v-icon>mdi-close</v-icon>
             </v-btn>
         </template>

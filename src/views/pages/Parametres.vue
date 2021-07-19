@@ -12,7 +12,7 @@
             <v-divider class="mb-3 mt-n1" />
             <v-row>
                 <v-col cols="12" class="text-right">
-                    <v-form ref="form" v-model="rules.valid" lazy-validation>
+                    <v-form ref="formPw" v-model="rules.valid" lazy-validation>
                         <v-text-field color="purple" label="Mot de passe actuel" v-model="oldPasswordUser" prepend-inner-icon="mdi-lock-outline" clearable :type="showPassword ? 'text' : 'password'" @click:append="showPassword = !showPassword" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" :rules="rules.passwordRules" required />
                         <v-text-field color="purple" label="Nouveau mot de passe" v-model="passwordUser" prepend-inner-icon="mdi-lock-outline" clearable :type="showNewPassword ? 'text' : 'password'" @click:append="showNewPassword = !showNewPassword" :append-icon="showNewPassword ? 'mdi-eye' : 'mdi-eye-off'" :rules="rules.passwordRules" required />
                         <v-btn class="mr-1" outlined color="error" text @click="clearPassword()">Annuler</v-btn>
@@ -37,37 +37,37 @@
                     <v-container class="py-0">
                         <v-card class="mt-0" height="auto">
                             <v-col cols="12">
-                                <div class="text-center">
+                                <v-form ref="formUser" v-model="rules.valid" lazy-validation class="text-center">
                                     <v-row>
                                         <v-col cols="12" md="6">
-                                            <v-text-field color="purple" label="Nom" v-model="user.lastname" prepend-inner-icon="mdi-face" :clearable="isUpdateUser" :disabled="!isUpdateUser" />
+                                            <v-text-field color="purple" label="Nom" v-model="user.lastname" prepend-inner-icon="mdi-face" :clearable="isUpdateUser" :disabled="!isUpdateUser" :rules="rules.caractereRules" required />
                                         </v-col>
                                         <v-col cols="12" md="6">
-                                            <v-text-field color="purple" label="Prénom" v-model="user.firstname" prepend-inner-icon="mdi-face" :clearable="isUpdateUser" :disabled="!isUpdateUser" />
+                                            <v-text-field color="purple" label="Prénom" v-model="user.firstname" prepend-inner-icon="mdi-face" :clearable="isUpdateUser" :disabled="!isUpdateUser" :rules="rules.caractereRules" required />
                                         </v-col>
                                     </v-row>
                                     <v-row class="mt-n4">
                                         <v-col cols="12" md="12">
-                                            <v-text-field color="purple" label="Email" v-model="user.email" prepend-inner-icon="mdi-email-outline" disabled />
+                                            <v-text-field color="purple" label="Email" v-model="user.email" prepend-inner-icon="mdi-email-outline" disabled :rules="rules.emailRules" required />
                                         </v-col>
                                     </v-row>
                                     <v-row class="mt-n4">
                                         <v-col cols="12" md="4">
-                                            <v-select color="purple" prepend-inner-icon="mdi-format-list-bulleted-type" v-model="user.civilite" :items="['Homme', 'Femme']" label="Civilité" :disabled="!isUpdateUser"></v-select>
+                                            <v-select color="purple" prepend-inner-icon="mdi-format-list-bulleted-type" v-model="user.civilite" :items="['Homme', 'Femme']" label="Civilité" :disabled="!isUpdateUser" :rules="rules.champRules" required></v-select>
                                         </v-col>
                                         <v-col cols="12" md="4">
                                             <v-menu v-model="isDialogDateNaissanceOpen" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="290px" color="purple">
                                                 <template v-slot:activator="{ on, attrs }">
-                                                    <v-text-field color="purple" v-model="user.dateNaissance" label="Date de naissance" prepend-inner-icon="mdi-calendar-outline" readonly v-bind="attrs" v-on="on" :disabled="!isUpdateUser"></v-text-field>
+                                                    <v-text-field color="purple" v-model="user.dateNaissance" label="Date de naissance" prepend-inner-icon="mdi-calendar-outline" readonly v-bind="attrs" v-on="on" :disabled="!isUpdateUser" :rules="rules.dateEnRules" required></v-text-field>
                                                 </template>
-                                                <v-date-picker color="purple" v-model="user.dateNaissance" first-day-of-week="1" @input="isDialogDateNaissanceOpen = false"></v-date-picker>
+                                                <v-date-picker color="purple" v-model="user.dateNaissance" first-day-of-week="1" @input="isDialogDateNaissanceOpen = false" :rules="rules.dateEnRules" required></v-date-picker>
                                             </v-menu>
                                         </v-col>
                                         <v-col cols="12" md="4">
                                             <v-text-field color="purple" label="Numéro de téléphone" v-model="user.portable" prepend-inner-icon="mdi-deskphone" :clearable="isUpdateUser" :disabled="!isUpdateUser" />
                                         </v-col>
                                     </v-row>
-                                </div>
+                                </v-form>
                             </v-col>
                             <v-row>
                                 <v-col cols="12">
@@ -131,7 +131,7 @@
             <span>{{ snackbarMessage }}</span>
         </div>
         <template v-slot:action="{ attrs }">
-            <v-btn dark icon  @click="isSnackbarOpened = false">
+            <v-btn dark icon @click="isSnackbarOpened = false">
                 <v-icon>mdi-close</v-icon>
             </v-btn>
         </template>
@@ -194,24 +194,26 @@ export default Vue.extend({
             axiosApi
                 .get("/user/own")
                 .then(async (response) => {
-                    if(response){
+                    if (response) {
                         this.user = response.data.user;
                         await this.setUser(this.user); //this.$store.commit("SET_USER", response.data.user) / $store.state.auth.user
-                        this.isOverlay = false;
                     }
                 })
                 .catch((error) => {
                     this.catchAxios(error)
+                }).finally(() => {
                     this.isOverlay = false;
-                })
+                });
         },
         saveUpdate: function () {
+            if (!this.$refs.formUser.validate()) return this.errorMessage("Veuillez vérifier les champs !");
             this.isUpdateUser = false;
             axiosApi
                 .put("/user/update/" + this.user._id, qs.stringify(this.user)) //update de l'user
                 .then((response) => {
                     if (response && response.data) {
                         Object.assign(this.$data, this.$options.data()); //reset data
+                        this.$refs.formUser.reset();
                         this.successMessage("Sauvegarde des modifications effectuée !");
                         setTimeout(() => {
                             this.getUserData();
@@ -228,7 +230,7 @@ export default Vue.extend({
         },
         saveNewPassword: function (oldPasswordUser: string, passwordUser: string) {
             this.isChangePasswordDialog = false;
-            if (!this.$refs.form.validate()) return this.errorMessage("Veuillez vérifier les champs !");
+            if (!this.$refs.formPw.validate()) return this.errorMessage("Veuillez vérifier les champs !");
             if (oldPasswordUser == null || oldPasswordUser == "") return this.errorMessage("Mot de passe actuel vide !");
             if (passwordUser == null || passwordUser == "") return this.errorMessage("Nouveau mot de passe vide !");
             /*--------------------------------------------------- */
@@ -239,9 +241,9 @@ export default Vue.extend({
             axiosApi
                 .put("/user/password", qs.stringify(payload)) //edit password de l'user
                 .then((response) => {
-                    if(response){
+                    if (response) {
                         Object.assign(this.$data, this.$options.data()); //reset data
-                        this.$refs.form.reset();
+                        this.$refs.formPw.reset();
                         this.successMessage("Le mot de passe a bien été modifié !");
                         setTimeout(() => {
                             this.getUserData();
@@ -249,10 +251,11 @@ export default Vue.extend({
                     }
                 })
                 .catch((error) => {
+                    this.catchAxios(error)
+                }).finally(() => {
                     this.passwordUser = "";
                     this.oldPasswordUser = "";
-                    this.catchAxios(error)
-                });
+                });;
         },
         clearPassword: function () {
             this.isChangePasswordDialog = false;

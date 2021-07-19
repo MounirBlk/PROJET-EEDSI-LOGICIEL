@@ -4,7 +4,6 @@ import {
     ValidationObserver,
     ValidationProvider,
 } from 'vee-validate'
-
 import {
     email,
     max,

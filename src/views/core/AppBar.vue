@@ -120,11 +120,11 @@ export default Vue.extend({
         ...mapMutations({
             setDrawer: "SET_DRAWER"
         }),
-        deconnexion: function () {
-            localStorage.clear();
+        deconnexion: async function () {
+            await this.logOut();
             this.$router.push({
                 name: "Connexion",
-                //params: { reloadLogOut: true },
+                //params: {},
             });
         },
         synchronisation: function () {
@@ -133,7 +133,7 @@ export default Vue.extend({
             this.openNotification('top-right', 'primary', 'Synchronisation', 'La synchronisation est en cours d\'exécution')
             setTimeout(() => {
                 this.isDisabledSynchro = false;
-            }, 10000);
+            }, 7500);
         },
         onScroll: function () {
             this.isTransparent = window.pageYOffset < 25

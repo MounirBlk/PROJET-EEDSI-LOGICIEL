@@ -6,10 +6,10 @@ import '@/plugins/vee-validate';
 import '@/plugins/axiosApi';
 import '@/plugins/socket';
 import '@/plugins/vuesax';
-import router from '@/router';
 import vuetify from '@/plugins/vuetify';
 import i18n from '@/plugins/i18n';
-import store from '@/store';//after plugins/axiosApi
+import store from '@/store';// /!\ Call after plugins/axiosApi /!\
+import router from '@/router';
 import qs from 'qs';
 import moment from 'vue-moment';
 import VuePageTransition from 'vue-page-transition';

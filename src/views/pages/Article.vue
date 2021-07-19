@@ -83,13 +83,13 @@
         <v-col cols="12" md="5">
             <v-row>
                 <v-col cols="12" v-for="(img, index) in paginatedData" :key="index" v-if="article.idProduct.tabImgLinks !== undefined">
-                    <v-img :src="img" height="300" width="auto" aspect-ratio="1" class="grey lighten-2">
-                        <template v-slot:placeholder>
-                            <v-row class="fill-height ma-0" align="center" justify="center">
-                                <v-progress-circular indeterminate color="success darken-1"></v-progress-circular>
-                            </v-row>
-                        </template>
-                    </v-img>
+                        <v-img transition="scale-transition" :src="img" height="300" width="auto" aspect-ratio="1" class="grey lighten-2">
+                            <template v-slot:placeholder>
+                                <v-row class="fill-height ma-0" align="center" justify="center">
+                                    <v-progress-circular indeterminate color="success darken-1"></v-progress-circular>
+                                </v-row>
+                            </template>
+                        </v-img>
                 </v-col>
                 <v-col cols="12" md="12" v-if="article.idProduct.tabImgLinks !== undefined">
                     <div class="text-center">

@@ -1,6 +1,6 @@
 <template>
 <v-app>
-    <dashboard-core-app-bar  v-if="connected != false" />
+    <dashboard-core-app-bar v-if="connected != false" />
 
     <dashboard-core-drawer v-if="connected != false" />
 
@@ -36,7 +36,11 @@ export default Vue.extend({
             this.connected = data;
         });
     },
-    beforeMount() {},
+    beforeMount() {
+        setTimeout(async () => {
+            await this.getOwnUserData();
+        }, 250);
+    },
     mounted() {},
     methods: {}
 });
