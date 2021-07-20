@@ -34,7 +34,7 @@
                 <br /><span class="font-weight-bold">Référence:</span> {{ commande.refID }}
                 <br /><span class="font-weight-bold">Adresse:</span> {{ commande.adresseLivraison }}
                 <br />
-                <v-row v-if="commande && commande.articles.length !== 0" no-gutters>
+                <v-row v-if="$vuetify.breakpoint.mdAndUp && commande && commande.articles.length !== 0" no-gutters>
                     <v-col cols="2" class="ma-1" :style="`border: solid 1px ${getCommandeColor(commande.statut)}`" v-for="(article, i) in commande.articles" :key="i" v-if="article">
                         <div v-if="article.idProduct.tabImgLinks" v-for="(image, j) in article.idProduct.tabImgLinks ? article.idProduct.tabImgLinks : []" :key="j">
                             <v-img v-if="isDataOk(image) && image !== '' && isObjectNotEmpty(commande.articles[i].idProduct) ? image.split(`${commande.articles[i].idProduct._id}/`)[1].includes(commande.articles[i].couleur) : false" transition="scale-transition" :src="image" height="40" width="100%" aspect-ratio="1" class="white">

@@ -25,5 +25,4 @@ Vue.component('LRectangle', LRectangle);
 Vue.component('LControlAttribution', LControlAttribution);
 Vue.component('LControlLayers', LControlLayers);
 Vue.component('LControlZoom', LControlZoom);
-Vue.component('LGeoJson', LGeoJson);
 Vue.component('LTooltip', LTooltip);
