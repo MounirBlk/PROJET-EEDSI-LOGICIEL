@@ -82,7 +82,7 @@
         </v-col>
         <v-col cols="12" md="5">
             <v-row>
-                <v-col cols="12" v-for="(img, index) in paginatedData" :key="index" v-if="article.idProduct.tabImgLinks !== undefined">
+                <v-col cols="12" v-for="(img, index) in paginatedData" :key="index" v-if="isDataOk(article.idProduct.tabImgLinks)">
                         <v-img transition="scale-transition" :src="img" height="300" width="auto" aspect-ratio="1" class="grey lighten-2">
                             <template v-slot:placeholder>
                                 <v-row class="fill-height ma-0" align="center" justify="center">
@@ -91,7 +91,7 @@
                             </template>
                         </v-img>
                 </v-col>
-                <v-col cols="12" md="12" v-if="article.idProduct.tabImgLinks !== undefined">
+                <v-col cols="12" md="12" v-if="isDataOk(article.idProduct.tabImgLinks) && parseInt(article.idProduct.tabImgLinks.length / article.idProduct.tabImgLinks.length) !== 1">
                     <div class="text-center">
                         <v-pagination circle v-model="pageNumber" :length="article.idProduct.tabImgLinks.length" @input="nextPage" />
                     </div>
@@ -189,7 +189,7 @@ export default Vue.extend({
         paginatedData() {
             const start = this.pageNumber * this.size - this.size,
                 end = start + this.size;
-            return this.article.idProduct.tabImgLinks === undefined ? [] : this.article.idProduct.tabImgLinks.slice(start, end);
+            return this.isDataOk(this.article.idProduct.tabImgLinks) ? this.article.idProduct.tabImgLinks.filter((el: string) => el.split(`${this.article.idProduct._id}/`)[1].includes(this.article.couleur)) /*this.article.idProduct.tabImgLinks.slice(start, end)*/ : [];
         }
     },
     watch: {},
