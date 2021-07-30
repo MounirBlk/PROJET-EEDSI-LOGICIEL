@@ -105,7 +105,6 @@
                 </v-expansion-panels>
             </v-col>
         </v-row>
-        <base-go-to-up />
         <v-snackbar shaped v-model="isSnackbarOpened" elevation="24" :color="isSuccess ? 'success' : 'error'" style="filter: opacity(95%);">
             <div class="text-center subtitle-1">
                 <v-icon v-if="!isSuccess" color="white" left>mdi-alert-outline</v-icon>
@@ -206,7 +205,7 @@ export default Vue.extend({
             size: 420 as number,
             zoom: 5 as number,
             center: [48.992106, 2.429232] as number[],
-        }
+        },
     }),
     created() {
         bus.$on("synchro", () => {
