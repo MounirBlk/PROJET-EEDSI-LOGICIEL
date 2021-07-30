@@ -5,7 +5,7 @@
         <v-toolbar-title :style="$vuetify.theme.dark ? 'filter: drop-shadow(4px 4px 9px white) invert(5%);' : 'filter: drop-shadow(4px 4px 9px black) invert(10%);'" class="hidden-sm-and-down font-weight-light" v-text="$route.name"></v-toolbar-title>
     </sequential-entrance>
     <v-spacer class="mx-2"></v-spacer>
-    <v-progress-linear width="100%" v-if="isProgress && $router.history.current.name !== 'Prospections'" dark striped color="indigo" v-model="valueTraitement" height="20">
+    <v-progress-linear width="100%" v-if="isProgress && $router.history.current.name !== 'Prospections'" dark striped :color="Math.ceil(valueTraitement) <= 33 ? 'warning' : Math.ceil(valueTraitement) <= 66 ? 'indigo' : 'success'" v-model="valueTraitement" height="20">
         <span class="font-weight-bold">En cours de traitement {{ Math.ceil(valueTraitement) > 100 ? 100 : Math.ceil(valueTraitement) }}%</span>
     </v-progress-linear>
 

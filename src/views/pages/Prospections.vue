@@ -535,8 +535,8 @@
         </v-row>
         <v-row no-gutters v-if="isProgress">
             <v-col cols="12" md="12">
-                <v-progress-linear dark striped color="indigo" v-model="valueTraitement" height="20">
-                    <strong>{{ Math.ceil(valueTraitement) > 100 ? 100 : Math.ceil(valueTraitement) }}%</strong>
+                <v-progress-linear dark striped :color="Math.ceil(valueTraitement) <= 33 ? 'warning' : Math.ceil(valueTraitement) <= 66 ? 'indigo' : 'success'" v-model="valueTraitement" height="20">
+                    <span class="font-weight-bold">{{ Math.ceil(valueTraitement) > 100 ? 100 : Math.ceil(valueTraitement) }}%</span>
                 </v-progress-linear>
             </v-col>
         </v-row>
