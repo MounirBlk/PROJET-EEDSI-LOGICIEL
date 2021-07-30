@@ -190,7 +190,7 @@
                         <base-material-card color="orange">
                             <template v-slot:heading>
                                 <div class="display-1 white--text">
-                                    <span>Produit</span><br />
+                                    <span>Composant</span><br />
                                 </div>
                             </template>
                             <div>

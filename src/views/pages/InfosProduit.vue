@@ -19,7 +19,7 @@
                 <div v-else>
                     <div v-if="$route.params.isEdit === false">
                         <v-row>
-                            <v-col cols="12" md="7">
+                            <v-col cols="12" md="5">
                                 <v-simple-table dense>
                                     <template v-slot:default>
                                         <tbody>
@@ -79,8 +79,13 @@
                                     </template>
                                 </v-simple-table>
                             </v-col>
-                            <v-col cols="12" md="5">
-                                <v-row v-if="produit.tabImgLinks !== undefined">
+                            <v-col cols="12" md="7">
+                                <v-row v-if="isDataOk(produit.tabImgLinks) && $vuetify.breakpoint.mdAndUp">
+                                    <v-col cols="12" md="12">
+                                        <base-carousel :autoplay="true" :display="3" :width="300" :images="isDataOk(produit.tabImgLinks) ? produit.tabImgLinks : []" />
+                                    </v-col>
+                                </v-row>
+                                <v-row v-if="isDataOk(produit.tabImgLinks) && $vuetify.breakpoint.smAndDown">
                                     <v-col cols="12" v-for="(img, index) in paginatedData" :key="index">
                                         <v-img :src="img" transition="scale-transition" height="300" width="auto" aspect-ratio="1" class="grey lighten-2">
                                             <template v-slot:placeholder>

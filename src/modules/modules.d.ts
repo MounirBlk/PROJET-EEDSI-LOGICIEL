@@ -6,4 +6,5 @@ declare module 'vue-sequential-entrance';
 declare module 'lodash';
 declare module 'vuesax';
 declare module 'leaflet';
+//declare module 'vue-carousel-3d';
 //declare module 'vuescroll';

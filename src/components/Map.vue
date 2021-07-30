@@ -123,7 +123,7 @@ export default Vue.extend({
                     visible: false,
                     url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
                     //attribution: 'Map data: &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
-                }
+                },
             ],
             geoJsonData: null,
             isBlink: false,
@@ -163,20 +163,29 @@ export default Vue.extend({
             if (statut === 'Termine') color = 'green'
             return color;
         },
-        getIcon: function (color: string = null): void {
+        getIcon: function (color: string = null, isOmbre: boolean = false): void {
             const colors: string[] = ['blue', 'gold', 'red', 'green', 'orange', 'yellow', 'violet', 'grey', 'black']
             let selectedColor = 'blue';
             if (colors.find((el) => el === color)) {
                 selectedColor = color
             }
-            return L.icon({
-                iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${selectedColor}.png`,
-                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                iconSize: [25, 41],
-                iconAnchor: [12, 41],
-                popupAnchor: [1, -34],
-                shadowSize: [41, 41],
-            })
+            if (isOmbre) {
+                return L.icon({
+                    iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${selectedColor}.png`,
+                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                    popupAnchor: [1, -34],
+                    shadowSize: [41, 41]
+                });
+            } else {
+                return L.icon({
+                    iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${selectedColor}.png`,
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                    popupAnchor: [1, -34]
+                });
+            }
         }
     }
 });
