@@ -35,7 +35,7 @@
                 </template>
                 <v-form>
                     <v-container class="py-0">
-                        <v-card class="mt-0" height="auto">
+                        <v-card class="pa-2" height="auto" outlined color="transparent">
                             <v-col cols="12">
                                 <v-form ref="formUser" v-model="rules.valid" lazy-validation class="text-center">
                                     <v-row>

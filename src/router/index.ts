@@ -129,6 +129,12 @@ const routes: Array<RouteConfig> = [
 				path: '/produits/produit',
 				component: () => import('@/views/pages/InfosProduit.vue'),
 				meta: setRequiresAuth(true)
+			},
+			{
+				name: 'Support',
+				path: '/support',
+				component: () => import('@/views/pages/Support.vue'),
+				meta: setRequiresAuth(true)
 			}
 		]
 	},

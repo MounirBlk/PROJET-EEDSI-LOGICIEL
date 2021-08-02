@@ -13,7 +13,7 @@
         <v-row :style="$vuetify.theme.dark ? 'filter: drop-shadow(8px 8px 18px indigo) invert(0%);' : 'filter: drop-shadow(4px 4px 9px white) invert(0%);'">
             <v-col cols="12" class="d-flex justify-center">
                 <span class="mx-2 font-weight-light text-h6">
-                    <v-icon left>mdi-face</v-icon>{{ $store.state.auth.user.firstname }} {{ $store.state.auth.user.lastname }}
+                    <v-icon left>mdi-face</v-icon><span>{{ $store.state.auth.user.firstname }} {{ $store.state.auth.user.lastname }}</span>
                 </span>
             </v-col>
         </v-row>
@@ -28,16 +28,16 @@
                 </v-list-item-action>
                 <v-list-item-content>
                     <v-list-item-title>
-                        <strong v-if="!$vuetify.theme.dark" style="text-shadow: 0.1em 0.1em 0.1em white; font-size: 18px">{{ item.title }}</strong>
-                        <strong v-else style="text-shadow: 0.1em 0.1em 0.1em black; font-size: 18px">{{ item.title }}</strong>
+                        <span v-if="!$vuetify.theme.dark" class="font-weight-bold" style="text-shadow: 0.1em 0.1em 0.1em white; font-size: 18px">{{ item.title }}</span>
+                        <span v-else class="font-weight-bold" style="text-shadow: 0.1em 0.1em 0.1em black; font-size: 18px">{{ item.title }}</span>
                     </v-list-item-title>
                 </v-list-item-content>
             </v-list-item>
             <v-list-group v-else :color="!$vuetify.theme.dark ? 'black' : 'white'" :prepend-icon="item.icon">
                 <template v-slot:activator>
                     <v-list-item-title>
-                        <strong v-if="!$vuetify.theme.dark" style="text-shadow: 0.1em 0.1em 0.1em white; font-size: 18px">{{ item.title }}</strong>
-                        <strong v-else style="text-shadow: 0.1em 0.1em 0.1em black; font-size: 18px">{{ item.title }}</strong>
+                        <span v-if="!$vuetify.theme.dark" class="font-weight-bold" style="text-shadow: 0.1em 0.1em 0.1em white; font-size: 18px">{{ item.title }}</span>
+                        <span v-else class="font-weight-bold" style="text-shadow: 0.1em 0.1em 0.1em black; font-size: 18px">{{ item.title }}</span>
                     </v-list-item-title>
                 </template>
                 <v-list-item dense class="ml-3 mt-1" v-for="(child, i) in item.children" :to="child.to" :key="i" link>
@@ -47,14 +47,30 @@
                     </v-list-item-action>
                     <v-list-item-content>
                         <v-list-item-title>
-                            <strong v-if="!$vuetify.theme.dark" style="text-shadow: 0.1em 0.1em 0.1em white; font-size: 18px">{{ child.title }}</strong>
-                            <strong v-else style="text-shadow: 0.1em 0.1em 0.1em black; font-size: 18px">{{ child.title }}</strong>
+                            <span v-if="!$vuetify.theme.dark" class="font-weight-bold" style="text-shadow: 0.1em 0.1em 0.1em white; font-size: 18px">{{ child.title }}</span>
+                            <span v-else class="font-weight-bold" style="text-shadow: 0.1em 0.1em 0.1em black; font-size: 18px">{{ child.title }}</span>
                         </v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
             </v-list-group>
         </sequential-entrance>
     </v-list>
+    <template v-slot:append>
+        <v-list class="py-0">
+            <v-list-item dense link to="/support">
+                <v-list-item-action>
+                    <v-icon v-if="!$vuetify.theme.dark" style="text-shadow: 0.1em 0.1em 0.1em white">mdi-handshake</v-icon>
+                    <v-icon v-else>mdi-handshake</v-icon>
+                </v-list-item-action>
+                <v-list-item-content>
+                    <v-list-item-title>
+                        <span v-if="!$vuetify.theme.dark" class="font-weight-bold" style="text-shadow: 0.1em 0.1em 0.1em white; font-size: 18px">Support</span>
+                        <span v-else class="font-weight-bold" style="text-shadow: 0.1em 0.1em 0.1em black; font-size: 18px">Support</span>
+                    </v-list-item-title>
+                </v-list-item-content>
+            </v-list-item>
+        </v-list>
+    </template>
 </v-navigation-drawer>
 </template>
 
@@ -105,6 +121,11 @@ export default Vue.extend({
             title: 'Commandes',
             icon: 'mdi-package-variant-closed',
             to: '/commandes',
+        }, {
+            title: 'Mails',
+            icon: 'mdi-email-multiple-outline',
+            to: '/mails',
+            disabled: true
         }, {
             title: 'Paramètres',
             icon: 'mdi-cogs',

@@ -110,10 +110,12 @@
                 <v-icon v-if="!isSuccess" color="white" left>mdi-alert-outline</v-icon>
                 <v-icon v-else color="white" left>mdi-checkbox-marked-circle-outline</v-icon>
                 <span>{{ snackbarMessage }}</span>
-                <v-btn dark icon class="ml-6" @click="isSnackbarOpened = false">
+            </div>
+            <template v-slot:action="{ attrs }">
+                <v-btn dark icon @click="isSnackbarOpened = false">
                     <v-icon>mdi-close</v-icon>
                 </v-btn>
-            </div>
+            </template>
         </v-snackbar>
     </v-container>
 </div>

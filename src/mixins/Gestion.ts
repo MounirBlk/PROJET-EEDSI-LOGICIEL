@@ -54,7 +54,7 @@ export default Vue.extend({
 				colorThree: 'rgba(193, 34, 214, 0)'
 			}
 		],
-		urlUsersData: 'https://jsonplaceholder.typicode.com/users'
+		urlUsersData: 'https://jsonplaceholder.typicode.com/users',
 	}),
 	computed: {
 		rules() {
@@ -133,7 +133,7 @@ export default Vue.extend({
 				position,
 				width: null,
 				icon: null, // `<i class='bx bx-select-multiple' ></i>`
-				duration: '5000', //en ms ou null
+				duration: 5000, //en ms ou null
 				title: "<h1 style='font-weight: lighter'>" + title + '</h1>',
 				text: "<h2 style='font-weight: lighter'>" + message + '</h2>'
 			});
