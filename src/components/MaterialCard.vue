@@ -1,5 +1,5 @@
 <template>
-<v-card v-bind="$attrs" :class="classes" class="v-card--material pa-3 mt-12 mb-10">
+<v-card v-bind="$attrs" hover :class="classes" class="v-card--material pa-3 mt-12 mb-10">
     <div class="d-flex grow flex-wrap">
         <v-avatar v-if="avatar" size="128" class="mx-auto v-card--material__avatar elevation-6" color="grey">
             <v-img transition="scale-transition" :src="avatar" />
@@ -102,4 +102,5 @@ export default Vue.extend({
       top: -40px
       transition: .3s ease
       z-index: 1
+
 </style>

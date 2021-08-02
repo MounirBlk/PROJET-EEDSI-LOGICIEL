@@ -4,9 +4,11 @@ import fr from 'vuetify/src/locale/fr';
 import en from 'vuetify/src/locale/en';
 import colors from 'vuetify/lib/util/colors'
 
-Vue.use(Vuetify);
+import { TiptapVuetifyPlugin } from 'tiptap-vuetify'
+import 'tiptap-vuetify/dist/main.css'// don't forget to import CSS styles
+import 'vuetify/dist/vuetify.min.css'// Vuetify's CSS styles 
 
-export default new Vuetify({
+const vuetify: Vuetify = new Vuetify({
   theme: {
       options: {
         customProperties: true,
@@ -37,3 +39,13 @@ export default new Vuetify({
       current: 'fr',
     },
 });
+
+Vue.use(Vuetify);
+Vue.use(TiptapVuetifyPlugin, {
+  // the next line is important! You need to provide the Vuetify Object to this place.
+  vuetify, // same as "vuetify: vuetify"
+  // optional, default to 'md' (default vuetify icons before v2.0.0)
+  iconsGroup: 'mdi'
+})
+
+export default vuetify;
