@@ -16,7 +16,6 @@ import {
     bus
 } from "../main";
 import Gestion from '@/mixins/Gestion';
-import isOnline from 'is-online';
 
 export default Vue.extend({
     name: 'Index',
@@ -38,24 +37,10 @@ export default Vue.extend({
         });
     },
     async beforeMount() {
-        if (await this.checkInternet()) {
-            setTimeout(async () => {
-                await this.getOwnUserData();
-            }, 250);
-        } else {
-            return this.openNotification('top-right', 'warn', 'Attention', 'Pas de connexion internet')
-        }
+        setTimeout(async () => {
+            await this.getOwnUserData();
+        }, 250);
     },
-    mounted() {},
-    methods: {
-        checkInternet: function (): Promise < boolean > {
-            return new Promise(async (resolve, reject) => {
-                const online = await isOnline({
-                    timeout: 6000
-                });
-                resolve(online ? true : false)
-            });
-        }
-    }
+    methods: {}
 });
 </script>

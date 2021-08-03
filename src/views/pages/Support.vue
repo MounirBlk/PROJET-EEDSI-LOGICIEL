@@ -164,17 +164,20 @@ export default Vue.extend({
                 HardBreak,
                 //Image
             ],
-            contact: {
-                lastname: null,
-                firstname: null,
-                email: null,
-                phone: null,
+        }
+    },
+    computed: {
+        contact() {
+            return {
+                lastname: this.isDataOk(this.$store.state.auth.user.lastname) ? this.$store.state.auth.user.lastname : null,
+                firstname: this.isDataOk(this.$store.state.auth.user.firstname) ? this.$store.state.auth.user.firstname : null,
+                email: this.isDataOk(this.$store.state.auth.user.email) ? this.$store.state.auth.user.email : null,
+                phone: this.isDataOk(this.$store.state.auth.user.portable) ? this.$store.state.auth.user.portable : null,
                 objet: null,
                 content: `<h3>Bonjour le support,</h3><p>-</p><h3>Dans l'attente de votre réponse, veuillez agréer mes salutations distinguées.</h3><h3>Cordialement.</h3>`
             }
         }
     },
-    computed: {},
     watch: {},
     created() {},
     beforeMount() {
@@ -183,6 +186,7 @@ export default Vue.extend({
     mounted() {},
     methods: {
         sendMail: function (contact: any) {
+            return console.log(contact)
             if (this.isDataOk(contact) && this.isObjectNotEmpty(contact)) {
                 if (!this.$refs.formContact.validate()) return this.errorMessage("Veuillez vérifier les champs !");
                 else if (!this.isDataOk(contact.content) || contact.content === '' || contact.content.length === 0) return this.errorMessage("Veuillez remplir le message !");
