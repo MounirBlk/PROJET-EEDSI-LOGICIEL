@@ -186,7 +186,6 @@ export default Vue.extend({
     mounted() {},
     methods: {
         sendMail: function (contact: any) {
-            return console.log(contact)
             if (this.isDataOk(contact) && this.isObjectNotEmpty(contact)) {
                 if (!this.$refs.formContact.validate()) return this.errorMessage("Veuillez vérifier les champs !");
                 else if (!this.isDataOk(contact.content) || contact.content === '' || contact.content.length === 0) return this.errorMessage("Veuillez remplir le message !");
