@@ -151,7 +151,7 @@
             </base-material-card>
         </v-col>
     </v-row>
-    <v-snackbar shaped v-model="isSnackbarOpened" elevation="24" :color="isSuccess ? 'success' : 'error'" style="filter: opacity(95%);">
+    <v-snackbar shaped v-model="isSnackbarOpened" elevation="24" :color="isSuccess ? 'success' : 'error'" v-filter="'opacity(95%)'">
         <div class="text-center subtitle-1">
             <v-icon v-if="!isSuccess" color="white" left>mdi-alert-outline</v-icon>
             <v-icon v-else color="white" left>mdi-checkbox-marked-circle-outline</v-icon>

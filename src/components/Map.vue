@@ -7,7 +7,7 @@
         <!--<LGeoJson :geojson="geoJsonData" />-->
         <LControlZoom position="topleft" zoomInTitle="Zoom avant" zoomOutTitle="Zoom arrière"></LControlZoom>
         <LControl position="bottomleft">
-            <v-btn color="green" dark style="filter: opacity(85%)" @click.prevent="$emit('getCommandes')">
+            <v-btn color="green" dark v-filter="'opacity(85%)'" @click.prevent="$emit('getCommandes')">
                 <v-icon>mdi-refresh</v-icon>
             </v-btn>
         </LControl>
