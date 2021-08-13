@@ -1,7 +1,7 @@
 <template>
-<v-img :gradient="$vuetify.breakpoint.smAndDown ? 'to bottom, darkblue, blue, indigo' : null" transition="scale-transition" :src="$vuetify.breakpoint.mdAndUp ? 'https://www.potentiel-humain.eu/wp-content/uploads/2020/09/hand.jpg' : ''">
+<v-img :gradient="$vuetify.breakpoint.smAndDown ? $vuetify.theme.dark ? 'to bottom, blue, darkblue, indigo' : 'to bottom, #D3A35F, #F3C98B, #F9E4C5, white' : null" transition="scale-transition" :src="$vuetify.breakpoint.mdAndUp ? 'https://www.potentiel-humain.eu/wp-content/uploads/2020/09/hand.jpg' : ''">
     <v-overlay :absolute="isAbsolute" :opacity="opacity" :value="isOverlay">
-        <v-progress-circular color="indigo" indeterminate size="80"></v-progress-circular>
+        <v-progress-circular :color="$vuetify.theme.dark ? 'indigo' : 'primary'" indeterminate size="80"></v-progress-circular>
     </v-overlay>
     <v-dialog v-model="isDialogForgotPassword" width="400px" overlay-opacity="0.9">
         <v-card class="px-6" v-filter="'opacity(90%)'">
@@ -14,7 +14,7 @@
                     <div class="text-center">
                         <v-row>
                             <v-col cols="12" md="12">
-                                <v-text-field color="indigo" label="Email*" v-model.trim="email_reset" prepend-inner-icon="mdi-email-outline" clearable />
+                                <v-text-field :color="$vuetify.theme.dark ? 'indigo' : 'primary darken-1'" label="Email*" v-model.trim="email_reset" prepend-inner-icon="mdi-email-outline" clearable />
                             </v-col>
                         </v-row>
                     </div>
@@ -33,28 +33,32 @@
         <v-col cols="12" align-self="center">
             <v-slide-y-transition appear>
                 <center>
-                    <base-material-card v-filter="'opacity(85%)'" :color="$vuetify.theme.dark ? 'indigo' : 'primary'" max-width="100%" width="600" class="px-5 mt-10 py-3">
+                    <base-material-card :kinesisType="$vuetify.breakpoint.mdAndUp ? 'depth' : 'scale'" :kinesisStrength="$vuetify.breakpoint.mdAndUp ? 20 : 0.15" v-filter="'opacity(85%)'" :color="$vuetify.theme.dark ? 'indigo' : 'primary'" max-width="100%" width="600" class="px-5 mt-10 py-3">
                         <template v-slot:heading>
                             <div class="text-center">
                                 <h1 class="display-1 font-weight-bold">
-                                    <v-icon large left>mdi-account-lock</v-icon>Connexion
+                                    <v-icon large left>mdi-account-lock</v-icon>
+                                    C<v-icon v-if="isActive" color="green" > mdi-emoticon-happy-outline</v-icon>
+                                    <v-icon v-else color="red"> mdi-emoticon-sad-outline</v-icon>nnexion
                                 </h1>
                             </div>
                         </template>
                         <!--<v-card>-->
                         <v-card-text class="text-center">
                             <v-form ref="form">
-                                <v-col cols="12" class="py-2">
-                                    <v-text-field :color="$vuetify.theme.dark ? 'indigo' : 'primary darken-1'" @keyup.enter="connexion(infos.email, infos.password)" label="Email" v-model="infos.email" prepend-icon="mdi-face" clearable />
-                                </v-col>
-                                <v-col cols="12" class="py-2">
-                                    <v-text-field :color="$vuetify.theme.dark ? 'indigo' : 'primary darken-1'" @keyup.enter="connexion(infos.email, infos.password)" label="Password" v-model="infos.password" prepend-icon="mdi-lock-outline" :type="showPassword ? 'text' : 'password'" @click:append="showPassword = !showPassword" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" clearable />
-                                </v-col>
-                                <v-col cols="12" class="pt-2 mb-2">
-                                    <span @click="isDialogForgotPassword = true" style="cursor: pointer">Mot de passe oublié ?</span>
-                                </v-col>
+                                <v-row dense align="center" align-content="center" justify="center">
+                                    <v-col cols="12" class="py-2">
+                                        <v-text-field :color="$vuetify.theme.dark ? 'indigo' : 'primary darken-1'" @keyup.enter="connexion(auth.email, auth.password)" label="Email" v-model="auth.email" prepend-icon="mdi-face" clearable />
+                                    </v-col>
+                                    <v-col cols="12" class="py-2">
+                                        <v-text-field :color="$vuetify.theme.dark ? 'indigo' : 'primary darken-1'" @keyup.enter="connexion(auth.email, auth.password)" label="Mot de passe" v-model="auth.password" prepend-icon="mdi-lock-outline" :type="showPassword ? 'text' : 'password'" @click:append="showPassword = !showPassword" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" clearable />
+                                    </v-col>
+                                    <v-col cols="12" class="py-2">
+                                        <span @click="isDialogForgotPassword = true" style="cursor: pointer">Mot de passe oublié ?</span>
+                                    </v-col>
+                                </v-row>
                                 <v-badge bordered :color="isActive ? 'primary' : 'grey'" icon="mdi-lock-open-outline" overlap>
-                                    <v-btn dark rounded :disabled="!isActive" :color="$vuetify.theme.dark ? 'indigo' : 'primary'" @click="connexion(infos.email, infos.password)">
+                                    <v-btn dark rounded :disabled="!isActive" :color="$vuetify.theme.dark ? 'indigo' : 'primary'" @click="connexion(auth.email, auth.password)">
                                         <v-icon left>mdi-check-circle-outline</v-icon>
                                         <span>Connexion</span>
                                     </v-btn>
@@ -111,27 +115,30 @@ export default Vue.extend({
     mixins: [Gestion],
     data: (): any => ({
         isDialogForgotPassword: false as boolean,
-        infos: {
+        auth: {
             email: '',
             password: '',
         },
         isActive: false as boolean,
         email_reset: '',
+        window: {}
     }),
-    created() {},
+    created() {
+        this.window = window
+    },
     beforeMount() {},
     mounted() {
         bus.$emit("connected", false);
         this.isOverlay = false;
     },
     watch: {
-        /*infos: {
+        /*auth: {
             handler(val: any) {
                 this.isActive = true
             },
             deep: true
         }*/
-        'infos.email': function (val) {
+        'auth.email': function (val) {
             this.isActive = val !== null && val !== "";
         }
     },
@@ -154,13 +161,13 @@ export default Vue.extend({
                 const token: string | null = localStorage.getItem('SET_TOKEN'); // ou response.data.token
                 if (token == null || response === null) {
                     this.isOverlay = false;
-                    this.infos.password = '';
+                    this.auth.password = '';
                     await this.$store.dispatch('clearToken');
                     return this.errorMessage("L'utilisateur est introuvable !");
                 }
                 if (response.data.user.role.toLowerCase() !== "administrateur" && response.data.user.role.toLowerCase() !== "commercial") {
                     this.isOverlay = false;
-                    this.infos.password = '';
+                    this.auth.password = '';
                     await this.$store.dispatch('clearToken');
                     return this.errorMessage('Vous n\'avez pas l\'autorisation d\'accéder à la plateforme');
                 } else {
@@ -176,7 +183,7 @@ export default Vue.extend({
             }).catch((error: any) => {
                 this.catchAxios(error);
                 this.isOverlay = false;
-                this.infos.password = '';
+                this.auth.password = '';
             })
         },
         /*oldConnexion: function (email: string, password: string): void {
@@ -219,7 +226,7 @@ export default Vue.extend({
                 .catch((error) => {
                     this.catchAxios(error);
                     this.isOverlay = false;
-                    this.infos.password = '';
+                    this.auth.password = '';
                 })
         },*/
         resetPassword: function (email: string) {

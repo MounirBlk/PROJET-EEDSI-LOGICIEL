@@ -481,7 +481,7 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
-    <base-material-card color="pink" icon="mdi-bank" max-width="100%" width="auto" inline class="px-5 py-3 mx-auto">
+    <base-material-card :kinesisActive="false" color="pink" icon="mdi-bank" max-width="100%" width="auto" inline class="px-5 py-3 mx-auto">
         <template v-slot:after-heading>
             <div class="display-1 font-weight-light">Prospections</div>
         </template>
