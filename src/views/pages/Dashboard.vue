@@ -27,7 +27,7 @@
                 </v-col>
                 <v-col cols="12" md="12" sm="12" class="py-0">
                     <v-hover v-slot="{ hover }">
-                        <base-material-card :color="hover ? 'red lighten-1' :'red'" max-width="100%" width="auto" :style="hover ? 'filter: drop-shadow(3px 3px 7px red) invert(5%);' : 'filter: opacity(100%);'" class="px-5 py-3 mx-auto">
+                        <base-material-card :kinesisActive="false" :color="hover ? 'red lighten-1' :'red'" max-width="100%" width="auto" :style="hover ? 'filter: drop-shadow(3px 3px 7px red) invert(5%);' : 'filter: opacity(100%);'" class="px-5 py-3 mx-auto">
                             <template v-slot:heading>
                                 <div class="text-center">
                                     <span class="display-1 font-weight-bold">
@@ -41,7 +41,7 @@
                 </v-col>
                 <v-col cols="12" md="6" sm="12" class="py-0">
                     <v-hover v-slot="{ hover }">
-                        <base-material-card :color="hover ? 'indigo lighten-1' : 'indigo'" max-width="100%" width="auto" :style="hover ? 'filter: drop-shadow(3px 3px 7px indigo) invert(5%);' : 'filter: opacity(100%);'" class="px-5 py-3 mx-auto">
+                        <base-material-card :kinesisActive="false" :color="hover ? 'indigo lighten-1' : 'indigo'" max-width="100%" width="auto" :style="hover ? 'filter: drop-shadow(3px 3px 7px indigo) invert(5%);' : 'filter: opacity(100%);'" class="px-5 py-3 mx-auto">
                             <template v-slot:heading>
                                 <div class="text-center">
                                     <span class="display-1 font-weight-bold">
@@ -55,7 +55,7 @@
                 </v-col>
                 <v-col cols="12" md="6" sm="12" class="py-0">
                     <v-hover v-slot="{ hover }">
-                        <base-material-card :color="hover ? 'pink lighten-1' : 'pink'" max-width="100%" width="auto" :style="hover ? 'filter: drop-shadow(3px 3px 7px pink) invert(5%);' : 'filter: opacity(100%);'" class="px-5 py-3 mx-auto">
+                        <base-material-card :kinesisActive="false" :color="hover ? 'pink lighten-1' : 'pink'" max-width="100%" width="auto" :style="hover ? 'filter: drop-shadow(3px 3px 7px pink) invert(5%);' : 'filter: opacity(100%);'" class="px-5 py-3 mx-auto">
                             <template v-slot:heading>
                                 <div class="text-center">
                                     <span class="display-1 font-weight-bold">
@@ -69,7 +69,7 @@
                 </v-col>
                 <v-col cols="12" md="12" sm="12" class="py-0">
                     <v-hover v-slot="{ hover }">
-                        <base-material-card :color="hover ? 'orange lighten-1' :'orange'" max-width="100%" width="auto" :style="hover ? 'filter: drop-shadow(3px 3px 7px orange) invert(5%);' : 'filter: opacity(100%);'" class="px-5 py-3 mx-auto">
+                        <base-material-card :kinesisActive="false" :color="hover ? 'orange lighten-1' :'orange'" max-width="100%" width="auto" :style="hover ? 'filter: drop-shadow(3px 3px 7px orange) invert(5%);' : 'filter: opacity(100%);'" class="px-5 py-3 mx-auto">
                             <template v-slot:heading>
                                 <div class="text-center">
                                     <span class="display-1 font-weight-bold">

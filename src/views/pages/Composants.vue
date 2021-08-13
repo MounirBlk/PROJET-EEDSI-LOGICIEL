@@ -193,82 +193,78 @@
                                     <span>Composant</span><br />
                                 </div>
                             </template>
-                            <div>
-                                <div>
-                                    <v-row>
-                                        <v-col cols="12" md="7">
-                                            <v-simple-table dense>
-                                                <template v-slot:default>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>Référence du composant</td>
-                                                            <td>{{ composantInfos.refID }}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Nom du composant</td>
-                                                            <td>{{ composantInfos.nom }}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Type</td>
-                                                            <td>{{ composantInfos.type }}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Couleurs</td>
-                                                            <td>{{ composantInfos.couleurs.join(', ') }}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Matières</td>
-                                                            <td>{{ composantInfos.matieres.join(', ') }}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Longueur</td>
-                                                            <td>{{ composantInfos.longueur }} cm</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Largeur</td>
-                                                            <td>{{ composantInfos.largeur }} cm</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Profondeur</td>
-                                                            <td>{{ composantInfos.profondeur }} cm</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Poids</td>
-                                                            <td>{{ composantInfos.poids }} kg</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Prix</td>
-                                                            <td>{{ composantInfos.prix }} €</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Quantité</td>
-                                                            <td>{{ composantInfos.quantite }}</td>
-                                                        </tr>
-                                                    </tbody>
+                            <v-row>
+                                <v-col cols="12" md="7">
+                                    <v-simple-table dense>
+                                        <template v-slot:default>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Référence du composant</td>
+                                                    <td>{{ composantInfos.refID }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Nom du composant</td>
+                                                    <td>{{ composantInfos.nom }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Type</td>
+                                                    <td>{{ composantInfos.type }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Couleurs</td>
+                                                    <td>{{ composantInfos.couleurs.join(', ') }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Matières</td>
+                                                    <td>{{ composantInfos.matieres.join(', ') }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Longueur</td>
+                                                    <td>{{ composantInfos.longueur }} cm</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Largeur</td>
+                                                    <td>{{ composantInfos.largeur }} cm</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Profondeur</td>
+                                                    <td>{{ composantInfos.profondeur }} cm</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Poids</td>
+                                                    <td>{{ composantInfos.poids }} kg</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Prix</td>
+                                                    <td>{{ composantInfos.prix }} €</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Quantité</td>
+                                                    <td>{{ composantInfos.quantite }}</td>
+                                                </tr>
+                                            </tbody>
+                                        </template>
+                                    </v-simple-table>
+                                </v-col>
+                                <v-col cols="12" md="5">
+                                    <v-row v-if="composantInfos.tabImgLinks !== undefined">
+                                        <v-col cols="12" v-for="(img, index) in paginatedData" :key="index">
+                                            <v-img transition="scale-transition" :src="img" height="300" width="auto" aspect-ratio="1" class="grey lighten-2">
+                                                <template v-slot:placeholder>
+                                                    <v-row class="fill-height ma-0" align="center" justify="center">
+                                                        <v-progress-circular indeterminate color="orange"></v-progress-circular>
+                                                    </v-row>
                                                 </template>
-                                            </v-simple-table>
+                                            </v-img>
                                         </v-col>
-                                        <v-col cols="12" md="5">
-                                            <v-row v-if="composantInfos.tabImgLinks !== undefined">
-                                                <v-col cols="12" v-for="(img, index) in paginatedData" :key="index">
-                                                    <v-img transition="scale-transition" :src="img" height="300" width="auto" aspect-ratio="1" class="grey lighten-2">
-                                                        <template v-slot:placeholder>
-                                                            <v-row class="fill-height ma-0" align="center" justify="center">
-                                                                <v-progress-circular indeterminate color="orange"></v-progress-circular>
-                                                            </v-row>
-                                                        </template>
-                                                    </v-img>
-                                                </v-col>
-                                                <v-col cols="12" md="12">
-                                                    <div class="text-center">
-                                                        <v-pagination circle v-model="pageNumber" :length="composantInfos.tabImgLinks.length" @input="nextPage" />
-                                                    </div>
-                                                </v-col>
-                                            </v-row>
+                                        <v-col cols="12" md="12">
+                                            <div class="text-center">
+                                                <v-pagination circle v-model="pageNumber" :length="composantInfos.tabImgLinks.length" @input="nextPage" />
+                                            </div>
                                         </v-col>
                                     </v-row>
-                                </div>
-                            </div>
+                                </v-col>
+                            </v-row>
                         </base-material-card>
                     </v-container>
                 </v-card-text>
@@ -281,7 +277,7 @@
             </v-form>
         </v-card>
     </v-dialog>
-    <base-material-card color="orange" icon="mdi-table-chair" max-width="100%" width="auto" inline class="px-5 py-3 mx-auto">
+    <base-material-card :kinesisActive="false" color="orange" icon="mdi-table-chair" max-width="100%" width="auto" inline class="px-5 py-3 mx-auto">
         <template v-slot:after-heading>
             <div class="display-1 font-weight-light">Composants</div>
         </template>

@@ -27,10 +27,11 @@ export default Vue.extend({
         DashboardCoreView: () => import('@/views/core/View.vue'),
     },
     data: () => ({
-        connected: true,
+        connected: true as boolean,
     }),
     computed: {},
     created() {
+        //console.log(navigator)
         this.$vuetify.theme.dark = new Date().getHours() >= 21 || new Date().getHours() <= 9 ? true : false;
         bus.$on("connected", (data: boolean) => {
             this.connected = data;

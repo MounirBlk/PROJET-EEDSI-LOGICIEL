@@ -1,7 +1,7 @@
 <template>
 <v-main>
     <vue-page-transition name="fade-in-down">
-        <router-view class="mb-10" style="z-index: 99" />
+        <router-view class="mb-7" style="z-index: 99" />
     </vue-page-transition>
 
     <base-go-to-up style="z-index: 999;" v-if="$router.history.current.name !== 'Connexion'" />
