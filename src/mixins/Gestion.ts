@@ -7,10 +7,23 @@ import io from 'socket.io-client';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
 import axiosApi from '@/plugins/axiosApi';
 
+/*Vue.directive('filter', {
+	bind: function (el, binding, vnode) {
+		el.style.filter = binding.value
+	}
+})*/
+
 export default Vue.extend({
 	name: 'Mixins',
 	props: {},
 	components: {},
+	directives: {
+		filter: {
+			bind: function (el, binding, vnode) {
+				el.style.filter = binding.value
+			}
+		}
+	},
 	data: (): any => ({
 		showPassword: false as boolean,
 		isSuccess: false as boolean, //snackbar

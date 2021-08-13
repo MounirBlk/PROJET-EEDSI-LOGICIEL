@@ -5,7 +5,7 @@
     </v-overlay>
     <v-row>
         <v-col cols="12" md="4">
-            <base-material-card color="primary" max-width="100%" width="auto" inline class="px-5 py-3 mx-auto">
+            <base-material-card :kinesisType="'depth'" :kinesisStrength="20" color="primary" max-width="100%" width="auto" inline class="px-5 py-3 mx-auto">
                 <template v-slot:heading>
                     <span class="text-h5 font-weight-bold">
                         <v-icon left large>mdi-account-group-outline</v-icon>L'équipe ECommerce
@@ -44,12 +44,12 @@
         </v-col>
         <v-col cols="12" md="8">
             <v-form ref="formContact" v-model="rules.valid" lazy-validation>
-                <base-material-card color="primary" icon="mdi-handshake" max-width="100%" width="auto" inline class="px-5 py-3 mx-auto">
+                <base-material-card :kinesisType="'depth'" :kinesisStrength="12"  color="primary" icon="mdi-handshake" max-width="100%" width="auto" inline class="px-5 py-3 mx-auto">
                     <template v-slot:after-heading>
                         <span class="text-h5 font-weight-light">Contacter le support</span>
                     </template>
                     <v-card width="auto" height="auto" elevation="0" outlined color="transparent">
-                        <v-card-text class="py-0">
+                        <v-card-text class="pa-0">
                             <v-container fluid>
                                 <v-row dense justify="center" align="center" align-content="center">
                                     <v-col align-self="start" order="auto" cols="12" md="6">
@@ -85,7 +85,7 @@
             </v-form>
         </v-col>
     </v-row>
-    <v-snackbar shaped v-model="isSnackbarOpened" elevation="24" :color="isSuccess ? 'success' : 'error'" style="filter: opacity(95%);">
+    <v-snackbar shaped v-model="isSnackbarOpened" elevation="24" :color="isSuccess ? 'success' : 'error'" v-filter="'opacity(95%)'">
         <div class="text-center subtitle-1">
             <v-icon v-if="!isSuccess" color="white" left>mdi-alert-outline</v-icon>
             <v-icon v-else color="white" left>mdi-checkbox-marked-circle-outline</v-icon>

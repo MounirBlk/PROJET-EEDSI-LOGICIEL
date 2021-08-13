@@ -7,5 +7,7 @@ declare module 'lodash';
 declare module 'vuesax';
 declare module 'leaflet';
 declare module 'tiptap-vuetify';
+declare module 'vue-kinesis';
+declare module 'vue-animejs';
 //declare module 'vue-carousel-3d';
 //declare module 'vuescroll';

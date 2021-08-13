@@ -9,7 +9,7 @@
     </v-card>
 
     <v-menu v-model="menu" :close-on-content-click="false" activator="#settings" bottom content-class="v-settings" left nudge-left="30" offset-x origin="top right" transition="scale-transition">
-        <v-card class="mb-0" width="500" style="filter: opacity(92%);" max-height="800">
+        <v-card class="mb-0" width="500" v-filter="'opacity(92%)'" max-height="800">
             <v-card-text class="px-0 pb-0">
                 <div class="text-center ">
                     <span class="indigo--text mb-2 d-inline-block text-h6">

@@ -1,10 +1,10 @@
 <template>
-<v-img transition="scale-transition" :src="$vuetify.breakpoint.mdAndUp ? 'https://www.potentiel-humain.eu/wp-content/uploads/2020/09/hand.jpg' : ''">
+<v-img :gradient="$vuetify.breakpoint.smAndDown ? 'to bottom, darkblue, blue, indigo' : null" transition="scale-transition" :src="$vuetify.breakpoint.mdAndUp ? 'https://www.potentiel-humain.eu/wp-content/uploads/2020/09/hand.jpg' : ''">
     <v-overlay :absolute="isAbsolute" :opacity="opacity" :value="isOverlay">
         <v-progress-circular color="indigo" indeterminate size="80"></v-progress-circular>
     </v-overlay>
     <v-dialog v-model="isDialogForgotPassword" width="400px" overlay-opacity="0.9">
-        <v-card class="px-6" style="filter: opacity(90%);">
+        <v-card class="px-6" v-filter="'opacity(90%)'">
             <v-card-title class="indigo--text">
                 Mot de passe oublié ?
                 <v-icon aria-label="Close" class="ml-auto" @click="isDialogForgotPassword = false">mdi-close</v-icon>
@@ -29,44 +29,46 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
-    <v-row justify="center">
-        <v-col cols="12">
+    <v-row justify="center" align-content="center" align="center">
+        <v-col cols="12" align-self="center">
             <v-slide-y-transition appear>
-                <base-material-card style="filter: opacity(85%);" :color="$vuetify.theme.dark ? 'indigo' : 'primary'" max-width="100%" width="600" class="px-5 mt-10 py-3 mx-auto">
-                    <template v-slot:heading>
-                        <div class="text-center">
-                            <h1 class="display-1 font-weight-bold">
-                                <v-icon large left>mdi-account-lock</v-icon>Connexion
-                            </h1>
-                        </div>
-                    </template>
-                    <!--<v-card>-->
-                    <v-card-text class="text-center">
-                        <v-form ref="form">
-                            <v-col cols="12" class="py-2">
-                                <v-text-field :color="$vuetify.theme.dark ? 'indigo' : 'primary darken-1'" @keyup.enter="connexion(infos.email, infos.password)" label="Email" v-model="infos.email" prepend-icon="mdi-face" clearable />
-                            </v-col>
-                            <v-col cols="12" class="py-2">
-                                <v-text-field :color="$vuetify.theme.dark ? 'indigo' : 'primary darken-1'" @keyup.enter="connexion(infos.email, infos.password)" label="Password" v-model="infos.password" prepend-icon="mdi-lock-outline" :type="showPassword ? 'text' : 'password'" @click:append="showPassword = !showPassword" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" clearable />
-                            </v-col>
-                            <v-col cols="12" class="pt-2 mb-2">
-                                <span @click="isDialogForgotPassword = true" style="cursor: pointer">Mot de passe oublié ?</span>
-                            </v-col>
-                            <v-badge bordered :color="isActive ? 'primary' : 'grey'" icon="mdi-lock-open-outline" overlap>
-                                <v-btn dark rounded :disabled="!isActive" :color="$vuetify.theme.dark ? 'indigo' : 'primary'" @click="connexion(infos.email, infos.password)">
-                                    <v-icon left>mdi-check-circle-outline</v-icon>
-                                    <span>Connexion</span>
-                                </v-btn>
-                            </v-badge>
-                        </v-form>
-                    </v-card-text>
-                    <!--</v-card>-->
-                    <!--<router-link to="register" class="indigo--text">Inscription</router-link>-->
-                </base-material-card>
+                <center>
+                    <base-material-card v-filter="'opacity(85%)'" :color="$vuetify.theme.dark ? 'indigo' : 'primary'" max-width="100%" width="600" class="px-5 mt-10 py-3">
+                        <template v-slot:heading>
+                            <div class="text-center">
+                                <h1 class="display-1 font-weight-bold">
+                                    <v-icon large left>mdi-account-lock</v-icon>Connexion
+                                </h1>
+                            </div>
+                        </template>
+                        <!--<v-card>-->
+                        <v-card-text class="text-center">
+                            <v-form ref="form">
+                                <v-col cols="12" class="py-2">
+                                    <v-text-field :color="$vuetify.theme.dark ? 'indigo' : 'primary darken-1'" @keyup.enter="connexion(infos.email, infos.password)" label="Email" v-model="infos.email" prepend-icon="mdi-face" clearable />
+                                </v-col>
+                                <v-col cols="12" class="py-2">
+                                    <v-text-field :color="$vuetify.theme.dark ? 'indigo' : 'primary darken-1'" @keyup.enter="connexion(infos.email, infos.password)" label="Password" v-model="infos.password" prepend-icon="mdi-lock-outline" :type="showPassword ? 'text' : 'password'" @click:append="showPassword = !showPassword" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" clearable />
+                                </v-col>
+                                <v-col cols="12" class="pt-2 mb-2">
+                                    <span @click="isDialogForgotPassword = true" style="cursor: pointer">Mot de passe oublié ?</span>
+                                </v-col>
+                                <v-badge bordered :color="isActive ? 'primary' : 'grey'" icon="mdi-lock-open-outline" overlap>
+                                    <v-btn dark rounded :disabled="!isActive" :color="$vuetify.theme.dark ? 'indigo' : 'primary'" @click="connexion(infos.email, infos.password)">
+                                        <v-icon left>mdi-check-circle-outline</v-icon>
+                                        <span>Connexion</span>
+                                    </v-btn>
+                                </v-badge>
+                            </v-form>
+                        </v-card-text>
+                        <!--</v-card>-->
+                        <!--<router-link to="register" class="indigo--text">Inscription</router-link>-->
+                    </base-material-card>
+                </center>
             </v-slide-y-transition>
         </v-col>
     </v-row>
-    <v-snackbar shaped v-model="isSnackbarOpened" elevation="24" :color="isSuccess ? 'success' : 'error'" style="filter: opacity(95%);">
+    <v-snackbar shaped v-model="isSnackbarOpened" elevation="24" :color="isSuccess ? 'success' : 'error'" v-filter="'opacity(95%)'">
         <div class="text-center subtitle-1">
             <v-icon v-if="!isSuccess" color="white" left>mdi-alert-outline</v-icon>
             <v-icon v-else color="white" left>mdi-checkbox-marked-circle-outline</v-icon>

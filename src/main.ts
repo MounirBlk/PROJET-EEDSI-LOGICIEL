@@ -6,6 +6,7 @@ import '@/plugins/vee-validate';
 import '@/plugins/axiosApi';
 import '@/plugins/socket';
 import '@/plugins/vuesax';
+import '@/plugins/vue-kinesis';
 import vuetify from '@/plugins/vuetify';
 import i18n from '@/plugins/i18n';
 import store from '@/store';// /!\ Call after plugins/axiosApi /!\
