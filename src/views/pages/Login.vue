@@ -149,7 +149,7 @@ export default Vue.extend({
     methods: {
         connexion: function (email: string, password: string): void {
             if (email == null || email == "")
-                return this.errorMessage("Identifiant vide !");
+                return this.errorMessage("Email vide !");
             if (password == null || password == "")
                 return this.errorMessage("Mot de passe vide !");
 
