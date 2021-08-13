@@ -149,9 +149,9 @@ export default Vue.extend({
     methods: {
         connexion: function (email: string, password: string): void {
             if (email == null || email == "")
-                return this.errorMessage("Email vide !");
+                return this.errorMessage("L'email est vide !");
             if (password == null || password == "")
-                return this.errorMessage("Mot de passe vide !");
+                return this.errorMessage("Email/password incorrect");
 
             this.isOverlay = true;
             this.$store.dispatch('authLogin', {
@@ -164,21 +164,22 @@ export default Vue.extend({
                     this.auth.password = '';
                     await this.$store.dispatch('clearToken');
                     return this.errorMessage("L'utilisateur est introuvable !");
-                }
-                if (response.data.user.role.toLowerCase() !== "administrateur" && response.data.user.role.toLowerCase() !== "commercial") {
-                    this.isOverlay = false;
-                    this.auth.password = '';
-                    await this.$store.dispatch('clearToken');
-                    return this.errorMessage('Vous n\'avez pas l\'autorisation d\'accéder à la plateforme');
                 } else {
-                    setTimeout(() => {
-                        this.setUser(response.data.user); //this.$store.commit("SET_USER", response.data.user) / $store.state.auth.user
-                        //this.setToken(token)//this.$store.commit("SET_TOKEN", token);
-                        bus.$emit("connected", true);
-                        return this.$router.push({
-                            name: "Accueil",
-                        });
-                    }, 500);
+                    if (response.data.user.role.toLowerCase() !== "administrateur" && response.data.user.role.toLowerCase() !== "commercial") {
+                        this.isOverlay = false;
+                        this.auth.password = '';
+                        await this.$store.dispatch('clearToken');
+                        return this.errorMessage('Vous n\'avez pas l\'autorisation d\'accéder à la plateforme');
+                    } else {
+                        setTimeout(() => {
+                            this.setUser(response.data.user); //this.$store.commit("SET_USER", response.data.user) / $store.state.auth.user
+                            //this.setToken(token)//this.$store.commit("SET_TOKEN", token);
+                            bus.$emit("connected", true);
+                            return this.$router.push({
+                                name: "Accueil",
+                            });
+                        }, 500);
+                    }
                 }
             }).catch((error: any) => {
                 this.catchAxios(error);
