@@ -31,7 +31,7 @@
             </base-material-card>
         </v-col>
         <v-col cols="12" md="4" v-if="commande.livreurID !== null">
-            <base-material-card color="success darken-1" icon="mdi-account-outline" max-width="100%" width="auto" inline class="px-5 py-3 mx-auto">
+            <base-material-card color="success darken-1" icon="mdi-account-outline" max-width="100%" width="auto" inline class="py-3 mx-auto">
                 <template v-slot:after-heading>
                     <div class="subtitle-1">
                         <span>Informations livreur</span>

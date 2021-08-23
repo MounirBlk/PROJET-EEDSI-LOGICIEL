@@ -99,7 +99,7 @@
             </base-material-card>
         </v-col>
         <v-col cols="12" md="4">
-            <base-material-card color="purple" icon="mdi-account-tie-outline" max-width="100%" width="auto" inline class="px-5 py-3 mx-auto">
+            <base-material-card color="purple" icon="mdi-account-tie-outline" max-width="100%" width="auto" inline class="py-3 mx-auto">
                 <template v-slot:after-heading>
                     <span class="purple--text text-h5 font-weight-light">
                         {{ user.role }}

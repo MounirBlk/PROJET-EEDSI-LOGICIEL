@@ -213,7 +213,7 @@
         <v-col cols="12" md="4" v-if="$route.params.isEdit === false">
             <v-skeleton-loader v-if="isFirstload" :loading="isLoading" type="table"></v-skeleton-loader>
             <div v-else>
-                <base-material-card color="brown" icon="mdi-cog" max-width="100%" width="auto" inline class="px-5 py-3 mx-auto">
+                <base-material-card color="brown" icon="mdi-cog" max-width="100%" width="auto" inline class="py-3 mx-auto">
                     <template v-slot:after-heading>
                         <div class="subtitle-1">
                             <span>Informations composants</span>

@@ -51,7 +51,7 @@
     </v-dialog>
     <v-row>
         <v-col cols="12" md="12" sm="12">
-            <base-material-card icon="mdi-calendar-month-outline" color="red" max-width="100%" width="auto" class="px-5 py-3 mx-auto">
+            <base-material-card icon="mdi-calendar-month-outline" color="red" max-width="100%" width="auto" class="py-3 mx-auto">
                 <template v-slot:after-heading>
                     <div class="display-1 font-weight-light">Calendrier de commandes</div>
                 </template>
