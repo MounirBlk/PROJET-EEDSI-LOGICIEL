@@ -132,7 +132,7 @@
         <v-col cols="12" md="4">
             <v-skeleton-loader v-if="isFirstload" :loading="isLoading" type="table"></v-skeleton-loader>
             <div v-else>
-                <base-material-card color="indigo" icon="mdi-clipboard-account" max-width="100%" width="auto" inline class="px-5 py-3 mx-auto">
+                <base-material-card color="indigo" icon="mdi-clipboard-account" max-width="100%" width="auto" inline class="py-3 mx-auto">
                     <v-row v-if="$route.params.isEdit === false">
                         <v-col cols="12">
                             <h4 class="display-1 font-weight-light mb-2 text-md-center indigo--text">{{ client.firstname }} {{ client.lastname }}</h4>

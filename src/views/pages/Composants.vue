@@ -277,7 +277,7 @@
             </v-form>
         </v-card>
     </v-dialog>
-    <base-material-card :kinesisActive="false" color="orange" icon="mdi-table-chair" max-width="100%" width="auto" inline class="px-5 py-3 mx-auto">
+    <base-material-card :kinesisActive="false" color="orange" icon="mdi-table-chair" max-width="100%" width="auto" inline class="py-3 mx-auto">
         <template v-slot:after-heading>
             <div class="display-1 font-weight-light">Composants</div>
         </template>
